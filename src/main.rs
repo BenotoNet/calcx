@@ -2,6 +2,7 @@
 mod ui;
 mod calc;
 mod number_struct;
+mod utils;
 
 use std::env::args;
 use ui::Option;
@@ -13,10 +14,10 @@ fn main() {
 
     let options = ui::parse_args(args);
 
+    // TODO: 
     for option in options {
         match option {
-            Option::SingleQuery(query) => {println!("{}", calculator.run(&query)); return},
-            // _ => {},
+            _ => {},
         }
     }
 

@@ -1,8 +1,9 @@
 use crate::calc::Calc;
 use cliclack::{input, log};
+
 // UI Library
 
-// Enums for setting Options -> Every option has its own "type"
+// Enums for setting Options
 pub enum Option {
     SingleQuery(String),
 }
@@ -12,7 +13,6 @@ pub enum Option {
 pub fn parse_args(args: Vec<String>) -> Vec<Option> {
     let args = &args[1..];
     let mut option_queue = vec![];
-    let mut query = String::new();
 
     for opt in args {
         // Parsing all command line arguments with starting with --
@@ -35,20 +35,11 @@ pub fn parse_args(args: Vec<String>) -> Vec<Option> {
                 _ => {}
             }
         }
-
-        // if it contains neither -- or -, then add it to the exec-once query
-        else {
-            query += &opt;
-        }
     }
 
     // If we do have an exec-once query (-> the query string is not empty) then we want to parse
     // that back to the main function
-    if query != "" {
-        option_queue.push(
-            Option::SingleQuery(query)
-        )
-    }
+    // FIX: Does not work
 
     // Return the entire list of options
     return option_queue;
@@ -61,7 +52,7 @@ fn help_menu() {
   Help Menu  
 -------------
 ";
-    println!{"{output}"}
+    log::info(output).unwrap();
 }
 
 

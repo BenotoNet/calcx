@@ -1,50 +1,58 @@
+use crate::utils;
+
 #[derive(Debug)]
 pub enum Token {
     Number(f64),
-    Arithmetic(String),
-    Operation(String) // TODO: -> Add Special Operations enum (e.g. Conversion, Time, etc)
+    Expression(String),
 }
 
 pub struct Calc {
     query: Vec<Token>,
 }
 
+const OPERATORS: [char; 7] = ['*', '^', '+', '-', '(', ')', '/'];
+
 impl Calc {
     pub fn new() -> Calc {
         Calc { query: vec![] }
     }
 
-    // Function to parse / Tokenize given query (e.g. 5+(9*2) and give a result, needs to be written very
-    // generally => later 'to keyword' needs to work as well)
-
+    // API to run a specific command
     pub fn run(&mut self, query: &str) -> String {
         // This function is supposed to tokenize the given query
         self.query = Calc::tokenize(query);
-
-        // Calculate the answer using the parsed tokens
 
         format!{"{:?}", self.query}
         // String::new()
     }
 
-    fn is_number(test_char: char) -> bool {
-        let test_num = test_char as u8;
-        test_num >= '0' as u8 && test_num <= '9' as u8
-    }
 
-    // Function to put string query into a more readable format for the computer
-    pub fn tokenize(query: &str) -> Vec<Token> {
-        let mut tokenized = vec![];
-        for a in query.chars() {
-            // Check if Number
-            match Calc::is_number(a) {
-                // TODO:
-                true => {},
-                false => {
-                    if ['+', '-', '*', '/', '^'].contains(&a) {tokenized.push(Token::Arithmetic(String::from(a)))}
-                },
+    // Function to put string query into a more readable format for the computer (Seperate each
+    // token)
+    fn tokenize(query: &str) -> Vec<Token> {
+        let mut tokens = vec![];
+
+        let rough_tokens = query.split(" ").collect::<Vec<&str>>();
+
+        for rough_token in rough_tokens {
+            let mut part_token = String::new();
+            for c in rough_token.chars() {
+                if OPERATORS.contains(&c) {
+                    // TODO: Remove unwraps
+                    tokens.push(Token::Number(part_token.clone().parse().unwrap()));
+                    tokens.push(Token::Expression(String::from(c)));
+                    part_token = String::new();
+                } else {
+                    part_token += &c.to_string();
+                }
             }
+            tokens.push(Token::Number(part_token.clone().parse().unwrap()));
         }
-        return tokenized;
+
+        // TODO: Clean Up Tokens (remove spaces, etc)
+
+        // Seperate Blocks with arithmetic operators:
+
+        return tokens;
     }
 }
