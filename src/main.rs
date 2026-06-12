@@ -20,5 +20,7 @@ fn main() {
         }
     }
 
-    // All options
+    // All options are set, therefore, we can start the interactive session
+    let ui = ui::UI::new();
+    ui.interactive();
 }
