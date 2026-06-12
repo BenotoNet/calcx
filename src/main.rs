@@ -15,12 +15,12 @@ fn main() {
 
     for option in options {
         match option {
-            Option::SingleQuery(query) => {println!("{}", calculator.run(&query));},
+            Option::SingleQuery(query) => {println!("{}", calculator.run(&query)); return},
             // _ => {},
         }
     }
 
     // All options are set, therefore, we can start the interactive session
-    let ui = ui::UI::new();
+    let mut ui = ui::UI::new(calculator);
     ui.interactive();
 }

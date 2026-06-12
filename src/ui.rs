@@ -1,6 +1,5 @@
-use std::io;
-use tui::{backend::CrosstermBackend, Terminal};
-
+use crate::calc::Calc;
+use cliclack::{input, log};
 // UI Library
 
 // Enums for setting Options -> Every option has its own "type"
@@ -11,6 +10,7 @@ pub enum Option {
 // Function to parse "--help" into printing help screen; Everything that is seperated by spaces and
 // does not contain -- or - will be added to the exec-once query => no interactive shell
 pub fn parse_args(args: Vec<String>) -> Vec<Option> {
+    let args = &args[1..];
     let mut option_queue = vec![];
     let mut query = String::new();
 
@@ -66,23 +66,24 @@ fn help_menu() {
 
 
 pub struct UI {
-
+    calc: Calc,
 }
 
 impl UI {
-    pub fn new() -> UI {
-        UI {  }
+    pub fn new(calc: Calc) -> UI {
+        UI { calc }
     }
 
-    pub fn interactive(&self) {
+    pub fn interactive(&mut self) {
         // Interaction loop: wait for user input -> parse user input -> query -> return output ->
         // ask for new user input
 
-        let stdout = io::stdout();
-        let backend = CrosstermBackend::new(stdout);
-        let mut terminal = Terminal::new(backend);
         loop {
-            
+            let query: String = input("Calcxulate!").interact().expect("Could not get input...");
+            if query == String::from("quit") {
+                return;
+            }
+            let _ = log::success(self.calc.run(&query)).expect("Could not write output...");
         }
     }
 }

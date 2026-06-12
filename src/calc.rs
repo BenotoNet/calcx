@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub enum Token {
     Number(f64),
     Arithmetic(String),
@@ -22,19 +23,28 @@ impl Calc {
 
         // Calculate the answer using the parsed tokens
 
-        String::new()
+        format!{"{:?}", self.query}
+        // String::new()
     }
 
-    // TODO: 
-    fn is_number() {}
-
-    // TODO: 
+    fn is_number(test_char: char) -> bool {
+        let test_num = test_char as u8;
+        test_num >= '0' as u8 && test_num <= '9' as u8
+    }
 
     // Function to put string query into a more readable format for the computer
     pub fn tokenize(query: &str) -> Vec<Token> {
+        let mut tokenized = vec![];
         for a in query.chars() {
             // Check if Number
+            match Calc::is_number(a) {
+                // TODO:
+                true => {},
+                false => {
+                    if ['+', '-', '*', '/', '^'].contains(&a) {tokenized.push(Token::Arithmetic(String::from(a)))}
+                },
+            }
         }
-        return vec![];
+        return tokenized;
     }
 }
