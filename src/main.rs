@@ -1,20 +1,24 @@
+// Internal Libraries
 mod ui;
-mod parser;
+mod calc;
+mod number_struct;
+
 use std::env::args;
 use ui::Option;
-mod basic_calc;
 
 fn main() {
     let args = args().collect::<Vec<String>>();
 
-    let parser = parser::Parser::new();
+    let mut calculator = calc::Calc::new();
 
     let options = ui::parse_args(args);
 
     for option in options {
         match option {
-            Option::SingleQuery(query) => {parser.parse(&query)},
-            _ => {},
+            Option::SingleQuery(query) => {println!("{}", calculator.run(&query));},
+            // _ => {},
         }
     }
+
+    // All options
 }
