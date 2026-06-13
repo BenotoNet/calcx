@@ -35,6 +35,11 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Option> {
                 _ => {}
             }
         }
+
+        // Parsing Exec-Once
+        else {
+            option_queue.push(Option::SingleQuery(opt.clone()))
+        }
     }
 
     // If we do have an exec-once query (-> the query string is not empty) then we want to parse

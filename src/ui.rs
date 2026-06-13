@@ -1,5 +1,6 @@
+use std::process::exit;
 use crate::calc::Calc;
-use cliclack::{input, log};
+use cliclack::{log};
 use rustyline::DefaultEditor;
 
 // UI Library
@@ -11,12 +12,17 @@ pub enum Option {
 
 pub struct UI {
     calc: Calc,
-    history: Vec<String>,
 }
 
 impl UI {
-    pub fn new(calc: Calc) -> UI {
-        UI { calc, history: vec![] }
+    pub fn new(calc: Calc, options: Vec<Option>) -> UI {
+        let mut ui = UI { calc };
+        for option in options {
+            match option {
+                Option::SingleQuery(query) => {ui.run_query(&query); exit(1);},
+            }
+        }
+        return ui;
     }
 
     pub fn interactive(mut self) {
@@ -29,7 +35,10 @@ impl UI {
             // Old Way of getting input via CliClack
             // let query: String = input("Calcxulate!").autocomplete(self.history.clone()).interact().expect("Could not get input...");
             // New: rustyline
-            let query: String = rl.readline("Calcxulate! ").expect("Could not get Input...");
+            let query: String = match rl.readline("Calcxulate >> ") {
+                Ok(input) => {input},
+                Err(_) => {return},
+            };
 
             if query == String::from("quit") {
                 return;
@@ -38,12 +47,15 @@ impl UI {
             // Add to History
             rl.add_history_entry(&query).expect("Could not add query to history...?");
 
-            log::success(self.calc.run(&query)).expect("Could not write output...");
+            self.run_query(&query);
 
             // if !self.history.contains(&query) {
             //     self.history.push(query);
             // }
-
         }
+    }
+
+    pub fn run_query(&mut self, query: &str) {
+        log::success(self.calc.run(&query)).expect("Could not write output...");
     }
 }
