@@ -1,6 +1,7 @@
-use std::process::exit;
 use crate::calc::Calc;
-use cliclack::{log};
+
+use std::process::exit;
+use cliclack::log;
 use rustyline::DefaultEditor;
 
 // NOTE: UI Library

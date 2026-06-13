@@ -1,8 +1,6 @@
-use crate::utils;
-
 mod tokenize;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Token {
     Number(f64),
 
@@ -13,8 +11,8 @@ pub enum Token {
     Mod,
     Pow,
     
-    LParen,
-    RParen,
+    LBrac,
+    RBrac,
 
     Var(String),
 
