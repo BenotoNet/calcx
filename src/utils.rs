@@ -1,6 +1,7 @@
 use crate::Option;
 use cliclack::{log};
 
+#[allow(unused)]
 pub fn is_number<T: AsRef<str>>(test_char: T) -> bool {
     match test_char.as_ref().parse::<f64>() {
         Ok(_) => true,
@@ -41,10 +42,6 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Option> {
             option_queue.push(Option::SingleQuery(opt.clone()))
         }
     }
-
-    // If we do have an exec-once query (-> the query string is not empty) then we want to parse
-    // that back to the main function
-    // FIX: Does not work
 
     // Return the entire list of options
     return option_queue;

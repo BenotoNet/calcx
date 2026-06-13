@@ -3,7 +3,7 @@ use crate::calc::Calc;
 use cliclack::{log};
 use rustyline::DefaultEditor;
 
-// UI Library
+// NOTE: UI Library
 
 // Enums for setting Options
 pub enum Option {
@@ -32,9 +32,9 @@ impl UI {
         let mut rl = DefaultEditor::new().unwrap();
 
         loop {
-            // Old Way of getting input via CliClack
+            // Old Way of getting input via CliClack, Deprecated because of History management
             // let query: String = input("Calcxulate!").autocomplete(self.history.clone()).interact().expect("Could not get input...");
-            // New: rustyline
+            // New: rustyline, less styling but more useful
             let query: String = match rl.readline("Calcxulate >> ") {
                 Ok(input) => {input},
                 Err(_) => {return},
@@ -49,6 +49,7 @@ impl UI {
 
             self.run_query(&query);
 
+            // Deprecated, from CliClack
             // if !self.history.contains(&query) {
             //     self.history.push(query);
             // }
