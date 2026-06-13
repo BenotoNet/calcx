@@ -12,7 +12,7 @@ fn main() {
 
     let mut calculator = calc::Calc::new();
 
-    let options = ui::parse_args(args);
+    let options = utils::parse_cli_args(args);
 
     // TODO: 
     for option in options {

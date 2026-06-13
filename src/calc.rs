@@ -10,7 +10,7 @@ pub struct Calc {
     query: Vec<Token>,
 }
 
-const OPERATORS: [char; 7] = ['*', '^', '+', '-', '(', ')', '/'];
+const OPERATORS: [char; 8] = ['*', '^', '+', '-', '(', ')', '/', '%'];
 
 impl Calc {
     pub fn new() -> Calc {
@@ -38,21 +38,67 @@ impl Calc {
             let mut part_token = String::new();
             for c in rough_token.chars() {
                 if OPERATORS.contains(&c) {
-                    // TODO: Remove unwraps
-                    tokens.push(Token::Number(part_token.clone().parse().unwrap()));
+                    // If it can be parsed as f64, append it as num, otherwise expression
+                    match part_token.parse::<f64>() {
+                        Ok(num) => {tokens.push(Token::Number(num));},
+                        Err(_) => {tokens.push(Token::Expression(part_token));}
+                    }
+
+                    // Append the Operator as expression
                     tokens.push(Token::Expression(String::from(c)));
+
+                    // Reset the appending token
                     part_token = String::new();
+
                 } else {
+                    // Append current character because the token is not done yet
                     part_token += &c.to_string();
                 }
             }
-            tokens.push(Token::Number(part_token.clone().parse().unwrap()));
+            // Append the last bit as expression or number
+            match part_token.parse::<f64>() {
+                Ok(num) => tokens.push(Token::Number(num)),
+                Err(_) => tokens.push(Token::Expression(part_token)),
+            }
         }
 
-        // TODO: Clean Up Tokens (remove spaces, etc)
+        // Cleaning up: Edge cases
+        let mut index = 0;
+        while index < tokens.len() {
+            let current_token = &tokens[index];
 
-        // Seperate Blocks with arithmetic operators:
+            match current_token {
+                Token::Number(num1) => {
+                    match tokens.get(index+1) {
+                        Some(Token::Number(num2)) => {
+                            // at current index and next, there are two numbers, therefore combine
+                            // them:
+                            let combined_string = format!{"{num1}{num2}"};
+                            // Unwrap should be fine here...
+                            tokens[index] = Token::Number(combined_string.parse::<f64>().unwrap());
 
+                            tokens.remove(index+1);
+                            index = 0;
+                        },
+                        // Advance the global index
+                        _ => index += 1,
+                    }
+                }
+                Token::Expression(ex) => {
+                    // Check if Token is empty -> Remove Token
+                    if ex == "" {
+                        tokens.remove(index);
+                        index = 0;
+                    }
+
+                    else {
+                        index += 1;
+                    }
+                }
+            }
+        }
+
+        // Finally, return the list of tokens
         return tokens;
     }
 }
