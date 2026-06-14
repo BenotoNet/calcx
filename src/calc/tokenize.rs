@@ -1,6 +1,5 @@
 use crate::utils;
 use super::Token;
-use std::collections::HashMap;
 
 fn split_into_unknowns(query: &str) -> Vec<Token> {
     let splitters = String::from("+-*/%!^()= ");
@@ -86,6 +85,8 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
 
 // Tokenize (Parse a given Query into Tokens)
 pub fn tokenize(query: &str) -> Vec<Token> {
+    // First, we split the query into semantic blocks (uncategorized) then, we categorize each block
+    // into a token and finally clean up the list of tokens (combine two adjecent Numbers)
     let tokens = clean(categorize(split_into_unknowns(query)));
 
     // Finally, return the list of tokens

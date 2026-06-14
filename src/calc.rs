@@ -22,6 +22,7 @@ pub enum Token {
     Unknown(String),
 }
 
+#[derive(Debug)]
 enum Expr {
     Number(f64),
     Binary {
@@ -41,25 +42,61 @@ impl Calc {
         Calc { tokens: vec![], current: 0 }
     }
 
+    fn peek(&self) -> Option<Token> {
+        return self.tokens.get(self.current).cloned();
+    }
+
     fn advance(&mut self) -> Option<Token> {
         self.current += 1;
-        self.tokens.get(self.current).cloned()
+        return self.tokens.get(self.current).cloned();
     }
 
-    fn peek(&mut self) -> Option<Token> {
-        self.tokens.get(self.current).cloned()
-    }
+    fn parse_expression(&mut self) -> Expr {
+        let mut left = self.parse_term();
 
-    fn peek_n(&mut self, n: usize) -> Option<Token> {
-        self.tokens.get(n).cloned()
-    }
-
-    fn parse_primary(&mut self) -> Expr {
-        match self.advance() {
-            Some(Token::Number(num)) => {return Expr::Number(num)},
-
-            _ => {panic!{"Unexpected Token"}},
+        while
+            match self.peek() {
+            Some(Token::Add)|Some(Token::Sub) => true,
+            _ => false,
+        } {
+            let operation = self.peek().unwrap(); self.advance();
+            let right = self.parse_term();
+            left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
         }
+        return left;
+    }
+
+    fn parse_term(&mut self) -> Expr {
+        let mut left = self.parse_factor();
+
+        while
+            match self.peek() {
+            Some(Token::Mul)|Some(Token::Div) => true,
+            _ => false,
+        } {
+            let operation = self.peek().unwrap(); self.advance();
+            let right = self.parse_factor();
+            left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
+        }
+        return left;
+    }
+
+    fn parse_factor(&mut self) -> Expr {
+        match self.peek() {
+            Some(Token::Number(num)) => {Expr::Number(num)},
+            Some(Token::LBrac) => {
+                self.advance();
+                let expr = self.parse_expression();
+                // EXPECT RBrac
+                self.advance();
+                return expr;
+            }
+            _ => {panic!{}},
+        }
+    }
+
+    fn build_tree(&mut self) -> Expr {
+        self.parse_expression()
     }
 
     // API to run a specific command and capture its output
@@ -68,7 +105,7 @@ impl Calc {
         self.tokens = tokenize::tokenize(query);
 
         // FIX: Debug
-        format!{"{:?}", self.tokens}
+        format!{"{:?}", self.build_tree()}
         // String::new()
     }
 }
