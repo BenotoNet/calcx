@@ -1,11 +1,22 @@
 use crate::Option;
 use cliclack::{log};
+use std::collections::HashMap;
+use crate::calc::Token;
 
-#[allow(unused)]
-pub fn is_number<T: AsRef<str>>(test_char: T) -> bool {
-    match test_char.as_ref().parse::<f64>() {
+pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
+    match test_string.as_ref().parse::<f64>() {
         Ok(_) => true,
         Err(_) => false,
+    }
+}
+
+pub fn get_token(atomic_query: &str) -> Token {
+    let mut operators = HashMap::new();
+    operators.insert("*", Token::Mul);
+
+    match operators.get(atomic_query) {
+        Some(token) => token.clone(),
+        _ => {Token::Unknown(String::from(atomic_query))}
     }
 }
 

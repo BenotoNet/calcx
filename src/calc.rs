@@ -19,6 +19,7 @@ pub enum Token {
     Assign,
 
     Keyword(String),
+    Unknown(String),
 }
 
 pub struct Calc {
