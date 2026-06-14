@@ -22,6 +22,15 @@ pub enum Token {
     Unknown(String),
 }
 
+enum Expr {
+    Number(f64),
+    Binary {
+        left: Box<Expr>,
+        op: Token,
+        right: Box<Expr>,
+    }
+}
+
 pub struct Calc {
     tokens: Vec<Token>,
     current: usize,
@@ -30,6 +39,27 @@ pub struct Calc {
 impl Calc {
     pub fn new() -> Calc {
         Calc { tokens: vec![], current: 0 }
+    }
+
+    fn advance(&mut self) -> Option<Token> {
+        self.current += 1;
+        self.tokens.get(self.current).cloned()
+    }
+
+    fn peek(&mut self) -> Option<Token> {
+        self.tokens.get(self.current).cloned()
+    }
+
+    fn peek_n(&mut self, n: usize) -> Option<Token> {
+        self.tokens.get(n).cloned()
+    }
+
+    fn parse_primary(&mut self) -> Expr {
+        match self.advance() {
+            Some(Token::Number(num)) => {return Expr::Number(num)},
+
+            _ => {panic!{"Unexpected Token"}},
+        }
     }
 
     // API to run a specific command and capture its output
