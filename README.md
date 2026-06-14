@@ -5,7 +5,7 @@ It is simply and solely a hobby project.
  
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions:
 
-- normal math operations (+, -, *, /, (), **, etc)
+- normal math operations (+, -, *, /, (), ^, etc)
 - custom user-defined functions (add_one(number) = number + 1, etc)
 - saving functions to profile (& settings)
 - user defined settings (precision, deg vs rad, etc)

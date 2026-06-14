@@ -14,9 +14,9 @@ pub enum Token {
     LBrac,
     RBrac,
 
-    Var(String),
-
     Assign,
+
+    Var(String),
 
     Keyword(String),
     Unknown(String),

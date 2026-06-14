@@ -16,8 +16,8 @@ pub struct UI {
 }
 
 impl UI {
-    pub fn new(calc: Calc, options: Vec<Option>) -> UI {
-        let mut ui = UI { calc };
+    pub fn new(options: Vec<Option>) -> UI {
+        let mut ui = UI { calc: Calc::new() };
         for option in options {
             match option {
                 Option::SingleQuery(query) => {ui.run_query(&query); exit(1);},
