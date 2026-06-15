@@ -82,8 +82,9 @@ impl Calc {
     }
 
     fn parse_factor(&mut self) -> Expr {
+        println!{"getting factor"}
         match self.peek() {
-            Some(Token::Number(num)) => {Expr::Number(num)},
+            Some(Token::Number(num)) => {self.advance(); Expr::Number(num)},
             Some(Token::LBrac) => {
                 self.advance();
                 let expr = self.parse_expression();
@@ -99,13 +100,43 @@ impl Calc {
         self.parse_expression()
     }
 
+    fn eval(&mut self, tree: Expr) -> Expr {
+        match tree {
+            Expr::Binary { left, op, right } => {
+                match (&*left, &*right) {
+                    (Expr::Number(num1), Expr::Number(num2)) => {
+                        // Be have an atomic Expression (only numbers)
+                        match op {
+                            Token::Add => {Expr::Number(num1 + num2)},
+                            Token::Sub => {Expr::Number(num1 - num2)},
+                            Token::Mul => {Expr::Number(num1 * num2)},
+                            Token::Div => {Expr::Number(num1 / num2)},
+                            _ => {panic!{}}
+                        }
+                    },
+                    _ => {
+                        // Not atomic yet, so evaluate: 
+                        // return self.eval(self.eval(*left))
+                        let new_op = Expr::Binary { left: Box::new(self.eval(*left)), op, right: Box::new(self.eval(*right))};
+                        return self.eval(new_op);
+                    }
+                }
+            },
+            _ => {
+                return tree;
+            }
+        }
+    }
+
     // API to run a specific command and capture its output
     pub fn run(&mut self, query: &str) -> String {
         // This function is supposed to tokenize the given query
         self.tokens = tokenize::tokenize(query);
 
         // FIX: Debug
-        format!{"{:?}", self.build_tree()}
-        // String::new()
+        let tree = self.build_tree();
+        println!("{:?}", self.eval(tree));
+        // format!{"{:?}", self.build_tree()}
+        String::new()
     }
 }
