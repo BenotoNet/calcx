@@ -2,10 +2,21 @@ use crate::utils;
 use super::Token;
 
 fn split_into_unknowns(query: &str) -> Vec<Token> {
-    let splitters = String::from("+-*/%!^()= ");
+    let splitters = String::from("+*/%!^()= ");
     let mut output = vec![];
     let mut partial = String::new();
     for c in query.chars() {
+        // Very Hacky, might need to change...
+        if c == '-' {
+            // When we can, we try to not append the minus as an operation, but rather a sign of a
+            // number
+            // -> Leads to being able to do operations like -1+2 while still allowing 5-1 by adding
+            // Add Operation between two numbers (when the second number is negative)
+            if partial != "" {
+                output.push(Token::Unknown(partial.clone()));
+            }
+            partial = String::new();
+        }
         if splitters.contains(c) {
             if partial != "" {
                 output.push(Token::Unknown(partial.clone()));
@@ -69,13 +80,24 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
     let mut index: usize = 0;
 
     while index < tokens.len() {
-        // If current index and next one are numbers, combine them
+        // If current index and next one are numbers
         let current = &tokens[index];
         match (current, tokens.get(index + 1)) {
             (Token::Number(num1), Some(Token::Number(num2))) => {
-                tokens[index] = Token::Number(format!{"{num1}{num2}"}.parse().unwrap());
-                tokens.remove(index+1);
-                index = 0;
+                // When we have a negative number behind a positive one, we do not combine, but add
+                // "Add" Operation between them e.g. 4-2 => 4 + -2
+                if num2 < &0.0 {
+                    tokens.insert(index+1, Token::Add);
+                    index = 0
+                }
+
+                else {
+                    // Combine the numbers by putting strings right next to each other. 
+                    // e.g. 5 5 => 55
+                    tokens[index] = Token::Number(format!{"{num1}{num2}"}.parse().unwrap());
+                    tokens.remove(index+1);
+                    index = 0;
+                }
             },
             _ => {index += 1;}
         }
