@@ -67,22 +67,41 @@ impl Calc {
     }
 
     fn parse_term(&mut self) -> Expr {
-        let mut left = self.parse_factor();
+        let mut left = self.parse_exponents();
 
         while
             match self.peek() {
             Some(Token::Mul)|Some(Token::Div) => true,
+            Some(Token::LBrac) => {
+                // Leaving out the mul sign for brackets
+                let right = self.parse_expression();
+                return self.eval(Expr::Binary { left: Box::new(left), op: Token::Mul, right: Box::new(right) })
+            }
             _ => false,
         } {
             let operation = self.peek().unwrap(); self.advance();
-            let right = self.parse_factor();
+            let right = self.parse_exponents();
             left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
         }
         return left;
     }
 
+    fn parse_exponents(&mut self) -> Expr {
+        let mut left = self.parse_factor();
+
+        while
+            match self.peek() {
+                Some(Token::Mod)|Some(Token::Pow) => true,
+                _ => false,
+            } {
+                let operation = self.peek().unwrap(); self.advance();
+                let right = self.parse_factor();
+                left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
+            }
+        return left;
+    }
+
     fn parse_factor(&mut self) -> Expr {
-        println!{"getting factor"}
         match self.peek() {
             Some(Token::Number(num)) => {self.advance(); Expr::Number(num)},
             Some(Token::LBrac) => {
@@ -111,6 +130,8 @@ impl Calc {
                             Token::Sub => {Expr::Number(num1 - num2)},
                             Token::Mul => {Expr::Number(num1 * num2)},
                             Token::Div => {Expr::Number(num1 / num2)},
+                            Token::Mod => {Expr::Number(num1 % num2)},
+                            Token::Pow => {Expr::Number(num1.powf(*num2))},
                             _ => {panic!{}}
                         }
                     },
@@ -130,13 +151,11 @@ impl Calc {
 
     // API to run a specific command and capture its output
     pub fn run(&mut self, query: &str) -> String {
+        self.current = 0;
         // This function is supposed to tokenize the given query
         self.tokens = tokenize::tokenize(query);
 
-        // FIX: Debug
         let tree = self.build_tree();
-        println!("{:?}", self.eval(tree));
-        // format!{"{:?}", self.build_tree()}
-        String::new()
+        format!{"{:?}", self.eval(tree)}
     }
 }

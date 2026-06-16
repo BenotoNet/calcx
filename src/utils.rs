@@ -48,7 +48,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Option> {
 
 // Printing the entire help menu for convinience purposes as a function
 // TODO: finishing the Help Menu
-fn help_menu() {
+pub fn help_menu() {
     let output = "
   Help Menu  
 -------------

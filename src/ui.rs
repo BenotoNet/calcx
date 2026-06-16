@@ -1,8 +1,10 @@
 use crate::calc::Calc;
 
 use std::process::exit;
-use cliclack::log;
+
+use cliclack::{log, clear_screen};
 use rustyline::DefaultEditor;
+use crate::utils;
 
 // NOTE: UI Library
 
@@ -41,8 +43,16 @@ impl UI {
                 Err(_) => {return},
             };
 
-            if query == String::from("quit") {
-                return;
+            match query.as_str() {
+                "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {return}
+                "clear" => {clear_screen().expect("Failed to clear screen..."); return self.interactive();}
+                "help" => {
+                    // Printing Help Menu when typing help into the calc
+                    // clear_screen().expect("Failed to clear Screen..."); 
+                    utils::help_menu();
+                    return self.interactive();
+                }
+                _ => {}
             }
             
             // Add to History
