@@ -25,6 +25,7 @@ fn split_into_unknowns(query: &str) -> Vec<Token> {
     return output;
 }
 
+#[allow(unused)]
 fn is_keyword(unknown_token: &str) -> bool {
     // TODO: Later, actually add the logic for handling keywords differently from e.g. variables
     true
@@ -34,9 +35,9 @@ fn categorize(tokens: Vec<Token>) -> Vec<Token> {
     tokens.iter().map(|token| {
         match token {
             Token::Unknown(token_string) => {
-                let STR = token_string.as_str();
-                if utils::is_number(STR) {return Token::Number(STR.parse().unwrap());}
-                match STR {
+                let token_str = token_string.as_str();
+                if utils::is_number(token_str) {return Token::Number(token_str.parse().unwrap());}
+                match token_str {
                     "+" => {Token::Add}
                     "-" => {Token::Sub}
                     "*" => {Token::Mul}

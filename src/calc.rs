@@ -1,6 +1,7 @@
 mod tokenize;
 
 #[derive(Debug, Clone)]
+#[allow(unused)]
 pub enum Token {
     Number(f64),
 
@@ -132,7 +133,7 @@ impl Calc {
                             Token::Div => {Expr::Number(num1 / num2)},
                             Token::Mod => {Expr::Number(num1 % num2)},
                             Token::Pow => {Expr::Number(num1.powf(*num2))},
-                            _ => {panic!{}}
+                            _ => {panic!{"This is not an Operator!"}},
                         }
                     },
                     _ => {
