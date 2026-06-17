@@ -52,6 +52,7 @@ impl UI {
                     utils::help_menu();
                     return self.interactive();
                 }
+                "" => {return self.interactive();}
                 _ => {}
             }
             

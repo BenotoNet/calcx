@@ -34,6 +34,15 @@ enum Expr {
     }
 }
 
+impl Expr {
+    pub fn display(&self) -> String {
+        match self {
+            Expr::Number(num) => {format!{"{num}"}},
+            _ => {panic!("Cannot display an operation, should only ever display display")}
+        }
+    }
+}
+
 pub struct Calc {
     tokens: Vec<Token>,
     current: usize,
@@ -44,13 +53,21 @@ impl Calc {
         Calc { tokens: vec![], current: 0 }
     }
 
+    fn expect(&mut self, token: Token) {
+        match self.advance().unwrap() {
+            token => {},
+            _ => {panic!{"This is not the expected Token!"}}
+        }
+    }
+
     fn peek(&self) -> Option<Token> {
         return self.tokens.get(self.current).cloned();
     }
 
     fn advance(&mut self) -> Option<Token> {
+        let current_token = self.tokens.get(self.current).cloned();
         self.current += 1;
-        return self.tokens.get(self.current).cloned();
+        return current_token;
     }
 
     fn parse_expression(&mut self) -> Expr {
@@ -61,7 +78,7 @@ impl Calc {
             Some(Token::Add)|Some(Token::Sub) => true,
             _ => false,
         } {
-            let operation = self.peek().unwrap(); self.advance();
+            let operation = self.advance().unwrap();
             let right = self.parse_term();
             left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
         }
@@ -81,7 +98,7 @@ impl Calc {
             }
             _ => false,
         } {
-            let operation = self.peek().unwrap(); self.advance();
+            let operation = self.advance().unwrap();
             let right = self.parse_exponents();
             left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
         }
@@ -96,7 +113,7 @@ impl Calc {
                 Some(Token::Mod)|Some(Token::Pow) => true,
                 _ => false,
             } {
-                let operation = self.peek().unwrap(); self.advance();
+                let operation = self.advance().unwrap();
                 let right = self.parse_factor();
                 left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
             }
@@ -110,7 +127,7 @@ impl Calc {
                 self.advance();
                 let expr = self.parse_expression();
                 // EXPECT RBrac
-                self.advance();
+                self.expect(Token::RBrac);
                 return expr;
             }
             _ => {panic!{}},
@@ -158,6 +175,6 @@ impl Calc {
         self.tokens = tokenize::tokenize(query);
 
         let tree = self.build_tree();
-        format!{"{:?}", self.eval(tree)}
+        self.eval(tree).display()
     }
 }
