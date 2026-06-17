@@ -27,7 +27,7 @@ impl Units {
         return units;
     }
 
-    pub fn combine<T: Fn(i8, i8) -> i8>(unit1: Units, unit2: Units, operation: T) -> Units {
+    pub fn combine<T: Fn(i8, i8) -> i8>(unit1: &Units, unit2: &Units, operation: T) -> Units {
         let mut output_units = Units::new(vec![]);
         output_units.second = operation(unit1.second, unit2.second);
         output_units.metre = operation(unit1.metre, unit2.metre);
@@ -40,7 +40,7 @@ impl Units {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Num {
     quantity: f64,
     units: Units,
@@ -52,39 +52,56 @@ impl Num {
         Num { quantity, units }
     }
 
+    pub fn unitless(quantity: f64) -> Num {
+        Num::new(quantity, vec![])
+    }
+
+    pub fn get_quant(&self) -> f64 {
+        return self.quantity;
+    }
+
     pub fn from(quantity: f64, units: Units) -> Num {
         Num { quantity, units }
     }
 
-    pub fn add(&self, num2: Num) -> Option<Num> {
+    pub fn add(&self, num2: &Num) -> Option<Num> {
         if self.units == num2.units {
             return Some(Num::from(self.quantity+num2.quantity, self.units.clone()))
         }
         None
     }
 
-    pub fn sub(&self, num2: Num) -> Option<Num> {
+    pub fn sub(&self, num2: &Num) -> Option<Num> {
         if self.units == num2.units {
             return Some(Num::from(self.quantity-num2.quantity, self.units.clone()))
         }
         None
     }
 
-    pub fn mul(&self, num2: Num) -> Option<Num> {
-        let output_units = Units::combine(self.units.clone(), num2.units, |unit1, unit2| {unit1+unit2});
+    pub fn mul(&self, num2: &Num) -> Option<Num> {
+        let output_units = Units::combine(&self.units.clone(), &num2.units, |unit1, unit2| {unit1+unit2});
 
         return Some(Num::from(self.quantity*num2.quantity, output_units))
     }
 
-    pub fn div(&self, num2: Num) -> Option<Num> {
-        let output_units = Units::combine(self.units.clone(), num2.units, |unit1, unit2| {unit1-unit2});
+    pub fn div(&self, num2: &Num) -> Option<Num> {
+        let output_units = Units::combine(&self.units.clone(), &num2.units, |unit1, unit2| {unit1-unit2});
 
         return Some(Num::from(self.quantity/num2.quantity, output_units))
     }
 
-    pub fn pow(&self, num2: Num) -> Option<Num> {
+    pub fn modf(&self, num2: &Num) -> Option<Num> {
+        // TODO
+        return Some(Num::new(1.0, vec![]));
+    }
+
+    pub fn powf(&self, num2: Num) -> Option<Num> {
         // FIX: ALL Units must be 0, otherwise return None
         // Then, all units from number 1 need to be multiplied by the quanity of num2
         return Some(Num::from(self.quantity.powf(num2.quantity), Units::new(vec![])));
+    }
+
+    pub fn display(&self) -> String {
+        format!("{} {:?}", self.quantity, self.units)
     }
 }

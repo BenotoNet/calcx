@@ -9,6 +9,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 
 - [x] ~normal math operations (+, -, *, /, (), ^, etc)~
 - [x] ~Getting negative Numbers to work~
+- [ ] Refactoring of Document Structure (more splitting into smaller files)
 - [ ] Functions like sqrt() or sin()
 - [ ] working with units (-> kilo gram to gram)
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
@@ -21,6 +22,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] working with dates & time (e.g. 14:00 + 5 hours)
 - [ ] Fractional Units (e.g. Sqrt(second))
 - [ ] Fix 1-2^2 (currently gives answer 5 since (-2)^2 is what is being calculated)
+- [ ] Fix -(5+5) (currently crashes)
 
 
 Wow, the more I thought about this, the more this seems like a *HUGE* project. Let's see how long I will last before I will quit... xD

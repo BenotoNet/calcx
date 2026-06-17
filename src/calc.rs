@@ -1,10 +1,12 @@
 mod tokenize;
 pub mod num;
 
+use num::Num;
+
 #[derive(Debug, Clone)]
 #[allow(unused)]
 pub enum Token {
-    Number(f64),
+    Number(Num),
 
     Add,
     Sub,
@@ -26,7 +28,7 @@ pub enum Token {
 
 #[derive(Debug)]
 enum Expr {
-    Number(f64),
+    Number(Num),
     Binary {
         left: Box<Expr>,
         op: Token,
@@ -37,7 +39,7 @@ enum Expr {
 impl Expr {
     pub fn display(&self) -> String {
         match self {
-            Expr::Number(num) => {format!{"{num}"}},
+            Expr::Number(num) => {format!{"{}", num.display()}},
             _ => {panic!("Cannot display an operation, should only ever display display")}
         }
     }
@@ -54,6 +56,7 @@ impl Calc {
     }
 
     fn expect(&mut self, token: Token) {
+        // TODO: Does not quite work yet
         match self.advance().unwrap() {
             token => {},
             _ => {panic!{"This is not the expected Token!"}}
@@ -145,12 +148,12 @@ impl Calc {
                     (Expr::Number(num1), Expr::Number(num2)) => {
                         // Be have an atomic Expression (only numbers)
                         match op {
-                            Token::Add => {Expr::Number(num1 + num2)},
-                            Token::Sub => {Expr::Number(num1 - num2)},
-                            Token::Mul => {Expr::Number(num1 * num2)},
-                            Token::Div => {Expr::Number(num1 / num2)},
-                            Token::Mod => {Expr::Number(num1 % num2)},
-                            Token::Pow => {Expr::Number(num1.powf(*num2))},
+                            Token::Add => {Expr::Number(num1.add(num2).unwrap())},
+                            Token::Sub => {Expr::Number(num1.sub(num2).unwrap())},
+                            Token::Mul => {Expr::Number(num1.mul(num2).unwrap())},
+                            Token::Div => {Expr::Number(num1.div(num2).unwrap())},
+                            // Token::Mod => {Expr::Number(num1.modf(num2).unwrap())},
+                            // Token::Pow => {Expr::Number(num1.powf(*num2).unwrap())},
                             _ => {panic!{"This is not an Operator!"}},
                         }
                     },

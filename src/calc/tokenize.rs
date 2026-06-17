@@ -1,5 +1,6 @@
 use crate::utils;
 use super::Token;
+use crate::Num;
 
 fn split_into_unknowns(query: &str) -> Vec<Token> {
     let splitters = String::from("+*/%!^()= ");
@@ -47,7 +48,7 @@ fn categorize(tokens: Vec<Token>) -> Vec<Token> {
         match token {
             Token::Unknown(token_string) => {
                 let token_str = token_string.as_str();
-                if utils::is_number(token_str) {return Token::Number(token_str.parse().unwrap());}
+                if utils::is_number(token_str) {return Token::Number(Num::unitless(token_str.parse::<f64>().unwrap()));}
                 match token_str {
                     "+" => {Token::Add}
                     "-" => {Token::Sub}
@@ -86,7 +87,7 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
             (Token::Number(num1), Some(Token::Number(num2))) => {
                 // When we have a negative number behind a positive one, we do not combine, but add
                 // "Add" Operation between them e.g. 4-2 => 4 + -2
-                if num2 < &0.0 {
+                if num2.get_quant() < 0.0 {
                     tokens.insert(index+1, Token::Add);
                     index = 0
                 }
@@ -94,7 +95,7 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
                 else {
                     // Combine the numbers by putting strings right next to each other. 
                     // e.g. 5 5 => 55
-                    tokens[index] = Token::Number(format!{"{num1}{num2}"}.parse().unwrap());
+                    tokens[index] = Token::Number(Num::unitless(format!{"{}{}", num1.display(), num2.display()}.parse::<f64>().unwrap()));
                     tokens.remove(index+1);
                     index = 0;
                 }
