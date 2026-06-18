@@ -82,13 +82,17 @@ fn match_keywords_units(mut tokens: Vec<Token>) -> Vec<Token> {
         match tokens.get(index) {
             // FIX: Not a good system!
             // Checking unit keywords and replace them with unit-number
-            Some(Token::Keyword(var)) if var == "metre" || var == "meter" => {
-                tokens[index] = Token::Number(Num::new(1.0, vec![('m', 1)]));
-            },
-
-            Some(Token::Keyword(var)) if var == "second" => {
-                tokens[index] = Token::Number(Num::new(1.0, vec![('s', 1)]));
-            },
+            Some(Token::Keyword(var)) => {
+                match var.as_str() {
+                    "metre"|"meter"|"meters"|"metres" => {tokens[index] = Token::Number(Num::new(1.0, vec![('m', 1)]));}
+                    "second"|"seconds"|"secs"|"sec" => {tokens[index] = Token::Number(Num::new(1.0, vec![('s', 1)]));}
+                    "gram"|"grams" => {tokens[index] = Token::Number(Num::new(1.0, vec![('g', 1)]));}
+                    "ampere"|"amperes" => {tokens[index] = Token::Number(Num::new(1.0, vec![('a', 1)]));}
+                    "kelvin" => {tokens[index] = Token::Number(Num::new(1.0, vec![('k', 1)]));}
+                    "candela"|"candelas" => {tokens[index] = Token::Number(Num::new(1.0, vec![('c', 1)]));}
+                    _ => {}
+                }
+            }
             _ => {}
         }
         index += 1;
