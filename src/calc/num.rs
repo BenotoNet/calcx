@@ -27,11 +27,22 @@ impl Units {
         return units;
     }
 
-    // TODO: CHECK if number is unitless
+    // Check if number is unitless
     pub fn is_unitless(&self) -> bool {
         return self.second == 0 && self.metre == 0 && self.gram == 0 && self.ampere == 0 && self.kelvin == 0 && self.candela == 0;
     }
 
+    pub fn operation<T: Fn(i8) -> i8>(mut unit1: Units, operation: T) -> Units {
+        unit1.second = operation(unit1.second);
+        unit1.metre = operation(unit1.metre);
+        unit1.gram = operation(unit1.gram);
+        unit1.ampere = operation(unit1.ampere);
+        unit1.kelvin = operation(unit1.kelvin);
+        unit1.candela = operation(unit1.candela);
+        return unit1;
+    }
+
+    // When we have two Unit 
     pub fn combine<T: Fn(i8, i8) -> i8>(unit1: &Units, unit2: &Units, operation: T) -> Units {
         let mut output_units = Units::new(vec![]);
         output_units.second = operation(unit1.second, unit2.second);
@@ -107,14 +118,21 @@ impl Num {
     }
 
     pub fn modf(&self, num2: &Num) -> Option<Num> {
-        // TODO
-        return Some(Num::new(1.0, vec![]));
+        // Numbers are expected to be unitless
+        assert!(self.is_unitless() && num2.is_unitless());
+
+        return Some(Num::unitless(self.quantity % num2.quantity));
     }
 
-    pub fn powf(&self, num2: Num) -> Option<Num> {
-        // FIX: ALL Units must be 0, otherwise return None
-        // Then, all units from number 1 need to be multiplied by the quanity of num2
-        return Some(Num::from(self.quantity.powf(num2.quantity), Units::new(vec![])));
+    pub fn powf(&self, num2: &Num) -> Option<Num> {
+        // exponent is expected to be unitless / dimensionless
+        assert!(num2.is_unitless());
+        
+        let output_quantity = self.quantity.powf(num2.quantity);
+        // TODO: Problem: Since we do not have units as floats, this is a sacrifice
+        let output_units = Units::operation(self.units.clone(), |unit| {unit * num2.quantity as i8});
+
+        return Some(Num::from(output_quantity, output_units));
     }
 
     pub fn display(&self) -> String {

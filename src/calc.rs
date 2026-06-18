@@ -152,8 +152,8 @@ impl Calc {
                             Token::Sub => {Expr::Number(num1.sub(num2).unwrap())},
                             Token::Mul => {Expr::Number(num1.mul(num2).unwrap())},
                             Token::Div => {Expr::Number(num1.div(num2).unwrap())},
-                            // Token::Mod => {Expr::Number(num1.modf(num2).unwrap())},
-                            // Token::Pow => {Expr::Number(num1.powf(*num2).unwrap())},
+                            Token::Mod => {Expr::Number(num1.modf(num2).unwrap())},
+                            Token::Pow => {Expr::Number(num1.powf(num2).unwrap())},
                             _ => {panic!{"This is not an Operator!"}},
                         }
                     },
