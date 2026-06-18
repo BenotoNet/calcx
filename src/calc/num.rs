@@ -27,6 +27,11 @@ impl Units {
         return units;
     }
 
+    // TODO: CHECK if number is unitless
+    pub fn is_unitless(&self) -> bool {
+        return self.second == 0 && self.metre == 0 && self.gram == 0 && self.ampere == 0 && self.kelvin == 0 && self.candela == 0;
+    }
+
     pub fn combine<T: Fn(i8, i8) -> i8>(unit1: &Units, unit2: &Units, operation: T) -> Units {
         let mut output_units = Units::new(vec![]);
         output_units.second = operation(unit1.second, unit2.second);
@@ -48,16 +53,27 @@ pub struct Num {
 
 impl Num {
     pub fn new(quantity: f64, units_vec: Vec<(char, i8)>) -> Num {
-        let mut units = Units::new(units_vec);
-        Num { quantity, units }
+        Num { quantity, units: Units::new(units_vec) }
     }
 
     pub fn unitless(quantity: f64) -> Num {
         Num::new(quantity, vec![])
     }
 
+    pub fn is_unitless(&self) -> bool {
+        return self.units.is_unitless();
+    }
+
     pub fn get_quant(&self) -> f64 {
         return self.quantity;
+    }
+
+    pub fn append(&self, num: &Num) -> Num {
+        // Numbers are expected to be unitless, therefore just append the quantities
+        assert!{self.is_unitless()};
+        assert!{num.is_unitless()};
+
+        return Num::unitless(format!{"{}{}", self.quantity, num.quantity}.parse::<f64>().unwrap())
     }
 
     pub fn from(quantity: f64, units: Units) -> Num {

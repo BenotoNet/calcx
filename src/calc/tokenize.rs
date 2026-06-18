@@ -76,6 +76,26 @@ fn categorize(tokens: Vec<Token>) -> Vec<Token> {
     }).collect()
 }
 
+fn match_keywords_units(mut tokens: Vec<Token>) -> Vec<Token> {
+    let mut index = 0;
+    while index < tokens.len() {
+        match tokens.get(index) {
+            // FIX: Not a good system!
+            // Checking unit keywords and replace them with unit-number
+            Some(Token::Keyword(var)) if var == "metre" || var == "meter" => {
+                tokens[index] = Token::Number(Num::new(1.0, vec![('m', 1)]));
+            },
+
+            Some(Token::Keyword(var)) if var == "second" => {
+                tokens[index] = Token::Number(Num::new(1.0, vec![('s', 1)]));
+            },
+            _ => {}
+        }
+        index += 1;
+    }
+    return tokens;
+}
+
 fn clean(tokens: Vec<Token>) -> Vec<Token> {
     let mut tokens = tokens;
     let mut index: usize = 0;
@@ -92,12 +112,20 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
                     index = 0
                 }
 
-                else {
-                    // Combine the numbers by putting strings right next to each other. 
+                // Check if the numbers are both unitless. If they are, we can combine, otherwise,
+                // we have to multiply
+                else if num1.is_unitless() && num2.is_unitless() {
+                    // Combine the numbers by putting strings right next to each other. (If Unitless)
                     // e.g. 5 5 => 55
-                    tokens[index] = Token::Number(Num::unitless(format!{"{}{}", num1.display(), num2.display()}.parse::<f64>().unwrap()));
+                    tokens[index] = Token::Number(num1.append(num2));
                     tokens.remove(index+1);
                     index = 0;
+                }
+
+                // Numbers are not unitless, therefore multiply (Add Multiplication Token between
+                // them)
+                else {
+                    tokens.insert(index+1, Token::Mul)
                 }
             },
             _ => {index += 1;}
@@ -111,7 +139,7 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
 pub fn tokenize(query: &str) -> Vec<Token> {
     // First, we split the query into semantic blocks (uncategorized) then, we categorize each block
     // into a token and finally clean up the list of tokens (combine two adjecent Numbers)
-    let tokens = clean(categorize(split_into_unknowns(query)));
+    let tokens = clean(match_keywords_units(categorize(split_into_unknowns(query))));
 
     // Finally, return the list of tokens
     tokens
