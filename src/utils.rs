@@ -1,5 +1,5 @@
 use crate::Option;
-use cliclack::{log};
+use cliclack::log;
 
 pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
     match test_string.as_ref().parse::<f64>() {

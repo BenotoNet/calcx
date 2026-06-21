@@ -1,49 +1,12 @@
 mod tokenize;
 pub mod num;
+pub mod units;
+pub mod token;
+pub mod expr;
 
-use num::Num;
+use token::Token;
+use expr::Expr;
 
-#[derive(Debug, Clone)]
-#[allow(unused)]
-pub enum Token {
-    Number(Num),
-
-    Add,
-    Sub,
-    Mul,
-    Div,
-    Mod,
-    Pow,
-    
-    LBrac,
-    RBrac,
-
-    Assign,
-
-    Var(String),
-
-    Keyword(String),
-    Unknown(String),
-}
-
-#[derive(Debug)]
-enum Expr {
-    Number(Num),
-    Binary {
-        left: Box<Expr>,
-        op: Token,
-        right: Box<Expr>,
-    }
-}
-
-impl Expr {
-    pub fn display(&self) -> String {
-        match self {
-            Expr::Number(num) => {format!{"{}", num.display()}},
-            _ => {panic!("Cannot display an operation, should only ever display display")}
-        }
-    }
-}
 
 pub struct Calc {
     tokens: Vec<Token>,

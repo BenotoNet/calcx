@@ -108,7 +108,7 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
         // If current index and next one are numbers
         let current = &tokens[index];
         match (current, tokens.get(index + 1)) {
-            (Token::Number(num1), Some(Token::Number(num2))) => {
+        (Token::Number(num1), Some(Token::Number(num2))) => {
                 // When we have a negative number behind a positive one, we do not combine, but add
                 // "Add" Operation between them e.g. 4-2 => 4 + -2
                 if num2.get_quant() < 0.0 {
@@ -132,6 +132,10 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
                     tokens.insert(index+1, Token::Mul)
                 }
             },
+            (Token::RBrac, Some(Token::Number(num))) => {
+                if !num.is_unitless() {tokens.insert(index+1, Token::Mul)}
+                index = 0;
+            }
             _ => {index += 1;}
         }
     }
