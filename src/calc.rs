@@ -96,7 +96,11 @@ impl Calc {
                 self.expect(Token::RBrac);
                 return expr;
             }
-            _ => {panic!{}},
+            Some(Token::Sub) => {
+                self.advance();
+                return Expr::Number(num::Num::new(-1.0, vec![]));
+            }
+            _ => {panic!{"{:?}", self.peek()}},
         }
     }
 
