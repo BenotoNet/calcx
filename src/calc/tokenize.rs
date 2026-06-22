@@ -80,7 +80,6 @@ fn match_keywords_units(mut tokens: Vec<Token>) -> Vec<Token> {
     let mut index = 0;
     while index < tokens.len() {
         match tokens.get(index) {
-            // FIX: Not a good system!
             // Checking unit keywords and replace them with unit-number
             Some(Token::Keyword(var)) => {
                 match var.as_str() {
@@ -147,7 +146,10 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
 pub fn tokenize(query: &str) -> Vec<Token> {
     // First, we split the query into semantic blocks (uncategorized) then, we categorize each block
     // into a token and finally clean up the list of tokens (combine two adjecent Numbers)
-    let tokens = clean(match_keywords_units(categorize(split_into_unknowns(query))));
+    let mut tokens = split_into_unknowns(query);
+    tokens = categorize(tokens);
+    tokens = match_keywords_units(tokens);
+    tokens = clean(tokens);
 
     // Finally, return the list of tokens
     tokens

@@ -80,6 +80,6 @@ impl Num {
     }
 
     pub fn display(&self) -> String {
-        format!("{} {:?}", self.quantity, self.units)
+        format!("{} {}", self.quantity, self.units.display())
     }
 }

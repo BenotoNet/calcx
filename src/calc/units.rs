@@ -54,4 +54,17 @@ impl Units {
 
         return output_units;
     }
+
+    pub fn display(&self) -> String {
+        // TODO: Later this needs to adapt to other units (like newton => 1 kilo gram * meter /
+        // second^-2)
+        let mut output = String::new();
+        if self.second != 0 {output += &format!{"{}^{} ", "second", self.second}};
+        if self.metre != 0 {output += &format!{"{}^{} ", "meter", self.metre}};
+        if self.gram != 0 {output += &format!{"{}^{} ", "gram", self.gram}};
+        if self.ampere != 0 {output += &format!{"{}^{} ", "ampere", self.ampere}};
+        if self.kelvin != 0 {output += &format!{"{}^{} ", "kelvin", self.kelvin}};
+        if self.candela != 0 {output += &format!{"{}^{} ", "candela", self.candela}};
+        return output;
+    }
 }
