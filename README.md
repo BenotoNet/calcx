@@ -10,6 +10,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] ~normal math operations (+, -, *, /, (), ^, etc)~
 - [x] ~Getting negative Numbers to work~
 - [x] Refactoring of Document Structure (more splitting into smaller files)
+- [x] add powers of 10 keywords functionality
 - [ ] Functions like sqrt() or sin()
 - [ ] working with units (-> kilo gram to gram)
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
