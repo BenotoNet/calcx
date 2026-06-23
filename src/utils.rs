@@ -55,5 +55,3 @@ pub fn help_menu() {
 ";
     log::info(output).unwrap();
 }
-
-pub fn error(error_message: &str) {}

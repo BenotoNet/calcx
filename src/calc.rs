@@ -18,6 +18,7 @@ impl Calc {
         Calc { tokens: vec![], current: 0 }
     }
 
+    #[allow(unused)]
     fn expect(&mut self, token: Token) {
         // FIX: Does not quite work yet
         match self.advance().unwrap() {
