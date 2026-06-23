@@ -19,7 +19,7 @@ impl Calc {
     }
 
     fn expect(&mut self, token: Token) {
-        // TODO: Does not quite work yet
+        // FIX: Does not quite work yet
         match self.advance().unwrap() {
             token => {},
             _ => {panic!{"This is not the expected Token!"}}
@@ -60,7 +60,8 @@ impl Calc {
             Some(Token::LBrac) => {
                 // Leaving out the mul sign for brackets
                 let right = self.parse_expression();
-                return self.eval(Expr::Binary { left: Box::new(left), op: Token::Mul, right: Box::new(right) })
+                // TODO: Remove Unwrap!
+                return self.eval(Expr::Binary { left: Box::new(left), op: Token::Mul, right: Box::new(right) }).unwrap()
             }
             _ => false,
         } {
@@ -108,43 +109,45 @@ impl Calc {
         self.parse_expression()
     }
 
-    fn eval(&mut self, tree: Expr) -> Expr {
+    fn eval(&self, tree: Expr) -> Result<Expr, &str> {
         match tree {
             Expr::Binary { left, op, right } => {
-                match (&*left, &*right) {
+                let left = self.eval(*left)?;
+                let right = self.eval(*right)?;
+
+                match (left, right) {
                     (Expr::Number(num1), Expr::Number(num2)) => {
                         // Be have an atomic Expression (only numbers)
                         match op {
-                            Token::Add => {Expr::Number(num1.add(num2).unwrap())},
-                            Token::Sub => {Expr::Number(num1.sub(num2).unwrap())},
-                            Token::Mul => {Expr::Number(num1.mul(num2).unwrap())},
-                            Token::Div => {Expr::Number(num1.div(num2).unwrap())},
-                            Token::Mod => {Expr::Number(num1.modf(num2).unwrap())},
-                            Token::Pow => {Expr::Number(num1.powf(num2).unwrap())},
-                            _ => {panic!{"This is not an Operator!"}},
+                            Token::Add => {Ok(Expr::Number(num1.add(&num2).unwrap()))},
+                            Token::Sub => {Ok(Expr::Number(num1.sub(&num2).unwrap()))},
+                            Token::Mul => {Ok(Expr::Number(num1.mul(&num2).unwrap()))},
+                            Token::Div => {Ok(Expr::Number(num1.div(&num2).unwrap()))},
+                            Token::Mod => {Ok(Expr::Number(num1.modf(&num2).unwrap()))},
+                            Token::Pow => {Ok(Expr::Number(num1.powf(&num2).unwrap()))},
+                            _ => Err("Not an Operator!"),
                         }
                     },
-                    _ => {
+                    (left, right) => Ok(Expr::Binary { 
                         // Not atomic yet, so evaluate: 
-                        // return self.eval(self.eval(*left))
-                        let new_op = Expr::Binary { left: Box::new(self.eval(*left)), op, right: Box::new(self.eval(*right))};
-                        return self.eval(new_op);
-                    }
+                            left: Box::new(left), 
+                            op, 
+                            right: Box::new(right),
+                    }),
                 }
-            },
-            _ => {
-                return tree;
             }
+            _ => Ok(tree)
         }
     }
 
     // API to run a specific command and capture its output
     pub fn run(&mut self, query: &str) -> String {
         self.current = 0;
+
         // This function is supposed to tokenize the given query
         self.tokens = tokenize::tokenize(query);
 
         let tree = self.build_tree();
-        self.eval(tree).display()
+        self.eval(tree).unwrap().display()
     }
 }

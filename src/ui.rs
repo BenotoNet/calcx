@@ -11,6 +11,7 @@ use crate::utils;
 // Enums for setting Options
 pub enum Option {
     SingleQuery(String),
+    Precision(u32),
 }
 
 pub struct UI {
@@ -23,6 +24,9 @@ impl UI {
         for option in options {
             match option {
                 Option::SingleQuery(query) => {ui.run_query(&query); exit(1);},
+                Option::Precision(precision) => {}// TODO: add option for variable precision (round
+                                                  // to n digits)
+                _ => {},
             }
         }
         return ui;
