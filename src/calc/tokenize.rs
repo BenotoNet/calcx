@@ -162,11 +162,11 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
                     tokens.insert(index+1, Token::Mul)
                 }
             },
-            (Token::RBrac, Some(Token::Number(num))) => {
-                if !num.is_unitless() {tokens.insert(index+1, Token::Mul)}
-                index = 0;
-            }
-            _ => {index += 1;}
+        (Token::RBrac, Some(Token::Number(_))) => {
+            tokens.insert(index+1, Token::Mul);
+            index = 0;
+        }
+        _ => {index += 1;}
         }
     }
 
