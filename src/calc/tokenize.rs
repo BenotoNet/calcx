@@ -2,6 +2,8 @@ use crate::utils;
 use super::Token;
 use crate::Num;
 
+mod misc_units;
+
 fn split_into_unknowns(query: &str) -> Vec<Token> {
     let splitters = String::from("+*/%!^()= ");
     let mut output = vec![];
@@ -99,28 +101,19 @@ fn match_keywords_units(mut tokens: Vec<Token>) -> Vec<Token> {
     return tokens;
 }
 
-fn match_10ers(mut tokens: Vec<Token>) -> Vec<Token> {
+fn match_misc_units(mut tokens: Vec<Token>) -> Vec<Token> {
     let mut index = 0; 
     while index < tokens.len() {
         match tokens.get(index) {
             // Checking the keywords for scientific notion / powers of ten
             Some(Token::Keyword(var)) => {
-                match var.as_str() {
-                    "exa" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(18.0)))); tokens.insert(index, Token::LBrac)},
-                    "peta" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(15.0)))); tokens.insert(index, Token::LBrac)},
-                    "tera" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(12.0)))); tokens.insert(index, Token::LBrac)},
-                    "giga" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(9.0)))); tokens.insert(index, Token::LBrac)},
-                    "mega" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(6.0)))); tokens.insert(index, Token::LBrac)},
-                    "kilo" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(3.0)))); tokens.insert(index, Token::LBrac)},
-                    "hecto" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(2.0)))); tokens.insert(index, Token::LBrac)},
-                    "deca" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(1.0)))); tokens.insert(index, Token::LBrac)},
-                    "deci" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(-1.0)))); tokens.insert(index, Token::LBrac)},
-                    "centi" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(-2.0)))); tokens.insert(index, Token::LBrac)},
-                    "milli" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(-3.0)))); tokens.insert(index, Token::LBrac)},
-                    "micro" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(-6.0)))); tokens.insert(index, Token::LBrac)},
-                    "nano" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(-9.0)))); tokens.insert(index, Token::LBrac)},
-                    "pico" => {tokens[index] = Token::RBrac; tokens.insert(index, Token::Number(Num::unitless(10.0f64.powf(-12.0)))); tokens.insert(index, Token::LBrac)},
-                    _ => {}
+                match misc_units::unit_to_num(var.as_str()) {
+                    Some(num) => {
+                        tokens[index] = Token::RBrac; 
+                        tokens.insert(index, Token::Number(num));
+                        tokens.insert(index, Token::LBrac);
+                    },
+                    _ => {},
                 }
             }
             _ => {},
@@ -180,7 +173,7 @@ pub fn tokenize(query: &str) -> Vec<Token> {
     let mut tokens = split_into_unknowns(query);
     tokens = categorize(tokens);
     tokens = match_keywords_units(tokens);
-    tokens = match_10ers(tokens);
+    tokens = match_misc_units(tokens);
     tokens = clean(tokens);
 
     // Finally, return the list of tokens
