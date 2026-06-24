@@ -29,8 +29,8 @@ pub fn unit_to_num(ul: &str) -> Option<Num> {
         "byte"|"bytes" => {Num::unitless(8.0)}
 
         // Physics
-        "joule"|"joules" => {Num::new(1000.0, vec![('g', 1), ('m', 2), ('s', -2)])}
-        "watt"|"watts" => {Num::new(1000.0, vec![('g', 1), ('m', 2), ('s', -3)])}
+        "joule"|"joules" => {Num::new(1.0, vec![('g', 1), ('m', 2), ('s', -2)])}
+        "watt"|"watts" => {Num::new(1.0, vec![('g', 1), ('m', 2), ('s', -3)])}
 
         _ => return None
     })
