@@ -3,6 +3,7 @@ pub mod num;
 pub mod units;
 pub mod token;
 pub mod expr;
+pub mod conversion;
 
 use token::Token;
 use expr::Expr;

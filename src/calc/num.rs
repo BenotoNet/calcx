@@ -23,6 +23,10 @@ impl Num {
         return self.quantity;
     }
 
+    pub fn get_units(&self) -> &Units {
+        return &self.units;
+    }
+
     pub fn append(&self, num: &Num) -> Num {
         // Numbers are expected to be unitless, therefore just append the quantities
         assert!{self.is_unitless()};

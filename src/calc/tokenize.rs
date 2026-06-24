@@ -2,7 +2,7 @@ use crate::utils;
 use super::Token;
 use crate::Num;
 
-mod misc_units;
+pub mod misc_units;
 
 fn split_into_unknowns(query: &str) -> Vec<Token> {
     let splitters = String::from("+*/%!^()= ");
