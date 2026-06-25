@@ -77,6 +77,6 @@ impl UI {
     }
 
     pub fn run_query(&mut self, query: &str) {
-        log::success(self.calc.run(&query)).expect("Could not write output...");
+        log::success(self.calc.run_ouput(&query)).expect("Could not write output...");
     }
 }

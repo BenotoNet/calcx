@@ -119,7 +119,7 @@ impl Calc {
 
                 match (left, right) {
                     (Expr::Number(num1), Expr::Number(num2)) => {
-                        // Be have an atomic Expression (only numbers)
+                        // We have an atomic Expression (only numbers)
                         match op {
                             Token::Add => {Ok(Expr::Number(num1.add(&num2).unwrap()))},
                             Token::Sub => {Ok(Expr::Number(num1.sub(&num2).unwrap()))},
@@ -143,7 +143,7 @@ impl Calc {
     }
 
     // API to run a specific command and capture its output
-    pub fn run(&mut self, query: &str) -> String {
+    pub fn run_ouput(&mut self, query: &str) -> String {
         self.current = 0;
 
         // This function is supposed to tokenize the given query
@@ -151,5 +151,15 @@ impl Calc {
 
         let tree = self.build_tree();
         self.eval(tree).unwrap().display()
+    }
+
+    pub fn run(&mut self, query: &str) -> Expr {
+        self.current = 0;
+
+        // This function is supposed to tokenize the given query
+        self.tokens = tokenize::tokenize(query);
+
+        let tree = self.build_tree();
+        self.eval(tree).unwrap()
     }
 }

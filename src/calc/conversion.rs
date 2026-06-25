@@ -1,7 +1,14 @@
 use crate::Num;
-use crate::calc::tokenize::misc_units::unit_to_num;
+use crate::calc;
 
+// Function to check if a number can be converted to some arbetrary units
 pub fn can_be_converted(base: Num, to_units: &str) -> bool {
-    let to_units = unit_to_num(to_units).unwrap().get_units().clone();
-    return base.div(&Num::from(1.0, to_units)).unwrap().is_unitless();
+    match calc::Calc::new().run(to_units) {
+        calc::expr::Expr::Number(num) => {
+            // Doing so by checking if when dividing by new units results in unitless number =>
+            // Units match and can be converted
+            return base.div(&num).unwrap().is_unitless();
+        },
+        _ => {return false}
+    }
 }
