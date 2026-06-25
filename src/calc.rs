@@ -62,6 +62,7 @@ impl Calc {
             println!{"Matched Keyword!"}
             let keyword = self.advance().unwrap();
             let right = self.parse_term();
+            println!{"{left:?}"}
             left = Expr::Binary { left: Box::new(left), op: keyword, right: Box::new(right) };
         }
         return left;
@@ -72,16 +73,20 @@ impl Calc {
 
         while
             match self.peek() {
-            Some(Token::Mul)|Some(Token::Div) => true,
-            Some(Token::LBrac) => {
-                // Leaving out the mul sign for brackets
-                let right = self.parse_expression();
-                // TODO: Remove Unwrap!
-                return self.eval(Expr::Binary { left: Box::new(left), op: Token::Mul, right: Box::new(right) }).unwrap()
-            }
-            _ => false,
+                Some(Token::Mul)|Some(Token::Div) => true,
+                Some(Token::LBrac) => {
+                    // Leaving out the mul sign for brackets
+                    let right = self.parse_factor();
+                    // TODO: Remove Unwrap!
+                    left = self.eval(Expr::Binary { left: Box::new(left), op: Token::Mul, right: Box::new(right) }).unwrap();
+                    true
+                }
+                _ => false,
         } {
-            let operation = self.advance().unwrap();
+            let operation = match self.advance() {
+                Some(v) => v,
+                _ => return left,
+            };
             let right = self.parse_exponents();
             left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
         }
