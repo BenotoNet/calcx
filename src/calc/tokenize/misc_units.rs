@@ -34,9 +34,12 @@ pub fn unit_to_num(ul: &str) -> Option<Num> {
         "day"|"days" => {Num::new(86400.0, vec![('s', 1)])}
         "week"|"weeks" => {Num::new(604800.0, vec![('s', 1)])}
         "year"|"years" => {Num::new(31557600.0, vec![('s', 1)])}
+        "decade"|"decades" => {Num::new(31557600.0*10.0, vec![('s', 1)])}
+        "century"|"centuries" => {Num::new(31557600.0*100.0, vec![('s', 1)])}
 
         // Computers
-        "byte"|"bytes" => {Num::unitless(8.0)}
+        "byte"|"bytes"|"octet" => {Num::unitless(8.0)}
+        "bit"|"bits" => {Num::unitless(1.0)}
 
         // Physics
         "newton"|"newtons" => {Num::new(1.0, vec![('K', 1), ('m', 1), ('s', -2)])}
@@ -45,16 +48,26 @@ pub fn unit_to_num(ul: &str) -> Option<Num> {
         "cal"|"calorie" => {Num::new(4.1868, vec![('K', 1), ('m', 2), ('s', -2)])}
         "kcal" => {Num::new(4.1868e3, vec![('K', 1), ('m', 2), ('s', -2)])}
         "watt"|"watts" => {Num::new(1.0, vec![('K', 1), ('m', 2), ('s', -3)])}
+        "horsepower" => {Num::new(745.69987158227022, vec![('K', 1), ('m', 2), ('s', -3)])}
         "coulomb" => {Num::new(1.0, vec![('a', 1), ('s', 1)])}
         "volt"|"volts" => {Num::new(1.0, vec![('K', 1), ('m', 2), ('s', -3), ('a', -1)])}
         "ohm"|"ohms" => {Num::new(1.0, vec![('K', 1), ('m', 2), ('s', -3), ('a', -2)])}
         "siemens" => {Num::new(1.0, vec![('K', -1), ('m', -2), ('s', 3), ('a', 2)])}
+        "sievert"|"gray" => {Num::new(1.0, vec![('m', 2), ('s', -2)])}
         "farad" => {Num::new(1.0, vec![('K', -1), ('m', -2), ('s', 4), ('a', 2)])}
         "weber" => {Num::new(1.0, vec![('K', 1), ('m', 2), ('s', -2), ('a', -1)])}
         "hertz"|"hz" => {Num::new(1.0, vec![('s', -1)])}
         "bar"|"bars" => {Num::new(1e5, vec![('K', 1), ('m', -1), ('s', -2)])}
         "litre"|"liter"|"liters"|"litres" => {Num::new(1e-3, vec![('m', 3)])}
         "atomic_mass_unit"|"u"|"amu" => {Num::new(1.660538921e-27, vec![('K', 1)])}
+
+        "electron_volt"|"eV" => {Num::new(1.6021766208e-19, vec![('K', 1), ('m', 2), ('s', -2)])},
+        "elementary_charge" => {Num::new(1.6021766208e-19, vec![('a', 1), ('s', 1)])},
+
+        "lumen"|"lumens" => {Num::new(1.0, vec![('c', 1)])},
+        "lux" => {Num::new(1.0, vec![('c', 1), ('m', -2)])},
+
+        "astronomical_unit"|"astronomical_units"|"au" => Num::new(149597870700.0, vec![('m', 1)]),
 
         "gravity"|"gravity_constant" => {Num::new(9.80665, vec![('m', 1), ('s', -2)])}
         "atm"|"atmosphere"|"atmospheric_pressure" => {Num::new(101325.0, vec![('K', 1), ('m', -1), ('s', -2)])}
@@ -76,6 +89,25 @@ pub fn unit_to_num(ul: &str) -> Option<Num> {
         "ppt"|"partspertrillion" => {Num::unitless(1e-12)}
 
         "karat" => {Num::unitless(1.0/24.0)}
+
+        // Stupid Americans:
+        "inch"|"inches" => {Num::new(2.54e-2, vec![('m', 1)])}
+        "foot"|"feet" => {Num::new(0.3048, vec![('m', 1)])}
+        "yard"|"yards" => {Num::new(0.9144, vec![('m', 1)])}
+        "mile"|"miles" => {Num::new(1609.344, vec![('m', 1)])}
+
+        "cup"|"cups" => {Num::new(2.4e-4, vec![('m', 3)])}
+        "tablespoon"|"tbl"|"tbsp"|"tblsp" => {Num::new(0.000015, vec![('m', 3)])}
+        "teaspoon"|"tsp" => {Num::new(0.000005, vec![('m', 3)])}
+
+        "pound"|"pounds"|"lb"|"lbs" => {Num::new(0.45359237, vec![('K', 1)])}
+        "grain"|"grains" => {Num::new(0.00006479891, vec![('K', 1)])}
+        "ounce"|"ounces"|"oz" => {Num::new(0.028349523125, vec![('K', 1)])}
+
+        "gallon_UK" => {Num::new(0.00454609, vec![('m', 3)])}
+        "gallon_US" => {Num::new(0.003785, vec![('m', 3)])}
+
+        "knot"|"knots" => {Num::new(1.852 / 3.6, vec![('m', 1), ('s', -1)])}
 
         // TODO: Continue on https://github.com/darius/unitcalc/blob/master/definitions.units at
         // line 976

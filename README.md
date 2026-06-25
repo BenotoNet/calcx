@@ -12,9 +12,9 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Getting negative Numbers to work
 - [x] Refactoring of Document Structure (more splitting into smaller files)
 - [x] add powers of 10 keywords functionality
-- [ ] Adding all obscure units (volts -> Si units)
+- [x] Adding all obscure units (volts -> Si units)
+- [ ] Handling Keywords (e.g. "to" correctly)
 - [ ] System for unit-conversion (-> 5 gram to kilogram)
-- [ ] Handling Keywords (e.g. to correctly)
 - [ ] working with units (-> kilo gram to gram)
 - [ ] Functions like sqrt() or sin()
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
