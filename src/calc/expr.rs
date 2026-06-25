@@ -8,7 +8,8 @@ pub enum Expr {
         left: Box<Expr>,
         op: Token,
         right: Box<Expr>,
-    }
+    },
+    Keyword(String),
 }
 
 impl Expr {

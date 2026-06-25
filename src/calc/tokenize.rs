@@ -46,36 +46,65 @@ fn is_keyword(unknown_token: &str) -> bool {
 }
 
 fn categorize(tokens: Vec<Token>) -> Vec<Token> {
-    tokens.iter().map(|token| {
+    let mut tokens = tokens;
+    // Rewriting the mapping function to not have to have a 1:1 ratio for each token
+    let mut index = 0;
+    while index < tokens.len() {
+        let token = tokens[index].clone();
         match token {
             Token::Unknown(token_string) => {
+                let mut token_string = token_string;
                 let token_str = token_string.as_str();
-                if utils::is_number(token_str) {return Token::Number(Num::unitless(token_str.parse::<f64>().unwrap()));}
-                match token_str {
-                    "+" => {Token::Add}
-                    "-" => {Token::Sub}
-                    "*" => {Token::Mul}
-                    "/" => {Token::Div}
-                    "%" => {Token::Mod}
-                    "(" => {Token::LBrac}
-                    ")" => {Token::RBrac}
-                    "^" => {Token::Pow}
-                    "=" => {Token::Assign}
-                    _ => {
-                        // No Operator Matches
-                        // Test for Keyword:
-                        if is_keyword(token_string) {
-                            return Token::Keyword(token_string.clone());
-                        }
-                        else {
-                            return Token::Var(token_string.clone());
+                if utils::is_number(token_str) {tokens[index] = Token::Number(Num::unitless(token_str.parse::<f64>().unwrap()))}
+
+                // We have found our keyword, therefore append all tokens after it 
+                // until we get a +, -, or brackets
+                else if token_string == "to" || token_string == "in" {
+                    tokens.remove(index);
+                    // making one big token of all that comes after
+                    let mut total_token = String::new();
+
+                    while token_string != "+" && token_string != "-" && token_string != ")" && index < tokens.len()-1 {
+                        total_token += &token_string;
+                        token_string = match tokens.remove(index) {
+                            Token::Unknown(token_str) => token_str,
+                            _ => break,
+                        };
+                        index += 1;
+                    }
+                    tokens.insert(index, Token::Keyword(token_string));
+                    tokens.insert(index, Token::Keyword(String::from("to")));
+                    println!{"{tokens:?}"}
+
+                }
+                else {
+                    tokens[index] = match token_str {
+                        "+" => {Token::Add}
+                        "-" => {Token::Sub}
+                        "*" => {Token::Mul}
+                        "/" => {Token::Div}
+                        "%" => {Token::Mod}
+                        "(" => {Token::LBrac}
+                        ")" => {Token::RBrac}
+                        "^" => {Token::Pow}
+                        "=" => {Token::Assign}
+                        _ => {
+                            // No Operator Matches
+                            // Test for Keyword:
+                            if is_keyword(&token_string) {
+                                Token::Keyword(token_string.clone())
+                            }
+                            else {
+                                Token::Var(token_string.clone())
+                            }
                         }
                     }
                 }
             },
-            _ => {panic!()}
-        }
-    }).collect()
+            _ => {index += 1;}
+        };
+    }
+    return tokens;
 }
 
 fn match_keywords_units(mut tokens: Vec<Token>) -> Vec<Token> {

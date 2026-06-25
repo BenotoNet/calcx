@@ -59,9 +59,13 @@ impl Calc {
                 _ => false,
             }
         {
-            println!{"Matched Keyword!"}
+            println!{"Found a keyword!"}
             let keyword = self.advance().unwrap();
-            let right = self.parse_term();
+            let right = match self.advance() {
+                Some(Token::Keyword(v)) => Expr::Keyword(v),
+                _ => panic!{"Not a valid unit to convert to!"},
+            };
+
             println!{"{left:?}"}
             left = Expr::Binary { left: Box::new(left), op: keyword, right: Box::new(right) };
         }
