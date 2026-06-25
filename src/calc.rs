@@ -8,6 +8,8 @@ pub mod conversion;
 use token::Token;
 use expr::Expr;
 
+use crate::calc::num::Num;
+
 
 pub struct Calc {
     tokens: Vec<Token>,
@@ -19,7 +21,6 @@ impl Calc {
         Calc { tokens: vec![], current: 0 }
     }
 
-    #[allow(unused)]
     fn expect(&mut self, token: Token) {
         assert!{std::mem::discriminant(&self.advance().unwrap()) == std::mem::discriminant(&token)};
     }
@@ -35,7 +36,7 @@ impl Calc {
     }
 
     fn parse_expression(&mut self) -> Expr {
-        let mut left = self.parse_term();
+        let mut left = self.parse_keywords();
 
         while
             match self.peek() {
@@ -43,8 +44,25 @@ impl Calc {
             _ => false,
         } {
             let operation = self.advance().unwrap();
-            let right = self.parse_term();
+            let right = self.parse_keywords();
             left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
+        }
+        return left;
+    }
+
+    fn parse_keywords(&mut self) -> Expr {
+        let mut left = self.parse_term();
+
+        while 
+            match self.peek() {
+                Some(Token::Keyword(_)) => true,
+                _ => false,
+            }
+        {
+            println!{"Matched Keyword!"}
+            let keyword = self.advance().unwrap();
+            let right = self.parse_term();
+            left = Expr::Binary { left: Box::new(left), op: keyword, right: Box::new(right) };
         }
         return left;
     }
@@ -88,6 +106,7 @@ impl Calc {
     fn parse_factor(&mut self) -> Expr {
         match self.peek() {
             Some(Token::Number(num)) => {self.advance(); Expr::Number(num)},
+            // Bracket Logic => Starting a new branch
             Some(Token::LBrac) => {
                 self.advance();
                 let expr = self.parse_expression();
@@ -95,6 +114,7 @@ impl Calc {
                 self.expect(Token::RBrac);
                 return expr;
             }
+            // make - 2 into the number "-2"
             Some(Token::Sub) => {
                 self.advance();
                 return Expr::Number(num::Num::new(-1.0, vec![]));
@@ -115,7 +135,7 @@ impl Calc {
 
                 match (left, right) {
                     (Expr::Number(num1), Expr::Number(num2)) => {
-                        // We have an atomic Expression (only numbers)
+                        // We have an atomic Expression (only numbers on both sides of the operator)
                         match op {
                             Token::Add => {Ok(Expr::Number(num1.add(&num2).unwrap()))},
                             Token::Sub => {Ok(Expr::Number(num1.sub(&num2).unwrap()))},
@@ -123,6 +143,21 @@ impl Calc {
                             Token::Div => {Ok(Expr::Number(num1.div(&num2).unwrap()))},
                             Token::Mod => {Ok(Expr::Number(num1.modf(&num2).unwrap()))},
                             Token::Pow => {Ok(Expr::Number(num1.powf(&num2).unwrap()))},
+
+                            // Keywords
+                            Token::Keyword(key) => {
+                                match key.as_str() {
+                                    "to"|"in" => {
+                                        // FIX: WTF AM I EVEN CODING RIGHT NOW?!
+                                        match conversion::convert(&num1, "kilo seconds") {
+                                            Some(output) => {println!{"{output}"}},
+                                            _ => {println!{"Conversion impossible"}},
+                                        }
+                                    }
+                                    _ => {},
+                                }
+                                return Ok(Expr::Number(Num::unitless(0.0)));
+                            }
                             _ => Err("Not an Operator!"),
                         }
                     },
@@ -140,13 +175,7 @@ impl Calc {
 
     // API to run a specific command and capture its output
     pub fn run_ouput(&mut self, query: &str) -> String {
-        self.current = 0;
-
-        // This function is supposed to tokenize the given query
-        self.tokens = tokenize::tokenize(query);
-
-        let tree = self.build_tree();
-        self.eval(tree).unwrap().display()
+        self.run(query).display()
     }
 
     pub fn run(&mut self, query: &str) -> Expr {
@@ -156,6 +185,7 @@ impl Calc {
         self.tokens = tokenize::tokenize(query);
 
         let tree = self.build_tree();
+        // println!{"{tree:?}"};
         self.eval(tree).unwrap()
     }
 }
