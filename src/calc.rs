@@ -21,11 +21,7 @@ impl Calc {
 
     #[allow(unused)]
     fn expect(&mut self, token: Token) {
-        // FIX: Does not quite work yet
-        match self.advance().unwrap() {
-            token => {},
-            _ => {panic!{"This is not the expected Token!"}}
-        }
+        assert!{std::mem::discriminant(&self.advance().unwrap()) == std::mem::discriminant(&token)};
     }
 
     fn peek(&self) -> Option<Token> {
