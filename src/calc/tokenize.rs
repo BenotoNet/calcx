@@ -93,7 +93,8 @@ fn match_units(mut tokens: Vec<Token>) -> Vec<Token> {
     let mut index = 0; 
     while index < tokens.len() {
         match tokens.get(index) {
-            // Checking the keywords for scientific notion / powers of ten
+            // Checking the keywords for scientific notion / powers of ten / additional units like
+            // volts, farad, etc
             Some(Token::Keyword(var)) => {
                 match misc_units::unit_to_num(var.as_str()) {
                     Some(num) => {

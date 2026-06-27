@@ -122,7 +122,7 @@ impl Calc {
                     _ => {
                         return match self.variables.get_var(var) {
                             Some(v) => v,
-                            _ => Expr::Number(super::num::Num::unitless(0.0))
+                            _ => panic!{"Undefined Variable"}
                         };
                     }
                 }
