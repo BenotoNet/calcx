@@ -6,6 +6,7 @@ pub struct Num {
     units: Units,
 }
 
+#[allow(unused)]
 impl Num {
     pub fn new(quantity: f64, units_vec: Vec<(char, i8)>) -> Num {
         Num { quantity, units: Units::new(units_vec) }

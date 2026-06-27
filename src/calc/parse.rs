@@ -1,5 +1,3 @@
-use crate::calc::num::Num;
-
 use super::Calc;
 use super::expr::Expr;
 use super::token::Token;
