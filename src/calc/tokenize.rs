@@ -42,7 +42,18 @@ fn split_into_unknowns(query: &str) -> Vec<Token> {
 fn is_keyword(unknown_token: &str) -> bool {
     // checking if the token is one of the reserved keywords, then it is a keyword, otherwise, it's
     // a variable!
-    true
+
+    // Check if it is a unit:
+    match misc_units::unit_to_num(unknown_token) {
+        Some(_) => return true,
+        _ => {},
+    };
+
+    // Check if it's a reserved keyword:
+    match unknown_token {
+        "to"|"in" => true,
+        _ => false,
+    }
 }
 
 fn categorize(tokens: Vec<Token>) -> Vec<Token> {
@@ -78,31 +89,7 @@ fn categorize(tokens: Vec<Token>) -> Vec<Token> {
     }).collect()
 }
 
-fn match_keywords_units(mut tokens: Vec<Token>) -> Vec<Token> {
-    let mut index = 0;
-    while index < tokens.len() {
-        match tokens.get(index) {
-            // Checking unit keywords and replace them with unit-number
-            Some(Token::Keyword(var)) => {
-                match var.as_str() {
-                    "metre"|"meter"|"meters"|"metres" => {tokens[index] = Token::Number(Num::new(1.0, vec![('m', 1)]));}
-                    "second"|"seconds"|"secs"|"sec" => {tokens[index] = Token::Number(Num::new(1.0, vec![('s', 1)]));}
-                    "gram"|"grams" => {tokens[index] = Token::Number(Num::new(0.001, vec![('K', 1)]));}
-                    "kilogram"|"kilograms" => {tokens[index] = Token::Number(Num::new(1.0, vec![('K', 1)]));}
-                    "ampere"|"amperes" => {tokens[index] = Token::Number(Num::new(1.0, vec![('a', 1)]));}
-                    "kelvin" => {tokens[index] = Token::Number(Num::new(1.0, vec![('k', 1)]));}
-                    "candela"|"candelas" => {tokens[index] = Token::Number(Num::new(1.0, vec![('c', 1)]));}
-                    _ => {}
-                }
-            }
-            _ => {}
-        }
-        index += 1;
-    }
-    return tokens;
-}
-
-fn match_misc_units(mut tokens: Vec<Token>) -> Vec<Token> {
+fn match_units(mut tokens: Vec<Token>) -> Vec<Token> {
     let mut index = 0; 
     while index < tokens.len() {
         match tokens.get(index) {
@@ -145,7 +132,7 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
                 else if num1.is_unitless() && num2.is_unitless() {
                     // Combine the numbers by putting strings right next to each other. (If Unitless)
                     // e.g. 5 5 => 55
-                    tokens[index] = Token::Number(num1.append(num2));
+                    tokens[index] = Token::Number(num1.append(&num2));
                     tokens.remove(index+1);
                     index = 0;
                 }
@@ -173,7 +160,7 @@ pub fn tokenize(query: &str) -> Vec<Token> {
     // into a token and finally clean up the list of tokens (combine two adjecent Numbers)
     let mut tokens = split_into_unknowns(query);
     tokens = categorize(tokens);
-    tokens = match_misc_units(tokens);
+    tokens = match_units(tokens);
     tokens = clean(tokens);
 
     // Finally, return the list of tokens
