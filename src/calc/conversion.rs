@@ -1,9 +1,16 @@
 use crate::Num;
 use crate::calc;
 
+fn can_be_converted_to(base: &Num, to_units: &str) -> bool {
+    can_be_converted(base, &calc::Calc::new().run(to_units))
+}
+
 // Function to check if a number can be converted to some arbetrary units
-fn can_be_converted(base: &Num, to_units: &str) -> bool {
-    match calc::Calc::new().run(to_units) {
+fn can_be_converted(base: &Num, units: &calc::expr::Expr) -> bool {
+    // TODO: Simplify expression via calc function (instead of calc.run(string))
+    // let calc = calc::Calc::new();
+    // let units = calc.eval(*units);
+    match units {
         calc::expr::Expr::Number(num) => {
             // Doing so by checking if when dividing by new units results in unitless number =>
             // Units match and can be converted
@@ -13,20 +20,25 @@ fn can_be_converted(base: &Num, to_units: &str) -> bool {
     }
 }
 
-pub fn convert(base: &Num, to_units: &str) -> Option<String> {
-    match can_be_converted(base, to_units) {
+pub fn convert_to(base: &Num, to_units: &str) -> Option<String> {
+    let mut calc = calc::Calc::new();
+    let expr = calc.run(to_units);
+    match can_be_converted(base, &expr) {
         true => {
-            // Convert by dividing quantity by parsed quantity of units and then append unit string
-            let mut calc = calc::Calc::new();
-            let expr = calc.run(to_units);
-            match expr {
-                calc::expr::Expr::Number(num) => {
-                    let output_quant = base.div(&num).unwrap().get_quant();
-                    return Some(format!{"{output_quant} {to_units}"});
-                }
-                _ => None
-            }
+            return convert(base, expr);
         }
         false => None,
+    }
+}
+
+pub fn convert(base: &Num, units: calc::expr::Expr) -> Option<String> {
+    // Convert by dividing quantity by parsed quantity of units -> This is the quantity of the
+    // output num
+    match units {
+        calc::expr::Expr::Number(num) => {
+            let output_quant = base.div(&num).unwrap().get_quant();
+            return Some(format!{"{output_quant}"});
+        }
+        _ => None
     }
 }

@@ -13,8 +13,6 @@ fn main() {
 
     let options = utils::parse_cli_args(args);
 
-    // println!{"{}", calc::conversion::can_be_converted(Num::new(1.0, vec![('m', 1)]), "second")};
-
     // All options are set, therefore, we can start the interactive session with the options
     ui::UI::new(options).interactive();
 }

@@ -5,6 +5,19 @@ use crate::calc::conversion;
 // TODO: Split up into smaller parts!
 
 impl Calc {
+    fn eval_keyword(&self, key: &str, num1: &Num, num2: &Num) {
+        match key {
+            "to"|"in" => {
+                // FIX: WTF AM I EVEN CODING RIGHT NOW?!
+                match conversion::convert(&num1, Expr::Number(num2.clone())) {
+                    Some(output) => {println!{"{output}"}},
+                    _ => {println!{"Conversion impossible"}},
+                }
+            }
+            _ => {},
+        }
+    }
+
     fn eval_atomic(&self, num1: &Num, op: Token, num2: &Num) -> Result<Expr, &str> {
         match op {
             // When we have simple operations between the two numbers, we simply apply the operation
@@ -17,20 +30,11 @@ impl Calc {
 
             // We found a Keyword
             Token::Keyword(key) => {
-                match key.as_str() {
-                    "to"|"in" => {
-                        // FIX: WTF AM I EVEN CODING RIGHT NOW?!
-                        match conversion::convert(&num1, "micro farad") {
-                            Some(output) => {println!{"{output}"}},
-                            _ => {println!{"Conversion impossible"}},
-                        }
-                    }
-                    _ => {},
-                }
+                self.eval_keyword(key.as_str(), num1, num2);
                 return Ok(Expr::Number(Num::unitless(0.0)));
             }
 
-            _ => Err("Not an Operator!"),
+            _ => {println!{"{op:?}"}; Err("Not an Operator!")},
         }
 
     }

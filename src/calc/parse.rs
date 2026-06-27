@@ -47,13 +47,6 @@ impl Calc {
         while
             match self.peek() {
                 Some(Token::Mul)|Some(Token::Div) => true,
-                Some(Token::LBrac) => {
-                    // Leaving out the mul sign for brackets
-                    let right = self.parse_factor();
-                    // TODO: Remove Unwrap!
-                    left = self.eval(Expr::Binary { left: Box::new(left), op: Token::Mul, right: Box::new(right) }).unwrap();
-                    true
-                }
                 _ => false,
         } {
             let operation = match self.advance() {
@@ -67,7 +60,7 @@ impl Calc {
     }
 
     fn parse_exponents(&mut self) -> Expr {
-        let mut left = self.parse_factor();
+        let mut left = self.parse_bracket();
 
         while
             match self.peek() {
@@ -75,9 +68,23 @@ impl Calc {
                 _ => false,
             } {
                 let operation = self.advance().unwrap();
-                let right = self.parse_factor();
+                let right = self.parse_bracket();
                 left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
             }
+        return left;
+    }
+
+    fn parse_bracket(&mut self) -> Expr {
+        let mut left = self.parse_factor();
+
+        while match self.peek() {
+            Some(Token::LBrac) => true,
+            _ => {false},
+        } {
+            let operation = Token::Mul;
+            let right = self.parse_factor();
+            left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) }
+        }
         return left;
     }
 
