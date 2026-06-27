@@ -15,7 +15,7 @@ impl Calc {
         }
     }
 
-    fn eval_atomic(&self, num1: &Num, op: Token, num2: &Num) -> Result<Expr, &str> {
+    fn eval_atomic(&self, num1: &Num, op: Token, num2: &Num) -> Result<Expr, String> {
         match op {
             // When we have simple operations between the two numbers, we simply apply the operation
             Token::Add => {Ok(Expr::Number(num1.add(&num2).unwrap()))},
@@ -29,16 +29,16 @@ impl Calc {
             Token::Keyword(key) => {
                 match self.eval_keyword(key.as_str(), num1, num2) {
                     Some(expr) => Ok(expr),
-                    _ => Err("Conversion Impossible")
+                    _ => Err(String::from("Conversion Impossible"))
                 }
             }
 
-            _ => {println!{"{op:?}"}; Err("Not an Operator!")},
+            _ => {println!{"{op:?}"}; Err(String::from("Not an Operator!"))},
         }
 
     }
 
-    pub fn eval(&self, tree: Expr) -> Result<Expr, &str> {
+    pub fn eval(&self, tree: Expr) -> Result<Expr, String> {
         match tree {
             Expr::Binary { left, op, right } => {
                 let left = self.eval(*left)?;

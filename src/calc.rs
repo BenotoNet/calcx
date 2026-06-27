@@ -38,10 +38,13 @@ impl Calc {
 
     // API to run a specific command and capture its output
     pub fn run_ouput(&mut self, query: &str) -> String {
-        self.run(query).display()
+        match self.run(query) {
+            Ok(output) => output.display(),
+            Err(error) => error
+        }
     }
 
-    pub fn run(&mut self, query: &str) -> Expr {
+    pub fn run(&mut self, query: &str) -> Result<Expr, String> {
         self.current = 0;
 
         // This function is supposed to tokenize the given query
@@ -49,9 +52,6 @@ impl Calc {
 
         let tree = self.build_tree();
         // println!{"{tree:?}"};
-        match self.eval(tree) {
-            Ok(expr) => expr,
-            Err(_) => {panic!{"Deal with Errors!"}},
-        }
+        self.eval(tree)
     }
 }
