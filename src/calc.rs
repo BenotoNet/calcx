@@ -48,7 +48,10 @@ impl Calc {
         self.tokens = tokenize::tokenize(query);
 
         let tree = self.build_tree();
-        println!{"{tree:?}"};
-        self.eval(tree).unwrap()
+        // println!{"{tree:?}"};
+        match self.eval(tree) {
+            Ok(expr) => expr,
+            Err(_) => {panic!{"Deal with Errors!"}},
+        }
     }
 }
