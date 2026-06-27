@@ -107,7 +107,25 @@ impl Calc {
             // We found a variable!
             Some(Token::Var(var)) => {
                 self.advance();
-                return super::variables::get_var(var);
+                match self.peek() {
+                    Some(Token::Assign) => {
+                            self.advance();
+                            let right = self.parse_expression();
+                            match self.eval(right).unwrap() {
+                                Expr::Number(num) => {
+                                    self.variables.set_var(var, num.clone());
+                                    Expr::Number(num)
+                                },
+                                _ => {panic!{"Could not evaluate right side of assignment!"};}
+                            }
+                    }
+                    _ => {
+                        return match self.variables.get_var(var) {
+                            Some(v) => v,
+                            _ => Expr::Number(super::num::Num::unitless(0.0))
+                        };
+                    }
+                }
             }
             _ => {
                 // an unknown Token!

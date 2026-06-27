@@ -13,6 +13,7 @@ use expr::Expr;
 pub struct Calc {
     tokens: Vec<Token>,
     current: usize,
+    variables: variables::VariableStorage,
 }
 
 mod parse;
@@ -20,7 +21,7 @@ mod eval;
 
 impl Calc {
     pub fn new() -> Calc {
-        Calc { tokens: vec![], current: 0 }
+        Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new() }
     }
 
     fn expect(&mut self, token: Token) {
