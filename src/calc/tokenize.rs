@@ -39,9 +39,9 @@ fn split_into_unknowns(query: &str) -> Vec<Token> {
     return output;
 }
 
-#[allow(unused)]
 fn is_keyword(unknown_token: &str) -> bool {
-    // TODO: Later, actually add the logic for handling keywords differently from e.g. variables
+    // checking if the token is one of the reserved keywords, then it is a keyword, otherwise, it's
+    // a variable!
     true
 }
 
@@ -173,7 +173,6 @@ pub fn tokenize(query: &str) -> Vec<Token> {
     // into a token and finally clean up the list of tokens (combine two adjecent Numbers)
     let mut tokens = split_into_unknowns(query);
     tokens = categorize(tokens);
-    tokens = match_keywords_units(tokens);
     tokens = match_misc_units(tokens);
     tokens = clean(tokens);
 

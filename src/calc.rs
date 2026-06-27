@@ -4,6 +4,7 @@ pub mod units;
 pub mod token;
 pub mod expr;
 pub mod conversion;
+pub mod variables;
 
 use token::Token;
 use expr::Expr;

@@ -1,3 +1,5 @@
+use crate::calc::num::Num;
+
 use super::Calc;
 use super::expr::Expr;
 use super::token::Token;
@@ -104,7 +106,15 @@ impl Calc {
                 self.advance();
                 return Expr::Number(super::num::Num::new(-1.0, vec![]));
             }
-            _ => {panic!{"Missing argument: expected more tokens, but did not get any... {:?}", self.peek()}},
+            // We found a variable!
+            Some(Token::Var(var)) => {
+                self.advance();
+                return super::variables::get_var(var);
+            }
+            _ => {
+                // an unknown Token!
+                panic!{"Unknown Token!"}
+            },
         }
     }
 }

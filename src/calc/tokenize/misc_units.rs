@@ -1,6 +1,13 @@
 use crate::calc::num::Num;
 pub fn unit_to_num(ul: &str) -> Option<Num> {
     Some(match ul {
+        "meter"|"meters"|"metre"|"metres" => Num::new(1.0, vec![('m', 1)]),
+        "second"|"seconds"|"secs"|"sec" => Num::new(1.0, vec![('s', 1)]),
+        "gram"|"grams" => Num::new(0.001, vec![('K', 1)]),
+        "kilogram"|"kilograms" => Num::new(1.0, vec![('K', 1)]),
+        "ampere"|"amperes" => Num::new(1.0, vec![('a', 1)]),
+        "kelvin" => Num::new(1.0, vec![('k', 1)]),
+        "candela"|"candelas" => Num::new(1.0, vec![('c', 1)]),
 
         // Powers of Ten
         "exa" => Num::unitless(1e18),
@@ -108,9 +115,6 @@ pub fn unit_to_num(ul: &str) -> Option<Num> {
         "gallon_US" => {Num::new(0.003785, vec![('m', 3)])}
 
         "knot"|"knots" => {Num::new(1.852 / 3.6, vec![('m', 1), ('s', -1)])}
-
-        // TODO: Continue on https://github.com/darius/unitcalc/blob/master/definitions.units at
-        // line 976
 
         _ => return None
     })
