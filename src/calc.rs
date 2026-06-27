@@ -49,6 +49,7 @@ impl Calc {
 
         // This function is supposed to tokenize the given query
         self.tokens = tokenize::tokenize(query);
+        // println!{"{:?}", self.tokens}
 
         let tree = self.build_tree();
         // println!{"{tree:?}"};

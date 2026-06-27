@@ -104,7 +104,7 @@ impl Calc {
                 self.advance();
                 return Expr::Number(super::num::Num::new(-1.0, vec![]));
             }
-            _ => {panic!{"{:?}", self.peek()}},
+            _ => {panic!{"Missing argument: expected more tokens, but did not get any... {:?}", self.peek()}},
         }
     }
 }

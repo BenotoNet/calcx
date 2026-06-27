@@ -3,15 +3,15 @@ use super::{expr::Expr, token::Token, num::Num};
 use crate::calc::conversion;
 
 impl Calc {
-    fn eval_keyword(&self, key: &str, num1: &Num, num2: &Num) -> Option<Expr> {
+    fn eval_keyword(&self, key: &str, num1: &Num, num2: &Num) -> Result<Expr, String> {
         match key {
             "to"|"in" => {
                 return match conversion::convert(&num1, Expr::Number(num2.clone())) {
-                    Some(output) => {Some(Expr::Number(output))},
-                    _ => None,
+                    Some(output) => {Ok(Expr::Number(output))},
+                    _ => Err(String::from("Conversion Impossible!")),
                 }
             }
-            _ => None,
+            _ => Err(String::from("Unknown Keyword!")),
         }
     }
 
@@ -27,10 +27,7 @@ impl Calc {
 
             // We found a Keyword
             Token::Keyword(key) => {
-                match self.eval_keyword(key.as_str(), num1, num2) {
-                    Some(expr) => Ok(expr),
-                    _ => Err(String::from("Conversion Impossible"))
-                }
+                self.eval_keyword(key.as_str(), num1, num2)
             }
 
             _ => {println!{"{op:?}"}; Err(String::from("Not an Operator!"))},
