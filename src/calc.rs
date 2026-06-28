@@ -5,6 +5,7 @@ pub mod token;
 pub mod expr;
 pub mod conversion;
 pub mod variables;
+pub mod keys_func;
 
 use token::Token;
 use expr::Expr;

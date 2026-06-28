@@ -1,20 +1,7 @@
 use super::Calc;
 use super::{expr::Expr, token::Token, num::Num};
-use crate::calc::conversion;
 
 impl Calc {
-    fn eval_keyword(&self, key: &str, num1: &Num, num2: &Num) -> Result<Expr, String> {
-        match key {
-            "to"|"in" => {
-                return match conversion::convert(&num1, Expr::Number(num2.clone())) {
-                    Some(output) => {Ok(Expr::Number(output))},
-                    _ => Err(String::from("Conversion Impossible!")),
-                }
-            }
-            _ => Err(String::from("Unknown Keyword!")),
-        }
-    }
-
     fn eval_atomic(&self, num1: &Num, op: Token, num2: &Num) -> Result<Expr, String> {
         match op {
             // When we have simple operations between the two numbers, we simply apply the operation

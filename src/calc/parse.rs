@@ -1,5 +1,6 @@
 use super::Calc;
 use super::expr::Expr;
+use super::num::Num;
 use super::token::Token;
 
 
@@ -126,6 +127,9 @@ impl Calc {
                         };
                     }
                 }
+            }
+            Some(Token::Keyword(_)) => {
+                return Expr::Number(Num::unitless(1.0));
             }
             _ => {
                 // an unknown Token!
