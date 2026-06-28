@@ -17,7 +17,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] System for unit-conversion (-> 5 gram to kilogram)
 - [x] working with units (-> kilo gram to gram)
 - [x] Variables & Assignments (-> "hello = 2", "2*hello => 4")
-- [ ] Variable Multiplication if left out (hello world => hello * world)
+- [x] Variable Multiplication if left out (hello world => hello * world)
 - [ ] Functions like sqrt() or sin()
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
 - [ ] saving functions to profile (& settings)
