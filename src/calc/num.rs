@@ -84,6 +84,13 @@ impl Num {
         return Some(Num::from(output_quantity, output_units));
     }
 
+    pub fn sin(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless(self.quantity.sin())),
+            false => None,
+        }
+    }
+
     pub fn display(&self) -> String {
         format!("{} {}", self.quantity, self.units.display())
     }

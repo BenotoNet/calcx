@@ -12,9 +12,18 @@ impl Calc {
                 }
             }
             "sqrt" => {
-                return Ok(Expr::Number(num2.powf(&Num::unitless(0.5)).unwrap()));
+                return Ok(Expr::Number(num1.mul(&num2.powf(&Num::unitless(0.5)).unwrap()).unwrap()));
             }
-            _ => Err(String::from("Unknown Keyword!")),
+            "sin" => {
+                return Ok(Expr::Number(num1.mul(&num2.sin().unwrap()).unwrap()))
+            }
+            "cos" => {
+                return Ok(Expr::Number(num1.mul(&(num2.add(&Num::unitless(1.57079632679489661923132169163975144209858469968755)).unwrap()).sin().unwrap()).unwrap()))
+            }
+            // "arcsin" => {
+            //     // TODO: add arcsine function
+            // }
+            _ => Err(String::from("Unknown Keyword! (Maybe not implemented yet?)")),
         }
     }
 }

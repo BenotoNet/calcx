@@ -51,7 +51,7 @@ fn is_keyword(unknown_token: &str) -> bool {
 
     // Check if it's a reserved keyword:
     match unknown_token {
-        "to"|"in"|"sqrt" => true,
+        "to"|"in"|"sqrt"|"sin"|"cos" => true,
         _ => false,
     }
 }
