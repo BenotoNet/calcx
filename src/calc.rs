@@ -15,14 +15,19 @@ pub struct Calc {
     tokens: Vec<Token>,
     current: usize,
     variables: variables::VariableStorage,
+    precision: usize,
 }
 
 mod parse;
 mod eval;
 
 impl Calc {
-    pub fn new() -> Calc {
-        Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new() }
+    pub fn new(precision: usize) -> Calc {
+        Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new(), precision: precision}
+    }
+
+    pub fn change_precision(&mut self, precision: usize) {
+        self.precision = precision;
     }
 
     // General Use Functions
@@ -45,7 +50,7 @@ impl Calc {
     // API to run a specific command and capture its output
     pub fn run_ouput(&mut self, query: &str) -> String {
         match self.run(query) {
-            Ok(output) => output.display(),
+            Ok(output) => output.display(self.precision),
             Err(error) => error
         }
     }

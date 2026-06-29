@@ -12,10 +12,10 @@ pub enum Expr {
 }
 
 impl Expr {
-    pub fn display(&self) -> String {
+    pub fn display(&self, precision: usize) -> String {
         match self {
-            Expr::Number(num) => {format!{"{}", num.display()}},
-            _ => {panic!("Cannot display an operation, should only ever display display")}
+            Expr::Number(num) => {format!{"{}", num.display(precision)}},
+            _ => {panic!("Cannot display an operation, should only ever display Number!")}
         }
     }
 }

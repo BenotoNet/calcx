@@ -10,7 +10,7 @@ pub struct Num {
 #[allow(unused)]
 impl Num {
     pub fn new(quantity: f64, units_vec: Vec<(char, i8)>) -> Num {
-        let quantity = utils::f64_to_Float(quantity);
+        let quantity = utils::f64_to_float(quantity);
         Num { quantity, units: Units::new(units_vec) }
     }
 
@@ -102,7 +102,7 @@ impl Num {
         }
     }
 
-    pub fn display(&self) -> String {
-        format!("{} {}", self.quantity, self.units.display())
+    pub fn display(&self, precision: usize) -> String {
+        format!("{} {}", utils::format_float(&self.quantity, precision), self.units.display())
     }
 }

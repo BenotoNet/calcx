@@ -9,11 +9,9 @@ use crate::utils;
 // NOTE: UI Library
 
 // Enums for setting Options
-// NOTE: Remove later
-#[allow(unused)]
 pub enum Option {
     SingleQuery(String),
-    Precision(u32),
+    Precision(usize),
 }
 
 pub struct UI {
@@ -22,14 +20,15 @@ pub struct UI {
 
 impl UI {
     pub fn new(options: Vec<Option>) -> UI {
-        let mut ui = UI { calc: Calc::new() };
+        // Default Precision
+        let default_precision = 15;
+        let mut ui = UI { calc: Calc::new(default_precision) };
         for option in options {
             // NOTE: Remove later
             #[allow(unused)]
             match option {
                 Option::SingleQuery(query) => {ui.run_query(&query); exit(1);},
-                Option::Precision(precision) => {}// TODO: add option for variable precision (round
-                                                  // to n digits)
+                Option::Precision(precision) => {ui.calc.change_precision(precision);}
                 _ => {},
             }
         }
