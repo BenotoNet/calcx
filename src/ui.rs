@@ -2,7 +2,6 @@ use crate::calc::Calc;
 
 use std::process::exit;
 
-use cliclack::{log, clear_screen};
 use rustyline::DefaultEditor;
 use crate::utils;
 
@@ -16,13 +15,16 @@ pub enum Option {
 
 pub struct UI {
     calc: Calc,
+    stdout: DefaultEditor,
 }
 
 impl UI {
     pub fn new(options: Vec<Option>) -> UI {
         // Default Precision
         let default_precision = 15;
-        let mut ui = UI { calc: Calc::new(default_precision) };
+        let rl = DefaultEditor::new().unwrap();
+
+        let mut ui = UI { calc: Calc::new(default_precision), stdout: rl };
         let mut exit_after_single_queries = false;
         for option in options {
             match option {
@@ -38,20 +40,18 @@ impl UI {
         // Interaction loop: wait for user input -> parse user input -> query -> return output ->
         // ask for new user input
 
-        let mut rl = DefaultEditor::new().unwrap();
-
         loop {
             // Old Way of getting input via CliClack, Deprecated because of History management
             // let query: String = input("Calcxulate!").autocomplete(self.history.clone()).interact().expect("Could not get input...");
             // New: rustyline, less styling but more useful
-            let query: String = match rl.readline("Calcxulate >> ") {
+            let query: String = match self.stdout.readline("Calcxulate >> ") {
                 Ok(input) => {input},
                 Err(_) => {return},
             };
 
             match query.as_str() {
                 "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {return}
-                "clear" => {clear_screen().expect("Failed to clear screen..."); return self.interactive();}
+                "clear" => {self.stdout.clear_screen().expect("Failed to clear screen..."); return self.interactive();}
                 "help" => {
                     // Printing Help Menu when typing help into the calc
                     // clear_screen().expect("Failed to clear Screen..."); 
@@ -63,7 +63,7 @@ impl UI {
             }
             
             // Add to History
-            rl.add_history_entry(&query).expect("Could not add query to history...?");
+            self.stdout.add_history_entry(&query).expect("Could not add query to history...?");
 
             self.run_query(&query);
 
@@ -79,6 +79,6 @@ impl UI {
     }
 
     pub fn output(output_string: &str) {
-        log::success(output_string).expect("Could not write output...");
+        utils::success(output_string);
     }
 }

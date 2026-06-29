@@ -1,5 +1,4 @@
 use crate::ui::Option;
-use cliclack::log;
 use crate::Float;
 
 pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
@@ -7,6 +6,15 @@ pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
         Ok(_) => true,
         Err(_) => false,
     }
+}
+
+// Clean Output without CliClack
+pub fn success(output: &str) {
+    println!{"> {output}\n"};
+}
+
+pub fn info(output: &str) {
+    println!{"{output}"}
 }
 
 // Function to parse "--help" into printing help screen; Everything that is seperated by spaces and
@@ -68,7 +76,7 @@ pub fn help_menu() {
 -------------
 ";
     // Print Help menu and exit
-    log::info(output).unwrap();
+    info(output);
     std::process::exit(0);
 }
 
