@@ -40,6 +40,19 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Option> {
                 _ => {},
             }
         }
+
+        // Otherwise, we have a normal exec-once command / commands
+        else {
+            if opt.contains(";") {
+                // Multiple Commands in one
+                for cmd in opt.split(";") {
+                    option_queue.push(Option::SingleQuery(cmd.to_string()))
+                }
+            }
+            else {
+                option_queue.push(Option::SingleQuery(opt.clone()));
+            }
+        }
         index += 1;
     }
 

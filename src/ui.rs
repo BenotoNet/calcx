@@ -23,15 +23,14 @@ impl UI {
         // Default Precision
         let default_precision = 15;
         let mut ui = UI { calc: Calc::new(default_precision) };
+        let mut exit_after_single_queries = false;
         for option in options {
-            // NOTE: Remove later
-            #[allow(unused)]
             match option {
-                Option::SingleQuery(query) => {ui.run_query(&query); exit(1);},
+                Option::SingleQuery(query) => {ui.run_query(&query); exit_after_single_queries = true;},
                 Option::Precision(precision) => {ui.calc.change_precision(precision);}
-                _ => {},
             }
         }
+        if exit_after_single_queries {exit(0)};
         return ui;
     }
 
