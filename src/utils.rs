@@ -1,4 +1,4 @@
-use crate::Option;
+use crate::ui::Option;
 use cliclack::log;
 
 pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {

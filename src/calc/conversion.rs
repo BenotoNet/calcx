@@ -1,5 +1,5 @@
-use crate::Num;
 use crate::calc;
+use crate::calc::num::Num;
 
 // fn can_be_converted_to(base: &Num, to_units: &str) -> bool {
 //     can_be_converted(base, &calc::Calc::new().run(to_units))

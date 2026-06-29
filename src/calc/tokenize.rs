@@ -1,6 +1,6 @@
 use crate::utils;
 use super::Token;
-use crate::Num;
+use crate::calc::num::Num;
 
 pub mod misc_units;
 
