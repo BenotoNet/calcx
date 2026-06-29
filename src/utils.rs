@@ -1,5 +1,6 @@
 use crate::ui::Option;
 use cliclack::log;
+use crate::Float;
 
 pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
     match test_string.as_ref().parse::<f64>() {
@@ -54,4 +55,8 @@ pub fn help_menu() {
 -------------
 ";
     log::info(output).unwrap();
+}
+
+pub fn f64_to_Float(num: f64) -> Float {
+    return Float::with_val(crate::PRECISION, num);
 }

@@ -25,14 +25,17 @@ impl Calc {
         Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new() }
     }
 
+    // General Use Functions
     fn expect(&mut self, token: Token) {
         assert!{std::mem::discriminant(&self.advance().unwrap()) == std::mem::discriminant(&token)};
     }
 
+    // Get current token
     fn peek(&self) -> Option<Token> {
         return self.tokens.get(self.current).cloned();
     }
 
+    // Get current token, then advance pointer
     fn advance(&mut self) -> Option<Token> {
         let current_token = self.tokens.get(self.current).cloned();
         self.current += 1;

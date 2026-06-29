@@ -22,6 +22,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] Copy to clipboard function
 - [ ] high ceiling for overflow (-> e.g. multiplying very large numbers with each other) (-> For that I will need to change from f64 to a custom type (probably external crate...))
 - [ ] high precision (-> depending on user settings, but at least maximum of 1024 decimal digits) (-> See above)
+- [ ] Remove all possible Cloning of Floats & Units
 - [ ] implement other misc functions: ln, exp, arcsin, arccos, ...
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work)
