@@ -15,32 +15,32 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Option> {
     let args = &args[1..];
     let mut option_queue = vec![];
 
-    for opt in args {
-        // Parsing all command line arguments with starting with --
-        // e.g. --help
+    let mut index = 0;
+    while index < args.len() {
+        let opt = args.get(index).unwrap();
+
+        // Command line argument
         if opt.starts_with("--") {
-            // Verbose Opt
-            let cmd = &opt[2..];
-            match cmd {
-                "help" => {help_menu()},
-                _ => {}
+            match opt.as_str() {
+                "--help" => help_menu(),
+                "--precision" => {
+                    // new precision
+                    index += 1;
+                    let precision: usize = args.get(index).unwrap().parse().expect("Not a valid new Precision Value!");
+                    option_queue.push(Option::Precision(precision));
+                }
+                _ => {},
             }
         }
 
-        // Parsing all shorthands => e.g. -h for --help
+        // Short hand-commands
         else if opt.starts_with("-") {
-            // Short Opt
-            let cmd = &opt[1..];
-            match cmd {
-                "h" => {help_menu()},
-                _ => {}
+            match opt.as_str() {
+                "-h" => help_menu(),
+                _ => {},
             }
         }
-
-        // Parsing Exec-Once
-        else {
-            option_queue.push(Option::SingleQuery(opt.clone()))
-        }
+        index += 1;
     }
 
     // Return the entire list of options
