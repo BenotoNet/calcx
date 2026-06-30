@@ -11,6 +11,7 @@ use crate::utils;
 pub enum Option {
     SingleQuery(String),
     Precision(usize),
+    OutputOnly,
 }
 
 pub struct UI {
@@ -30,6 +31,7 @@ impl UI {
             match option {
                 Option::SingleQuery(query) => {ui.run_query(&query); exit_after_single_queries = true;},
                 Option::Precision(precision) => {ui.calc.change_precision(precision);}
+                Option::OutputOnly => todo!()
             }
         }
         if exit_after_single_queries {exit(0)};

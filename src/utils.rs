@@ -37,6 +37,9 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Option> {
                     let precision: usize = args.get(index).unwrap().parse().expect("Not a valid new Precision Value!");
                     option_queue.push(Option::Precision(precision));
                 }
+                "--output-only"|"-o" => {
+                    option_queue.push(Option::OutputOnly);
+                }
                 _ => {},
             }
         }

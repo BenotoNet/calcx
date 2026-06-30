@@ -68,6 +68,8 @@ pub fn unit_to_num(ul: &str) -> Option<Num> {
         "litre"|"liter"|"liters"|"litres" => {Num::new(1e-3, vec![('m', 3)])}
         "atomic_mass_unit"|"u"|"amu" => {Num::new(1.660538921e-27, vec![('K', 1)])}
 
+        "planck"|"placks_constant" => {Num::new(6.6260700939290016768e-34, vec![('m', 2), ('K', 1), ('s', -1)])}
+
         "electron_volt"|"eV" => {Num::new(1.6021766208e-19, vec![('K', 1), ('m', 2), ('s', -2)])},
         "elementary_charge" => {Num::new(1.6021766208e-19, vec![('a', 1), ('s', 1)])},
 
