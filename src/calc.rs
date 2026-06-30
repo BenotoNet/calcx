@@ -16,6 +16,7 @@ pub struct Calc {
     current: usize,
     variables: variables::VariableStorage,
     precision: usize,
+    history: Vec<Expr>,
 }
 
 mod parse;
@@ -23,7 +24,14 @@ mod eval;
 
 impl Calc {
     pub fn new(precision: usize) -> Calc {
-        Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new(), precision: precision}
+        Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new(), precision: precision, history: vec![] }
+    }
+
+    pub fn get_ans(&self) -> Option<Expr> {
+        match self.history.get(self.history.len()-1) {
+            Some(Expr::Number(num)) => Some(Expr::Number(num.clone())),
+            _ => None,
+        }
     }
 
     pub fn change_precision(&mut self, precision: usize) {
@@ -64,6 +72,13 @@ impl Calc {
 
         let tree = self.build_tree();
         // println!{"{tree:?}"};
-        self.eval(tree)
+        let output = self.eval(tree);
+
+        match &output {
+            Ok(Expr::Number(num)) => {self.history.push(Expr::Number(num.clone()))}
+            _ => {},
+        }
+
+        output
     }
 }

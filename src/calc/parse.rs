@@ -1,16 +1,15 @@
 use super::Calc;
 use super::expr::Expr;
-use super::num::Num;
 use super::token::Token;
 
 
 impl Calc {
-    pub fn build_tree(&mut self) -> Expr {
+    pub fn build_tree(&mut self) -> Option<Expr> {
         self.parse_expression()
     }
 
-    fn parse_expression(&mut self) -> Expr {
-        let mut left = self.parse_keywords();
+    fn parse_expression(&mut self) -> Option<Expr> {
+        let mut left = self.parse_keywords()?;
 
         while
             match self.peek() {
@@ -18,14 +17,14 @@ impl Calc {
             _ => false,
         } {
             let operation = self.advance().unwrap();
-            let right = self.parse_keywords();
+            let right = self.parse_keywords()?;
             left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
         }
-        return left;
+        return Some(left);
     }
 
-    fn parse_keywords(&mut self) -> Expr {
-        let mut left = self.parse_term();
+    fn parse_keywords(&mut self) -> Option<Expr> {
+        let mut left = self.parse_term()?;
 
         while 
             match self.peek() {
@@ -35,15 +34,15 @@ impl Calc {
         {
             // We have found a Keyword
             let keyword = self.advance().unwrap();
-            let right = self.parse_term();
+            let right = self.parse_term()?;
 
             left = Expr::Binary { left: Box::new(left), op: keyword, right: Box::new(right) };
         }
-        return left;
+        return Some(left);
     }
 
-    fn parse_term(&mut self) -> Expr {
-        let mut left = self.parse_bracket();
+    fn parse_term(&mut self) -> Option<Expr> {
+        let mut left = self.parse_bracket()?;
 
         while
             match self.peek() {
@@ -52,30 +51,30 @@ impl Calc {
         } {
             let operation = match self.advance() {
                 Some(v) => v,
-                _ => return left,
+                _ => return Some(left),
             };
-            let right = self.parse_bracket();
+            let right = self.parse_bracket()?;
             left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
         }
-        return left;
+        return Some(left);
     }
 
-    fn parse_bracket(&mut self) -> Expr {
-        let mut left = self.parse_exponents();
+    fn parse_bracket(&mut self) -> Option<Expr> {
+        let mut left = self.parse_exponents()?;
 
         while match self.peek() {
             Some(Token::LBrac) => true,
             _ => {false},
         } {
             let operation = Token::Mul;
-            let right = self.parse_exponents();
+            let right = self.parse_exponents()?;
             left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) }
         }
-        return left;
+        return Some(left);
     }
 
-    fn parse_exponents(&mut self) -> Expr {
-        let mut left = self.parse_factor();
+    fn parse_exponents(&mut self) -> Option<Expr> {
+        let mut left = self.parse_factor()?;
 
         while
             match self.peek() {
@@ -83,27 +82,29 @@ impl Calc {
                 _ => false,
             } {
                 let operation = self.advance().unwrap();
-                let right = self.parse_factor();
+                let right = self.parse_factor()?;
                 left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
             }
-        return left;
+        return Some(left);
     }
 
-    fn parse_factor(&mut self) -> Expr {
+    fn parse_factor(&mut self) -> Option<Expr> {
         match self.peek() {
-            Some(Token::Number(num)) => {self.advance(); Expr::Number(num)},
+            Some(Token::Number(num)) => {self.advance(); Some(Expr::Number(num))},
             // Bracket Logic => Starting a new branch
             Some(Token::LBrac) => {
                 self.advance();
-                let expr = self.parse_expression();
+                let expr = self.parse_expression()?;
+
                 // EXPECT RBrac
                 self.expect(Token::RBrac);
-                return expr;
+
+                return Some(expr);
             }
-            // make - 2 into the number "-2"
+            // make - 2 into the number "-2" by parsing into (-1)2
             Some(Token::Sub) => {
                 self.advance();
-                return Expr::Number(super::num::Num::new(-1.0, vec![]));
+                return Some(Expr::Number(super::num::Num::new(-1.0, vec![])));
             }
             // We found a variable!
             Some(Token::Var(var)) => {
@@ -112,28 +113,25 @@ impl Calc {
                     Some(Token::Assign) => {
                             self.advance();
                             let right = self.parse_expression();
-                            match self.eval(right).unwrap() {
-                                Expr::Number(num) => {
+                            match self.eval(right) {
+                                Ok(Expr::Number(num)) => {
                                     self.variables.set_var(var, num.clone());
-                                    Expr::Number(num)
+                                    Some(Expr::Number(num))
                                 },
                                 _ => {panic!{"Could not evaluate right side of assignment!"};}
                             }
                     }
                     _ => {
                         return match self.variables.get_var(var) {
-                            Some(v) => v,
+                            Some(v) => Some(v),
                             _ => panic!{"Undefined Variable"}
                         };
                     }
                 }
             }
-            Some(Token::Keyword(_)) => {
-                return Expr::Number(Num::unitless(1.0));
-            }
             _ => {
                 // an unknown Token!
-                panic!{"Unknown Token!"}
+                return None;
             },
         }
     }
