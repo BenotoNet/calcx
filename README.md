@@ -25,6 +25,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] high precision (-> depending on user settings, but at least maximum of 1024 decimal digits) (-> See above)
 - [ ] Make --output-only cli option with -o
 - [ ] Remove all possible Cloning of Floats & Units
+- [ ] Improve Precision on "Variables (e.g. Pi)"
 - [ ] implement other misc functions: ln, exp, arcsin, arccos, ...
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work)

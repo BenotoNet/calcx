@@ -43,7 +43,16 @@ impl Num {
         assert!{self.is_unitless()};
         assert!{num.is_unitless()};
 
-        return Num::unitless(format!{"{}{}", self.quantity, num.quantity}.parse::<f64>().unwrap());
+        let mut power_of_ten = num.get_quant().clone().log10().ceil();
+
+        // Edge case of number 1
+        if num.get_quant() == 1.0 || num.get_quant() == 0 {
+            power_of_ten = Float::with_val(crate::PRECISION, 1);
+        }
+
+        let combined_value = num.get_quant() + self.get_quant() * (Float::with_val(crate::PRECISION, 10.0).ln() * power_of_ten).exp();
+
+        return Num::unitless_float(combined_value);
     }
 
     pub fn from(quantity: Float, units: Units) -> Num {
