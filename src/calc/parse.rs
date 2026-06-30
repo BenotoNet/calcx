@@ -9,7 +9,7 @@ impl Calc {
     }
 
     fn parse_expression(&mut self) -> Option<Expr> {
-        let mut left = self.parse_keywords()?;
+        let mut left = self.parse_keywords();
 
         while
             match self.peek() {
@@ -17,14 +17,14 @@ impl Calc {
             _ => false,
         } {
             let operation = self.advance().unwrap();
-            let right = self.parse_keywords()?;
-            left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
+            let right = self.parse_keywords();
+            left = Some(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
         }
-        return Some(left);
+        return left;
     }
 
     fn parse_keywords(&mut self) -> Option<Expr> {
-        let mut left = self.parse_term()?;
+        let mut left = self.parse_term();
 
         while 
             match self.peek() {
@@ -34,15 +34,15 @@ impl Calc {
         {
             // We have found a Keyword
             let keyword = self.advance().unwrap();
-            let right = self.parse_term()?;
+            let right = self.parse_term();
 
-            left = Expr::Binary { left: Box::new(left), op: keyword, right: Box::new(right) };
+            left = Some(Expr::Binary { left: Box::new(left), op: keyword, right: Box::new(right) });
         }
-        return Some(left);
+        return left;
     }
 
     fn parse_term(&mut self) -> Option<Expr> {
-        let mut left = self.parse_bracket()?;
+        let mut left = self.parse_bracket();
 
         while
             match self.peek() {
@@ -51,30 +51,30 @@ impl Calc {
         } {
             let operation = match self.advance() {
                 Some(v) => v,
-                _ => return Some(left),
+                _ => return left,
             };
-            let right = self.parse_bracket()?;
-            left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
+            let right = self.parse_bracket();
+            left = Some(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
         }
-        return Some(left);
+        return left;
     }
 
     fn parse_bracket(&mut self) -> Option<Expr> {
-        let mut left = self.parse_exponents()?;
+        let mut left = self.parse_exponents();
 
         while match self.peek() {
             Some(Token::LBrac) => true,
             _ => {false},
         } {
             let operation = Token::Mul;
-            let right = self.parse_exponents()?;
-            left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) }
+            let right = self.parse_exponents();
+            left = Some(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) })
         }
-        return Some(left);
+        return left;
     }
 
     fn parse_exponents(&mut self) -> Option<Expr> {
-        let mut left = self.parse_factor()?;
+        let mut left = self.parse_factor();
 
         while
             match self.peek() {
@@ -82,10 +82,10 @@ impl Calc {
                 _ => false,
             } {
                 let operation = self.advance().unwrap();
-                let right = self.parse_factor()?;
-                left = Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) };
+                let right = self.parse_factor();
+                left = Some(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
             }
-        return Some(left);
+        return left;
     }
 
     fn parse_factor(&mut self) -> Option<Expr> {

@@ -25,8 +25,8 @@ impl Calc {
     pub fn eval(&self, tree: Option<Expr>) -> Result<Expr, String> {
         match tree {
             Some(Expr::Binary { left, op, right }) => {
-                let left = self.eval(Some(*left));
-                let right = self.eval(Some(*right));
+                let left = self.eval(*left);
+                let right = self.eval(*right);
 
                 match (left, right) {
                     (Ok(Expr::Number(num1)), Ok(Expr::Number(num2))) => {
@@ -46,9 +46,9 @@ impl Calc {
 
                     (left, right) => Ok(Expr::Binary { 
                         // Not atomic yet, so evaluate: 
-                        left: Box::new(left?), 
+                        left: Box::new(Some(left?)), 
                         op, 
-                        right: Box::new(right?),
+                        right: Box::new(Some(right?)),
                     }),
                 }
             }

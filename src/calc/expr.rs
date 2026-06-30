@@ -5,9 +5,9 @@ use super::token::Token;
 pub enum Expr {
     Number(Num),
     Binary {
-        left: Box<Expr>,
+        left: Box<Option<Expr>>,
         op: Token,
-        right: Box<Expr>,
+        right: Box<Option<Expr>>,
     }
 }
 
