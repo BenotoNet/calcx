@@ -19,8 +19,8 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Variables & Assignments (-> "hello = 2", "2*hello => 4")
 - [x] Variable Multiplication if left out (hello world => hello * world)
 - [x] Functions like sqrt() or sin()
-- [ ] ans / answer keyword for the result of last calculation
-- [ ] Copy to clipboard function
+- [x] ans / answer keyword for the result of last calculation
+- [x] Copy to clipboard function
 - [x] high ceiling for overflow (-> e.g. multiplying very large numbers with each other) (-> For that I will need to change from f64 to a custom type (probably external crate...))
 - [x] high precision (-> depending on user settings, but at least maximum of 1024 decimal digits) (-> See above)
 - [x] Make --output-only cli option with -o
