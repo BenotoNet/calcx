@@ -44,6 +44,11 @@ impl Calc {
                         return self.eval_atomic(None, op, Some(&num2));
                     }
 
+                    (Err(_), Err(_)) => {
+                        // Both sides failed
+                        return self.eval_atomic(None, op, None);
+                    }
+
                     (left, right) => Ok(Expr::Binary { 
                         // Not atomic yet, so evaluate: 
                         left: Box::new(Some(left?)), 
