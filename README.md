@@ -23,7 +23,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] Copy to clipboard function
 - [x] high ceiling for overflow (-> e.g. multiplying very large numbers with each other) (-> For that I will need to change from f64 to a custom type (probably external crate...))
 - [x] high precision (-> depending on user settings, but at least maximum of 1024 decimal digits) (-> See above)
-- [ ] Make --output-only cli option with -o
+- [x] Make --output-only cli option with -o
 - [ ] Remove all possible Cloning of Floats & Units
 - [ ] Improve Precision on "Variables (e.g. Pi)"
 - [ ] implement other misc functions: ln, exp, arcsin, arccos, ...

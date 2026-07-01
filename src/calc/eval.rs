@@ -3,8 +3,10 @@ use super::{expr::Expr, token::Token, num::Num};
 
 impl Calc {
     fn eval_atomic(&self, num1: Option<&Num>, op: Token, num2: Option<&Num>) -> Result<Expr, String> {
+        // println!{"{num1:?}, {op:?}, {num2:?}"};
         match op {
             // When we have simple operations between the two numbers, we simply apply the operation
+            // FIX: Remove all Unwraps
             Token::Add => {Ok(Expr::Number(num1.unwrap().add(&num2.unwrap()).unwrap()))},
             Token::Sub => {Ok(Expr::Number(num1.unwrap().sub(&num2.unwrap()).unwrap()))},
             Token::Mul => {Ok(Expr::Number(num1.unwrap().mul(&num2.unwrap()).unwrap()))},
@@ -17,7 +19,7 @@ impl Calc {
                 self.eval_keyword(key.as_str(), num1, num2)
             }
 
-            _ => {println!{"{op:?}"}; Err(String::from("Not an Operator!"))},
+            _ => {println!{"{op:?}"}; Err(String::from("Not an Operator / Operation!"))},
         }
 
     }

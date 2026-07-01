@@ -8,7 +8,8 @@ use crate::utils;
 // NOTE: UI Library
 
 // Enums for setting Options
-pub enum Option {
+#[derive(PartialEq)]
+pub enum Setting {
     SingleQuery(String),
     Precision(usize),
     OutputOnly,
@@ -17,21 +18,22 @@ pub enum Option {
 pub struct UI {
     calc: Calc,
     stdout: DefaultEditor,
+    persistent: Vec<Setting>
 }
 
 impl UI {
-    pub fn new(options: Vec<Option>) -> UI {
+    pub fn new(options: Vec<Setting>) -> UI {
         // Default Precision
         let default_precision = 15;
         let rl = DefaultEditor::new().unwrap();
 
-        let mut ui = UI { calc: Calc::new(default_precision), stdout: rl };
+        let mut ui = UI { calc: Calc::new(default_precision), stdout: rl, persistent: vec![] };
         let mut exit_after_single_queries = false;
         for option in options {
             match option {
-                Option::SingleQuery(query) => {ui.run_query(&query); exit_after_single_queries = true;},
-                Option::Precision(precision) => {ui.calc.change_precision(precision);}
-                Option::OutputOnly => todo!()
+                Setting::SingleQuery(query) => {ui.run_query(&query); exit_after_single_queries = true;},
+                Setting::Precision(precision) => {ui.calc.change_precision(precision);},
+                Setting::OutputOnly => ui.persistent.push(Setting::OutputOnly),
             }
         }
         if exit_after_single_queries {exit(0)};
@@ -77,7 +79,15 @@ impl UI {
     }
 
     pub fn run_query(&mut self, query: &str) {
-        UI::output(&self.calc.run_ouput(&query));
+        if self.persistent
+            .contains(
+                &Setting::OutputOnly
+                ) {
+            println!{"{}", self.calc.run_ouput(&query)};
+        } else {
+            // Normal output with nice formatting
+            UI::output(&self.calc.run_ouput(&query));
+        }
     }
 
     pub fn output(output_string: &str) {

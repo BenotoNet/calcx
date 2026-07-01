@@ -1,4 +1,4 @@
-use crate::ui::Option;
+use crate::ui::Setting;
 use crate::Float;
 
 pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
@@ -19,7 +19,7 @@ pub fn info(output: &str) {
 
 // Function to parse "--help" into printing help screen; Everything that is seperated by spaces and
 // does not contain -- or - will be added to the exec-once query => no interactive shell
-pub fn parse_cli_args(args: Vec<String>) -> Vec<Option> {
+pub fn parse_cli_args(args: Vec<String>) -> Vec<Setting> {
     let args = &args[1..];
     let mut option_queue = vec![];
 
@@ -28,26 +28,18 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Option> {
         let opt = args.get(index).unwrap();
 
         // Command line argument
-        if opt.starts_with("--") {
+        if opt.starts_with("-") {
             match opt.as_str() {
-                "--help" => help_menu(),
+                "--help"|"-h" => help_menu(),
                 "--precision" => {
                     // new precision
                     index += 1;
                     let precision: usize = args.get(index).unwrap().parse().expect("Not a valid new Precision Value!");
-                    option_queue.push(Option::Precision(precision));
+                    option_queue.push(Setting::Precision(precision));
                 }
                 "--output-only"|"-o" => {
-                    option_queue.push(Option::OutputOnly);
+                    option_queue.push(Setting::OutputOnly);
                 }
-                _ => {},
-            }
-        }
-
-        // Short hand-commands
-        else if opt.starts_with("-") {
-            match opt.as_str() {
-                "-h" => help_menu(),
                 _ => {},
             }
         }
@@ -57,11 +49,11 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Option> {
             if opt.contains(";") {
                 // Multiple Commands in one
                 for cmd in opt.split(";") {
-                    option_queue.push(Option::SingleQuery(cmd.to_string()))
+                    option_queue.push(Setting::SingleQuery(cmd.to_string()))
                 }
             }
             else {
-                option_queue.push(Option::SingleQuery(opt.clone()));
+                option_queue.push(Setting::SingleQuery(opt.clone()));
             }
         }
         index += 1;
