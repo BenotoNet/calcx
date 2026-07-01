@@ -49,6 +49,9 @@ impl Num {
         if num.get_quant() == 1.0 || num.get_quant() == 0 {
             power_of_ten = Float::with_val(crate::PRECISION, 1);
         }
+        else if num.get_quant().clone().log10() == power_of_ten {
+            power_of_ten += 1;
+        }
 
         let combined_value = num.get_quant() + self.get_quant() * (Float::with_val(crate::PRECISION, 10.0).ln() * power_of_ten).exp();
 

@@ -37,7 +37,8 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] HEX to RGB, etc
 - [ ] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated)
 - [ ] Fix (-2)-2 != 4 (--> -2 * -2 is what is being calculated; same as above)
-- [ ] FIX 5 10 => 60
+- [ ] Fix 5 05 => 55 (should be 505)
+- [x] FIX 5 10 => 60
 - [x] Fix -(5+5) (currently crashes)
 - [x] Fix 10^31 planck => Is supposedly not unitless
 
