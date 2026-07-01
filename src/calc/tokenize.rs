@@ -51,7 +51,7 @@ fn is_keyword(unknown_token: &str) -> bool {
 
     // Check if it's a reserved keyword:
     match unknown_token {
-        "to"|"in"|"sqrt"|"sin"|"cos"|"ans" => true,
+        "to"|"in"|"sqrt"|"sin"|"cos"|"ans"|"clip"|"copy" => true,
         _ => false,
     }
 }
@@ -153,6 +153,17 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
         // a number and then a var or the other way around
         (Token::Var(_), Some(Token::Var(_)))|(Token::Var(_), Some(Token::Number(_)))|(Token::Number(_), Some(Token::Var(_))) => {
             tokens.insert(index+1, Token::Mul);
+        }
+
+        // Adding Brackets around "ans" keyword to allow automatic multiplication & inserting into
+        // functions, etc
+        (Token::Keyword(key), _) => {
+            if key == "ans" {
+                tokens.insert(index, Token::LBrac);
+                tokens.insert(index+2, Token::RBrac);
+                index += 1;
+            }
+            index += 1;
         }
         _ => {index += 1;}
         }

@@ -1,3 +1,5 @@
+use cli_clipboard::set_contents;
+
 use crate::calc::Calc;
 use crate::calc::{num::Num, expr::Expr};
 use crate::calc::conversion::convert;
@@ -55,6 +57,18 @@ impl Calc {
                     None => {}
                 };
                 return Ok(Expr::Number(last_answer));
+            }
+            // Copying last answer to clipboard:
+            ("clip"|"copy", None, None) => {
+                return match self.get_ans() {
+                    Some(v) => {
+                        // Copying
+                        set_contents(v.display(self.precision)).unwrap();
+
+                        Ok(v)
+                    },
+                    _ => Err(String::from("Could not copy last answer to Clipboard, maybe not accessible")),
+                }
             }
             // "arcsin" => {
             //     // TODO: add arcsine function
