@@ -9,8 +9,9 @@ pub struct Num {
 
 #[allow(unused)]
 impl Num {
-    pub fn new(quantity: f64, units_vec: Vec<(char, i8)>) -> Num {
-        let quantity = utils::f64_to_float(quantity);
+    pub fn new(quantity: &str, units_vec: Vec<(char, i8)>) -> Num {
+        let quantity = Float::parse(quantity).unwrap();
+        let quantity = Float::with_val(crate::PRECISION, quantity);
         Num { quantity, units: Units::new(units_vec) }
     }
 
@@ -18,7 +19,7 @@ impl Num {
         Num { quantity, units: Units::new(units_vec) }
     }
 
-    pub fn unitless(quantity: f64) -> Num {
+    pub fn unitless(quantity: &str) -> Num {
         Num::new(quantity, vec![])
     }
 

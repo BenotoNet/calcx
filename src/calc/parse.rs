@@ -104,7 +104,7 @@ impl Calc {
             // make - 2 into the number "-2" by parsing into (-1)2
             Some(Token::Sub) => {
                 self.advance();
-                return Some(Expr::Number(super::num::Num::new(-1.0, vec![])));
+                return Some(Expr::Number(super::num::Num::new("-1.0", vec![])));
             }
             // We found a variable!
             Some(Token::Var(var)) => {
@@ -124,7 +124,7 @@ impl Calc {
                     _ => {
                         return match self.variables.get_var(var) {
                             Some(v) => Some(v),
-                            _ => panic!{"Undefined Variable"}
+                            _ => None
                         };
                     }
                 }

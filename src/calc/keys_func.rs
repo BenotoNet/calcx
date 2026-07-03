@@ -17,8 +17,8 @@ impl Calc {
                 return Ok(
                     Expr::Number(
                         match num1 {
-                            Some(num1) => {num1.mul(&num2.powf(&Num::unitless(0.5)).unwrap()).unwrap()},
-                            _ => {num2.powf(&Num::unitless(0.5)).unwrap()},
+                            Some(num1) => {num1.mul(&num2.powf(&Num::unitless("0.5")).unwrap()).unwrap()},
+                            _ => {num2.powf(&Num::unitless("0.5")).unwrap()},
                         }
                         )
                     );
@@ -37,8 +37,8 @@ impl Calc {
                 return Ok(
                     Expr::Number(
                         match num1 {
-                            Some(num1) => {num1.mul(&(num2.add(&Num::unitless(1.57079632679489661923132169163975144209858469968755)).unwrap()).sin().unwrap()).unwrap()},
-                            _ => {(num2.add(&Num::unitless(1.57079632679489661923132169163975144209858469968755)).unwrap()).sin().unwrap()},
+                            Some(num1) => {num1.mul(&(num2.add(&Num::unitless("1.57079632679489661923132169163975144209858469968755")).unwrap()).sin().unwrap()).unwrap()},
+                            _ => {(num2.add(&Num::unitless("1.57079632679489661923132169163975144209858469968755")).unwrap()).sin().unwrap()},
                         }
                         )
                     );

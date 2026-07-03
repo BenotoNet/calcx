@@ -61,7 +61,7 @@ fn categorize(tokens: Vec<Token>) -> Vec<Token> {
         match token {
             Token::Unknown(token_string) => {
                 let token_str = token_string.as_str();
-                if utils::is_number(token_str) {return Token::Number(Num::unitless(token_str.parse::<f64>().unwrap()));}
+                if utils::is_number(token_str) {return Token::Number(Num::unitless(token_str));}
                 match token_str {
                     "+" => {Token::Add}
                     "-" => {Token::Sub}
