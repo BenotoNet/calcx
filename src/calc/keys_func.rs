@@ -198,7 +198,8 @@ impl Calc {
                 return Ok(Expr::Number(last_answer));
             }
             // Copying last answer to clipboard:
-            ("clip"|"copy"|"clipboard", None, None) => {
+            ("clip"|"copy"|"clipboard", _, _) => {
+                println!{"{:?}", self.get_ans()};
                 return match self.get_ans() {
                     Some(v) => {
                         // Copying

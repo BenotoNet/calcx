@@ -75,10 +75,6 @@ pub fn help_menu() {
     std::process::exit(0);
 }
 
-pub fn f64_to_float(num: f64) -> Float {
-    return Float::with_val(crate::PRECISION, num);
-}
-
 // Written by AI, sorry...
 pub fn format_float(x: &Float, max_decimals: usize) -> String {
     let s = format!("{:.*}", max_decimals, x);

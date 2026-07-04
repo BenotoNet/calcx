@@ -60,7 +60,7 @@ impl Calc {
                 }
             }
             Some(v) => {Ok(v)}
-            _ => Err(String::from("idk"))
+            _ => Err(format!{"idk"}),
         }
     }
 }
