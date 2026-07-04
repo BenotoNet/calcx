@@ -24,14 +24,14 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] high ceiling for overflow (-> e.g. multiplying very large numbers with each other) (-> For that I will need to change from f64 to a custom type (probably external crate...))
 - [x] high precision (-> depending on user settings, but at least maximum of 1024 decimal digits) (-> See above)
 - [x] Make --output-only cli option with -o
-- [ ] Remove all possible Cloning of Floats & Units
-- [ ] Improve Precision on "Variables (e.g. Pi)"
+- [x] Improve Precision on "Variables (e.g. Pi)"
+- [x] user defined settings (precision, etc)
 - [ ] implement other misc functions: ln, exp, arcsin, arccos, ...
+- [ ] Remove all possible Cloning of Floats & Units
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work)
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
 - [ ] saving functions to profile (& settings)
-- [ ] user defined settings (precision, etc)
 - [ ] Fractional Units (e.g. Sqrt(second))
 - [ ] stop frequent crashes and handle errors instead (-> Operation is impossible, might require dimensionless argument, etc)
 - [ ] HEX to RGB, etc

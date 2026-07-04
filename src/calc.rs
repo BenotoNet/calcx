@@ -28,7 +28,7 @@ impl Calc {
     }
 
     pub fn get_ans(&self) -> Option<Expr> {
-        match self.history.get(self.history.len()-1) {
+        match self.history.last() {
             Some(Expr::Number(num)) => Some(Expr::Number(num.clone())),
             _ => None,
         }
