@@ -43,6 +43,145 @@ impl Calc {
                         )
                     );
             }
+            ("tan", num1, Some(num2)) => {
+                let ans = num2.tan().unwrap();
+
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {num1.mul(&ans).unwrap()},
+                            _ => ans,
+                        }
+                    )
+                )
+            }
+            ("arcsin", num1, Some(num2)) => {
+                let ans = num2.arcsin().unwrap();
+
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {num1.mul(&ans).unwrap()},
+                            _ => ans,
+                        }
+                    )
+                )
+            }
+            ("arccos", num1, Some(num2)) => {
+                let ans = num2.arccos().unwrap();
+
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {num1.mul(&ans).unwrap()},
+                            _ => ans,
+                        }
+                    )
+                )
+            }
+            ("arctan", num1, Some(num2)) => {
+                let ans = num2.arctan().unwrap();
+
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {num1.mul(&ans).unwrap()},
+                            _ => ans,
+                        }
+                    )
+                )
+            }
+            ("ln", num1, Some(num2)) => {
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {
+                                num1.mul(&(num2.log(&crate::calc::tokenize::misc_units::unit_to_num("e").unwrap())).unwrap()).unwrap()
+                            }
+                            _ => {num2.log(&crate::calc::tokenize::misc_units::unit_to_num("e").unwrap()).unwrap()},
+                        }
+                    )
+                )
+            }
+            ("lg"|"log10", num1, Some(num2)) => {
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {
+                                num1.mul(&(num2.log(&Num::unitless("10"))).unwrap()).unwrap()
+                            }
+                            _ => {num2.log(&Num::unitless("10")).unwrap()},
+                        }
+                    )
+                )
+            }
+            ("log2", num1, Some(num2)) => {
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {
+                                num1.mul(&(num2.log(&Num::unitless("2"))).unwrap()).unwrap()
+                            }
+                            _ => {num2.log(&Num::unitless("2")).unwrap()},
+                        }
+                    )
+                )
+            }
+            ("exp", num1, Some(num2)) => {
+                let ans = num2.exp().unwrap();
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {num1.mul(&ans).unwrap()},
+                            _ => ans,
+                        }
+                    )
+                )
+            }
+            ("floor"|"round_down", num1, Some(num2)) => {
+                let ans = num2.floor().unwrap();
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {num1.mul(&ans).unwrap()},
+                            _ => ans,
+                        }
+                    )
+                )
+            }
+            ("ceil"|"round_up"|"ceiling", num1, Some(num2)) => {
+                let ans = num2.ceil().unwrap();
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {num1.mul(&ans).unwrap()},
+                            _ => ans,
+                        }
+                    )
+                )
+            }
+            ("round", num1, Some(num2)) => {
+                let ans = num2.round().unwrap();
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {num1.mul(&ans).unwrap()},
+                            _ => ans,
+                        }
+                    )
+                )
+            }
+            ("abs", num1, Some(num2)) => {
+                let ans = num2.abs().unwrap();
+                return Ok(
+                    Expr::Number(
+                        match num1 {
+                            Some(num1) => {num1.mul(&ans).unwrap()},
+                            _ => ans,
+                        }
+                    )
+                )
+            }
             ("ans", num1, num2) => {
                 let mut last_answer = match self.get_ans() {
                     Some(Expr::Number(num3)) => {num3}

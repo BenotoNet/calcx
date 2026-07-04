@@ -115,6 +115,72 @@ impl Num {
         }
     }
 
+    pub fn tan(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless_float(self.quantity.clone().tan())),
+            false => None,
+        }
+    }
+
+    pub fn arcsin(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless_float(self.quantity.clone().asin())),
+            false => None,
+        }
+    }
+
+    pub fn arccos(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless_float(self.quantity.clone().acos())),
+            false => None,
+        }
+    }
+
+    pub fn arctan(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless_float(self.quantity.clone().atan())),
+            false => None,
+        }
+    }
+
+    pub fn abs(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless_float(self.quantity.clone().abs())),
+            false => None,
+        }
+    }
+
+    pub fn round(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless_float(self.quantity.clone().round())),
+            false => None,
+        }
+    }
+
+    pub fn ceil(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless_float(self.quantity.clone().ceil())),
+            false => None,
+        }
+    }
+
+    pub fn floor(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless_float(self.quantity.clone().floor())),
+            false => None,
+        }
+    }
+
+    pub fn log(&self, base: &Num) -> Option<Num> {
+        if !self.is_unitless() || !base.is_unitless() {return None};
+        Some(Num::unitless_float(self.quantity.clone().log2()).div(&Num::unitless_float(base.get_quant().log2())).unwrap())
+    }
+
+    pub fn exp(&self) -> Option<Num> {
+        if !self.is_unitless() {return None};
+        Some(Num::unitless_float(self.quantity.clone().exp()))
+    }
+
     pub fn display(&self, precision: usize) -> String {
         format!("{} {}", utils::format_float(&self.quantity, precision), self.units.display())
     }
