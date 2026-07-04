@@ -7,13 +7,13 @@ use crate::calc::conversion::convert;
 impl Calc {
     pub fn eval_keyword(&self, key: &str, num1: Option<&Num>, num2: Option<&Num>) -> Result<Expr, String> {
         match (key, num1, num2) {
-            ("to"|"in", Some(num1), Some(num2)) => {
+            ("to"|"in"|"convert"|"convert_to", Some(num1), Some(num2)) => {
                 return match convert(&num1, Expr::Number(num2.clone())) {
                     Some(output) => {Ok(Expr::Number(output))},
                     _ => Err(String::from("Conversion Impossible!")),
                 }
             }
-            ("sqrt", num1, Some(num2)) => {
+            ("sqrt"|"root2", num1, Some(num2)) => {
                 return Ok(
                     Expr::Number(
                         match num1 {
@@ -23,7 +23,7 @@ impl Calc {
                         )
                     );
             }
-            ("sin", num1, Some(num2)) => {
+            ("sin"|"sine", num1, Some(num2)) => {
                 return Ok(
                     Expr::Number(
                         match num1 {
@@ -33,7 +33,7 @@ impl Calc {
                         )
                     );
             }
-            ("cos", num1, Some(num2)) => {
+            ("cos"|"cosine", num1, Some(num2)) => {
                 return Ok(
                     Expr::Number(
                         match num1 {
@@ -43,7 +43,7 @@ impl Calc {
                         )
                     );
             }
-            ("tan", num1, Some(num2)) => {
+            ("tan"|"tangent", num1, Some(num2)) => {
                 let ans = num2.tan().unwrap();
 
                 return Ok(
@@ -55,7 +55,7 @@ impl Calc {
                     )
                 )
             }
-            ("arcsin", num1, Some(num2)) => {
+            ("arcsin"|"arcsine"|"asin", num1, Some(num2)) => {
                 let ans = num2.arcsin().unwrap();
 
                 return Ok(
@@ -67,7 +67,7 @@ impl Calc {
                     )
                 )
             }
-            ("arccos", num1, Some(num2)) => {
+            ("arccos"|"arccosine"|"acos", num1, Some(num2)) => {
                 let ans = num2.arccos().unwrap();
 
                 return Ok(
@@ -79,7 +79,7 @@ impl Calc {
                     )
                 )
             }
-            ("arctan", num1, Some(num2)) => {
+            ("arctan"|"arctangent"|"atan", num1, Some(num2)) => {
                 let ans = num2.arctan().unwrap();
 
                 return Ok(
@@ -138,7 +138,7 @@ impl Calc {
                     )
                 )
             }
-            ("floor"|"round_down", num1, Some(num2)) => {
+            ("floor"|"round_down"|"rdown"|"roundd", num1, Some(num2)) => {
                 let ans = num2.floor().unwrap();
                 return Ok(
                     Expr::Number(
@@ -149,7 +149,7 @@ impl Calc {
                     )
                 )
             }
-            ("ceil"|"round_up"|"ceiling", num1, Some(num2)) => {
+            ("ceil"|"round_up"|"ceiling"|"rup"|"roundu", num1, Some(num2)) => {
                 let ans = num2.ceil().unwrap();
                 return Ok(
                     Expr::Number(
@@ -171,7 +171,7 @@ impl Calc {
                     )
                 )
             }
-            ("abs", num1, Some(num2)) => {
+            ("abs"|"absolute"|"absolutes", num1, Some(num2)) => {
                 let ans = num2.abs().unwrap();
                 return Ok(
                     Expr::Number(
@@ -182,7 +182,7 @@ impl Calc {
                     )
                 )
             }
-            ("ans", num1, num2) => {
+            ("ans"|"last", num1, num2) => {
                 let mut last_answer = match self.get_ans() {
                     Some(Expr::Number(num3)) => {num3}
                     _ => {return Err(String::from("Last Answer not accessible!"))},
@@ -198,7 +198,7 @@ impl Calc {
                 return Ok(Expr::Number(last_answer));
             }
             // Copying last answer to clipboard:
-            ("clip"|"copy", None, None) => {
+            ("clip"|"copy"|"clipboard", None, None) => {
                 return match self.get_ans() {
                     Some(v) => {
                         // Copying
@@ -209,9 +209,6 @@ impl Calc {
                     _ => Err(String::from("Could not copy last answer to Clipboard, maybe not accessible")),
                 }
             }
-            // "arcsin" => {
-            //     // TODO: add arcsine function
-            // }
             _ => Err(String::from("Unknown Keyword Or Not enough Arguments! (Maybe not implemented yet?)")),
         }
     }
