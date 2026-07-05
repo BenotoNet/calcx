@@ -115,6 +115,13 @@ impl Num {
         }
     }
 
+    pub fn cos(&self) -> Option<Num> {
+        match self.is_unitless() {
+            true => Some(Num::unitless_float(self.quantity.clone().cos())),
+            false => None,
+        }
+    }
+
     pub fn tan(&self) -> Option<Num> {
         match self.is_unitless() {
             true => Some(Num::unitless_float(self.quantity.clone().tan())),
