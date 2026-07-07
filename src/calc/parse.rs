@@ -14,21 +14,50 @@ impl Calc {
         let mut args = vec![];
 
         // Splitting Arguments with ','
-        let temp_arg: Vec<Token> = vec![];
+        let mut temp_arg: Vec<Token> = vec![];
+        let mut brackets = 1;
         while match self.advance() {
             Some(Token::Func(func)) => {
                 if func.as_str() == "," {
-                    // one argument finished, evaluating, then appending to args
+                    // one argument finished, appending to args, then continue
                     args.push(temp_arg.clone());
+                    temp_arg = vec![];
                     true
                 }
                 else {
                     // We have a function as an argument for a function...? I guess that's okay...
+                    temp_arg.push(Token::Func(func));
                     true
                 }
             }
-            _ => false
+            // Increase Bracket count by one, so that when we have the matching RBrac, we don't stop
+            // parsing args, e.g. func((5+2), 2)
+            Some(Token::LBrac) => {brackets += 1; true},
+            // Check if we are at the last closing bracket, then append final arg and stop
+            Some(Token::RBrac) => {brackets -= 1; if brackets <= 0 {
+                args.push(temp_arg.clone());
+                false
+            } 
+            else {true}},
+
+            // We are at the end, because self.advance does not give anything anymore, therefore
+            // stop
+            None => {false}
+
+            // we got anything other than specified above, then append if not none and continue
+            var => {
+                match var {
+                    Some(v) => temp_arg.push(v),
+                    _ => {},
+                }
+                true
+            }
         } {};
+
+        // FIX: Here, I would need to build my own another tree of the part of the tokens that were parsed
+        // as args
+
+        println!{"{:?}", args}
         
         None
     }

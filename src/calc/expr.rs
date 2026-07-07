@@ -8,7 +8,11 @@ pub enum Expr {
         left: Box<Option<Expr>>,
         op: Token,
         right: Box<Option<Expr>>,
-    }
+    },
+    Arg {
+        arg: Box<Option<Expr>>,
+        right: Box<Option<Expr>>,
+    },
 }
 
 impl Expr {
