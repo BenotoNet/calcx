@@ -54,12 +54,14 @@ impl Calc {
             }
         } {};
 
-        // FIX: Here, I would need to build my own another tree of the part of the tokens that were parsed
-        // as args
+        let mut out = None;
+        for arg in args {
+            let mut temp_calc = Calc::new(self.precision);
+            temp_calc.set_tokens(arg.clone());
+            out = Some(Expr::Arg {arg: Box::new(temp_calc.build_tree()), right: Box::new(out) });
+        }
 
-        println!{"{:?}", args}
-        
-        None
+        out
     }
 
     fn parse_expression(&mut self) -> Option<Expr> {

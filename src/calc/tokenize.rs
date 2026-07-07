@@ -81,7 +81,7 @@ fn categorize(tokens: Vec<Token>) -> Vec<Token> {
                         if is_keyword(token_string) {
                             return Token::Keyword(token_string.clone());
                         }
-                        if super::funcs::is_function() {
+                        if super::funcs::is_function(token_string) {
                             return Token::Func(token_string.clone())
                         }
                         else {

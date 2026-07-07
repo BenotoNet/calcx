@@ -6,7 +6,6 @@ pub mod expr;
 pub mod conversion;
 pub mod variables;
 pub mod keys_func;
-pub mod funcs;
 
 use token::Token;
 use expr::Expr;
@@ -22,10 +21,15 @@ pub struct Calc {
 
 mod parse;
 mod eval;
+mod funcs;
 
 impl Calc {
     pub fn new(precision: usize) -> Calc {
         Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new(), precision: precision, history: vec![] }
+    }
+
+    pub fn set_tokens(&mut self, tokens: Vec<Token>) {
+        self.tokens = tokens;
     }
 
     pub fn get_ans(&self) -> Option<Expr> {
@@ -72,7 +76,7 @@ impl Calc {
         // println!{"{:?}", self.tokens}
 
         let tree = self.build_tree();
-        // println!{"{tree:?}"};
+        println!{"{tree:?}"};
         let output = self.eval(tree);
 
         match &output {
