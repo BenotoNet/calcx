@@ -8,6 +8,31 @@ impl Calc {
         self.parse_expression()
     }
 
+    pub fn parse_function_arguments(&mut self) -> Option<Expr> {
+        self.expect(Token::LBrac);
+        
+        let mut args = vec![];
+
+        // Splitting Arguments with ','
+        let temp_arg: Vec<Token> = vec![];
+        while match self.advance() {
+            Some(Token::Func(func)) => {
+                if func.as_str() == "," {
+                    // one argument finished, evaluating, then appending to args
+                    args.push(temp_arg.clone());
+                    true
+                }
+                else {
+                    // We have a function as an argument for a function...? I guess that's okay...
+                    true
+                }
+            }
+            _ => false
+        } {};
+        
+        None
+    }
+
     fn parse_expression(&mut self) -> Option<Expr> {
         let mut left = self.parse_keywords();
 
@@ -29,6 +54,11 @@ impl Calc {
         while 
             match self.peek() {
                 Some(Token::Keyword(_)) => true,
+                Some(Token::Func(func)) => {
+                    let func_token = self.advance().unwrap();
+                    let args = self.parse_function_arguments();
+                    return Some(Expr::Binary { left: Box::new(left), op: func_token, right: Box::new(args) });
+                },
                 _ => false,
             }
         {

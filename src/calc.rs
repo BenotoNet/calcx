@@ -6,6 +6,7 @@ pub mod expr;
 pub mod conversion;
 pub mod variables;
 pub mod keys_func;
+pub mod funcs;
 
 use token::Token;
 use expr::Expr;
@@ -68,10 +69,10 @@ impl Calc {
 
         // This function is supposed to tokenize the given query
         self.tokens = tokenize::tokenize(query);
-        // println!{"{:?}", self.tokens}
+        println!{"{:?}", self.tokens}
 
         let tree = self.build_tree();
-        // println!{"{tree:?}"};
+        println!{"{tree:?}"};
         let output = self.eval(tree);
 
         match &output {

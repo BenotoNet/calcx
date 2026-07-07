@@ -5,7 +5,7 @@ use crate::calc::num::Num;
 pub mod misc_units;
 
 fn split_into_unknowns(query: &str) -> Vec<Token> {
-    let splitters = String::from("+*/%!^()= ");
+    let splitters = String::from("+*/%!^()= ,");
     let mut output = vec![];
     let mut partial = String::new();
     for c in query.chars() {
@@ -80,6 +80,9 @@ fn categorize(tokens: Vec<Token>) -> Vec<Token> {
                         // Test for Keyword:
                         if is_keyword(token_string) {
                             return Token::Keyword(token_string.clone());
+                        }
+                        if super::funcs::is_function() {
+                            return Token::Func(token_string.clone())
                         }
                         else {
                             return Token::Var(token_string.clone());
