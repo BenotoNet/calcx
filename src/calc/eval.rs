@@ -1,5 +1,4 @@
 use crate::calc::funcs;
-
 use super::Calc;
 use super::{expr::Expr, token::Token, num::Num};
 
@@ -29,8 +28,16 @@ impl Calc {
     pub fn eval(&self, tree: Option<Expr>) -> Result<Expr, String> {
         match tree {
             Some(Expr::Binary { left, op, right }) => {
-                // FIX: Check if we have a function and if yes, deal with it properly (TODO FOR
-                // LATER; I DONT EVEN FUCKING KNOW HOW)
+                // if we have a function as the operator, run the code with given arguments
+                match op.clone() {
+                    Token::Func(func) => {
+                        // We run the function code and also pass along the arguments
+                        let right = right.clone();
+                        println!{"{:?}", funcs::func_call(&func, *right)};
+                        // FIX: Figure out what to do with the result here
+                    }
+                    _ => {}
+                }
 
                 let left = self.eval(*left);
                 let right = self.eval(*right);
