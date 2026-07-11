@@ -1,8 +1,18 @@
 use crate::calc::expr::Expr;
+use crate::calc::num::Num;
 
+// Horrible Way, but works -> Evaluating an argument by using a new calculator instance
+fn eval_argument(arg: Expr) -> Result<Expr, String> {
+    let temp_calc = crate::calc::Calc::new(crate::PRECISION as usize);
+    temp_calc.eval(Some(arg))
+}
 
+// FIX: When should it be a function, and when a keyword / Variable?
 pub fn is_function(token_str: &str) -> bool {
-    true
+    match token_str {
+        "add_one" => true,
+        _ => false,
+    }
 }
 
 pub fn unwrap_args(mut args: Option<Expr>) -> Vec<Expr> {
@@ -26,11 +36,14 @@ pub fn unwrap_args(mut args: Option<Expr>) -> Vec<Expr> {
 pub fn func_call(func_str: &str, args: Option<Expr>) -> Result<Expr, String> {
     let args = unwrap_args(args); // This function unwraps the Arguments into a simple array of
                                   // expressions
-    // FIX: We need to evaluate each argument, so that we have only one number left, not an
-    // expression of tokens
     match func_str {
         "add_one" => {
-            // FIX: Implement a function to add one to the first argument
+            match eval_argument(args.get(0).unwrap().clone()) {
+                Ok(Expr::Number(num)) => {
+                    return Ok(Expr::Number(num.add(&Num::unitless("1.0")).unwrap()));
+                }
+                _ => {}
+            };
         },
         _ => {},
     }

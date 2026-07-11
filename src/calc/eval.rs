@@ -29,12 +29,10 @@ impl Calc {
         match tree {
             Some(Expr::Binary { left, op, right }) => {
                 // if we have a function as the operator, run the code with given arguments
-                match op.clone() {
+                match op {
                     Token::Func(func) => {
                         // We run the function code and also pass along the arguments
-                        let right = right.clone();
-                        println!{"{:?}", funcs::func_call(&func, *right)};
-                        // FIX: Figure out what to do with the result here
+                        return funcs::func_call(&func, *right);
                     }
                     _ => {}
                 }

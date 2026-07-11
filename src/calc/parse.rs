@@ -32,9 +32,11 @@ impl Calc {
             }
             // Increase Bracket count by one, so that when we have the matching RBrac, we don't stop
             // parsing args, e.g. func((5+2), 2)
-            Some(Token::LBrac) => {brackets += 1; true},
+            // Also add the brackets to the argument => ((5+2) / 2) otherwise becomes 5 + 2 / 2 
+            //    -> Different results
+            Some(Token::LBrac) => {temp_arg.push(Token::LBrac); brackets += 1; true},
             // Check if we are at the last closing bracket, then append final arg and stop
-            Some(Token::RBrac) => {brackets -= 1; if brackets <= 0 {
+            Some(Token::RBrac) => {temp_arg.push(Token::RBrac); brackets -= 1; if brackets <= 0 {
                 args.push(temp_arg.clone());
                 false
             } 
@@ -85,16 +87,20 @@ impl Calc {
         while 
             match self.peek() {
                 Some(Token::Keyword(_)) => true,
-                Some(Token::Func(func)) => {
+                Some(Token::Func(_)) => {
                     let func_token = self.advance().unwrap();
                     let args = self.parse_function_arguments();
-                    return Some(Expr::Binary { left: Box::new(left), op: func_token, right: Box::new(args) });
+                    left = Some(Expr::Binary { left: Box::new(left), op: func_token, right: Box::new(args) });
+                    true
                 },
                 _ => false,
             }
         {
             // We have found a Keyword
-            let keyword = self.advance().unwrap();
+            let keyword = match self.advance() {
+                Some(v) => v,
+                _ => {return left}
+            };
             let right = self.parse_term();
 
             left = Some(Expr::Binary { left: Box::new(left), op: keyword, right: Box::new(right) });

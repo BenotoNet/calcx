@@ -27,8 +27,12 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Improve Precision on "Variables (e.g. Pi)"
 - [x] user defined settings (precision, etc)
 - [x] implement other misc functions: ln, exp, arcsin, arccos, floor, ...
+- [x] Functions (with multiple arguments)
+- [ ] Fix bugs for Functions: add_one(add_one(5)) should be 7
+- [ ] Fix: sqrt(add_one(8)) should be 3
+// Comment: sqrt(add_one(5)+0) works just fine
+- [ ] Custom User defined functions
 - [ ] Fractional Units (e.g. Sqrt(second))
-- [ ] Functions (with multiple arguments)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Remove all possible Cloning of Floats & Units
 - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work)
