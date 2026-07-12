@@ -10,7 +10,7 @@ fn eval_argument(arg: Expr) -> Result<Expr, String> {
 // FIX: When should it be a function, and when a keyword / Variable?
 pub fn is_function(token_str: &str) -> bool {
     match token_str {
-        "add_one" => true,
+        "add_one"|"," => true,
         _ => false,
     }
 }

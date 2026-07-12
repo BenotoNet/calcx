@@ -9,13 +9,21 @@ impl Calc {
     }
 
     pub fn parse_function_arguments(&mut self) -> Option<Expr> {
-        self.expect(Token::LBrac);
-        
         let mut args = vec![];
 
         // Splitting Arguments with ','
         let mut temp_arg: Vec<Token> = vec![];
-        let mut brackets = 1;
+        let mut brackets = 0;
+
+        // First opening Bracket -> Opening Bracket should not be added to the calculation, but is optional nonetheless
+        match self.peek() {
+            Some(Token::LBrac) => {
+                brackets += 1;
+                self.advance();
+            }
+            _ => {}
+        }
+
         while match self.advance() {
             Some(Token::Func(func)) => {
                 if func.as_str() == "," {
@@ -36,23 +44,38 @@ impl Calc {
             //    -> Different results
             Some(Token::LBrac) => {temp_arg.push(Token::LBrac); brackets += 1; true},
             // Check if we are at the last closing bracket, then append final arg and stop
-            Some(Token::RBrac) => {temp_arg.push(Token::RBrac); brackets -= 1; if brackets <= 0 {
-                args.push(temp_arg.clone());
-                false
-            } 
-            else {true}},
+            Some(Token::RBrac) => {temp_arg.push(Token::RBrac); brackets -= 1; 
+                if brackets <= 0 {
+                    args.push(temp_arg.clone());
+                    false
+                } 
+                else {true}
+            },
 
             // We are at the end, because self.advance does not give anything anymore, therefore
             // stop
-            None => {false}
+            // But first, append what the temp is right now
+            None => {
+                args.push(temp_arg.clone());
+                false
+            }
 
             // we got anything other than specified above, then append if not none and continue
             var => {
-                match var {
-                    Some(v) => temp_arg.push(v),
-                    _ => {},
+                // If we do not have brackets (-> originally brackets var is 0) we should stop right
+                // here...
+                match (brackets<=0, var) {
+                    (true, Some(v)) => {
+                        temp_arg.push(v);
+                        args.push(temp_arg.clone());
+                        false
+                    },
+                    (false, Some(v)) => {
+                        temp_arg.push(v);
+                        true
+                    },
+                    _ => true,
                 }
-                true
             }
         } {};
 

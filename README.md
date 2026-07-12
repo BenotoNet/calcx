@@ -31,6 +31,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] Fix bugs for Functions: add_one(add_one(5)) should be 7
 - [ ] Fix: sqrt(add_one(8)) should be 3
 // Comment: sqrt(add_one(5)+0) works just fine
+- [ ] Fix 2 add_one(5) & 2 * add_one(5)
 - [ ] Custom User defined functions
 - [ ] Fractional Units (e.g. Sqrt(second))
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)

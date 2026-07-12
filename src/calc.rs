@@ -76,7 +76,7 @@ impl Calc {
         // println!{"{:?}", self.tokens}
 
         let tree = self.build_tree();
-        println!{"{tree:?}"};
+        // println!{"{tree:?}"};
         let output = self.eval(tree);
 
         match &output {
