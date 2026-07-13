@@ -10,7 +10,7 @@ fn eval_argument(arg: Expr) -> Result<Expr, String> {
 // FIX: When should it be a function, and when a keyword / Variable?
 pub fn is_function(token_str: &str) -> bool {
     match token_str {
-        "add_one"|"," => true,
+        "add_one"|","|"root"|"nth_root"|"n_root" => true,
         _ => false,
     }
 }
@@ -36,16 +36,26 @@ pub fn unwrap_args(mut args: Option<Expr>) -> Vec<Expr> {
 pub fn func_call(func_str: &str, args: Option<Expr>) -> Result<Expr, String> {
     let args = unwrap_args(args); // This function unwraps the Arguments into a simple array of
                                   // expressions
-    match func_str {
-        "add_one" => {
-            match eval_argument(args.get(0).unwrap().clone()) {
+    // Eval each argument
+    let args: Vec<Result<Expr, String>> = args.iter().map(|arg| {eval_argument(arg.clone())}).collect();
+    match (func_str, args.len()) {
+        ("add_one", 1) => {
+            match &args[0] {
                 Ok(Expr::Number(num)) => {
                     return Ok(Expr::Number(num.add(&Num::unitless("1.0")).unwrap()));
                 }
                 _ => {}
             };
         },
+        ("root"|"nth_root"|"n_root", 2) => {
+            match (&args[0], &args[1]) {
+                (Ok(Expr::Number(root)), Ok(Expr::Number(base))) => {
+                    return Ok(Expr::Number(base.powf(&Num::unitless("1.0").div(root).unwrap()).unwrap()))
+                }
+                _ => {}
+            }
+        }
         _ => {},
     }
-    Err(String::new())
+    return Err(String::from("Error: Wrong Number of Arguments or not a function!"));
 }

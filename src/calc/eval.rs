@@ -20,7 +20,7 @@ impl Calc {
                 self.eval_keyword(key.as_str(), num1, num2)
             }
 
-            _ => {println!{"{op:?}"}; Err(String::from("Not an Operator / Operation!"))},
+            _ => {println!{"Error... {op:?}"}; Err(String::from("Not an Operator / Operation!"))},
         }
 
     }

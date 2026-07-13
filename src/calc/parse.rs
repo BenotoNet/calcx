@@ -44,12 +44,15 @@ impl Calc {
             //    -> Different results
             Some(Token::LBrac) => {temp_arg.push(Token::LBrac); brackets += 1; true},
             // Check if we are at the last closing bracket, then append final arg and stop
-            Some(Token::RBrac) => {temp_arg.push(Token::RBrac); brackets -= 1; 
+            Some(Token::RBrac) => {brackets -= 1; 
                 if brackets <= 0 {
                     args.push(temp_arg.clone());
                     false
                 } 
-                else {true}
+                else {
+                   temp_arg.push(Token::RBrac);
+                   true
+                }
             },
 
             // We are at the end, because self.advance does not give anything anymore, therefore
