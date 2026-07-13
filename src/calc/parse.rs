@@ -26,8 +26,9 @@ impl Calc {
 
         while match self.advance() {
             Some(Token::Func(func)) => {
-                if func.as_str() == "," {
-                    // one argument finished, appending to args, then continue
+                if func.as_str() == "," && brackets <= 1 {
+                    // one argument finished, appending to args, then continue (but only if we are
+                    // in the root bracket structure)
                     args.push(temp_arg.clone());
                     temp_arg = vec![];
                     true

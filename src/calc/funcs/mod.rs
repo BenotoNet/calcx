@@ -38,24 +38,24 @@ pub fn func_call(func_str: &str, args: Option<Expr>) -> Result<Expr, String> {
                                   // expressions
     // Eval each argument
     let args: Vec<Result<Expr, String>> = args.iter().map(|arg| {eval_argument(arg.clone())}).collect();
-    match (func_str, args.len()) {
+    let wa = || {Err(String::from("Error: Something went wrong"))};
+    return match (func_str, args.len()) {
         ("add_one", 1) => {
             match &args[0] {
                 Ok(Expr::Number(num)) => {
-                    return Ok(Expr::Number(num.add(&Num::unitless("1.0")).unwrap()));
+                    Ok(Expr::Number(num.add(&Num::unitless("1.0")).unwrap()))
                 }
-                _ => {}
-            };
+                _ => {wa()}
+            }
         },
         ("root"|"nth_root"|"n_root", 2) => {
             match (&args[0], &args[1]) {
                 (Ok(Expr::Number(root)), Ok(Expr::Number(base))) => {
-                    return Ok(Expr::Number(base.powf(&Num::unitless("1.0").div(root).unwrap()).unwrap()))
+                    Ok(Expr::Number(base.powf(&Num::unitless("1.0").div(root).unwrap()).unwrap()))
                 }
-                _ => {}
+                _ => {wa()}
             }
         }
-        _ => {},
+        _ => {Err(String::from("Error: Wrong Number of Arguments or not a function!"))},
     }
-    return Err(String::from("Error: Wrong Number of Arguments or not a function!"));
-}
+    }
