@@ -90,6 +90,9 @@ impl Calc {
             out = Some(Expr::Arg {arg: Box::new(temp_calc.build_tree()), right: Box::new(out) });
         }
 
+        // Undo the last going forward
+        self.rewind();
+
         out
     }
 
@@ -125,7 +128,7 @@ impl Calc {
         {
             // We have found a Keyword
             let keyword = match self.advance() {
-                Some(v) => v,
+                Some(Token::Keyword(key)) => Token::Keyword(key),
                 _ => {return left}
             };
             let right = self.parse_term();

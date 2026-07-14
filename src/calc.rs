@@ -60,6 +60,10 @@ impl Calc {
         return current_token;
     }
 
+    fn rewind(&mut self) {
+        self.current -= 1;
+    }
+
     // API to run a specific command and capture its output
     pub fn run_ouput(&mut self, query: &str) -> String {
         match self.run(query) {
@@ -73,10 +77,12 @@ impl Calc {
 
         // This function is supposed to tokenize the given query
         self.tokens = tokenize::tokenize(query);
-        // println!{"{:?}", self.tokens}
+        println!{"{:?}", self.tokens}
+
+        println!{"Parsing Done"};
 
         let tree = self.build_tree();
-        // println!{"{tree:?}"};
+        println!{"{tree:?}"};
         let output = self.eval(tree);
 
         match &output {

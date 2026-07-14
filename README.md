@@ -30,10 +30,9 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Functions (with multiple arguments)
 - [x] Fix bugs for Functions: add_one(add_one(5)) should be 7
 - [ ] Fix 2 add_one(5) & 2 * add_one(5)
-- [ ] Fix: sqrt(add_one(8)) should be 3
+- [x] Fix: sqrt(add_one(8)) should be 3
 - [ ] Port simple functions (besides "to") to be functions which could take multiple arguments (-> Having everything in one place)
 // Comment: sqrt(add_one(5)+0) works just fine
-- [ ] Custom User defined functions
 - [ ] Fractional Units (e.g. Sqrt(second))
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Remove all possible Cloning of Floats & Units
@@ -42,6 +41,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] saving functions to profile (& settings)
 - [ ] stop frequent crashes and handle errors instead (-> Operation is impossible, might require dimensionless argument, etc)
 - [ ] HEX to RGB, etc
+- [ ] Custom User defined functions
 - [ ] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated)
 - [ ] Fix (-2)-2 != 4 (--> -2 * -2 is what is being calculated; same as above)
 - [ ] Fix 5 05 => 55 (should be 505)
