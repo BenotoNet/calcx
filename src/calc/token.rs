@@ -21,5 +21,6 @@ pub enum Token {
 
     Keyword(String),
     Func(String),
+    Septerator,
     Unknown(String),
 }

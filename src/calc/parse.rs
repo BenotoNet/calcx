@@ -25,17 +25,17 @@ impl Calc {
         }
 
         while match self.advance() {
-            Some(Token::Func(func)) => {
-                if func.as_str() == "," && brackets <= 1 {
+            Some(Token::Septerator) => {
+                if brackets <= 1 {
                     // one argument finished, appending to args, then continue (but only if we are
                     // in the root bracket structure)
                     args.push(temp_arg.clone());
                     temp_arg = vec![];
                     true
                 }
+                // We are not at the root branch yet, so just append
                 else {
-                    // We have a function as an argument for a function...? I guess that's okay...
-                    temp_arg.push(Token::Func(func));
+                    temp_arg.push(Token::Septerator);
                     true
                 }
             }

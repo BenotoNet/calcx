@@ -52,6 +52,7 @@ pub fn unit_to_num(ul: &str) -> Option<Num> {
         "newton"|"newtons" => {Num::new("1.0", vec![('K', 1), ('m', 1), ('s', -2)])}
         "pascal"|"pascals" => {Num::new("1.0", vec![('K', 1), ('m', -1), ('s', -2)])}
         "joule"|"joules" => {Num::new("1.0", vec![('K', 1), ('m', 2), ('s', -2)])}
+        "british_thermal_units"|"british_thermal_unit"|"btu"|"btus" => {Num::new("1055.056", vec![('K', 1), ('m', 2), ('s', -2)])}
         "cal"|"calorie" => {Num::new("4.1868", vec![('K', 1), ('m', 2), ('s', -2)])}
         "kcal" => {Num::new("4.1868e3", vec![('K', 1), ('m', 2), ('s', -2)])}
         "watt"|"watts" => {Num::new("1.0", vec![('K', 1), ('m', 2), ('s', -3)])}
