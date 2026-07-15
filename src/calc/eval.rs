@@ -70,7 +70,7 @@ impl Calc {
                 }
             }
             Some(v) => {Ok(v)}
-            _ => Err(format!{"idk"}),
+            _ => Err(format!{""}),
         }
     }
 }

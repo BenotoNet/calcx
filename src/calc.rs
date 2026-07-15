@@ -82,7 +82,7 @@ impl Calc {
         // println!{"Parsing Done"};
 
         let tree = self.build_tree();
-        // println!{"{tree:?}"};
+        println!{"{tree:?}"};
         let output = self.eval(tree);
 
         match &output {

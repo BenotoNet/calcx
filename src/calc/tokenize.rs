@@ -171,41 +171,45 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
             }
             index += 1;
         }
-        // (Token::Func(func), _) => {
-        //     // We have a function and want to turn it from func(a, b) into (func(a, b))
-        //     if func != "," {
-        //         // But save the original index (if we have a double number in the arguments, for
-        //         // example)
-        //         let original_index = index;
-        //
-        //         // We count brackets
-        //         let mut brackets = 0;
-        //
-        //         // we add the starting brackets
-        //         tokens.insert(index, Token::LBrac);
-        //         index += 1;
-        //         while index < tokens.len() {
-        //             match tokens.get(index) {
-        //                 // Increase counter on LBrackets
-        //                 Some(Token::LBrac) => {brackets += 1; index += 1;},
-        //                 // and decrease on Rbrackets
-        //                 Some(Token::RBrac) => {brackets -= 1; 
-        //                     // If we finished (last bracket)
-        //                     if brackets <= 0 {
-        //                         // We break the loop and are done (insert the last RBracket)
-        //                         tokens.insert(index, Token::RBrac);
-        //                         index = original_index+2; // The plus two comes from the original
-        //                                                   // bracket and function being where the
-        //                                                   // index points
-        //                         break
-        //                     }
-        //                     index += 1;
-        //                 }
-        //                 _ => {index += 1},
-        //             }
-        //         }
-        //     }
-        // }
+        // If we have a function, we want to add brackets around it
+        (Token::Func(func), _) => {
+            // We have a function and want to turn it from func(a, b) into (func(a, b))
+            if func != "," {
+                // But save the original index (if we have a double number in the arguments, for
+                // example)
+                let original_index = index;
+
+                // We count brackets
+                let mut brackets = 0;
+
+                // we add the starting brackets
+                tokens.insert(index, Token::LBrac);
+                index += 1;
+                while index < tokens.len() {
+                    match tokens.get(index) {
+                        // Increase counter on LBrackets
+                        Some(Token::LBrac) => {brackets += 1; index += 1;},
+                        // and decrease on Rbrackets
+                        Some(Token::RBrac) => {brackets -= 1; 
+                            // If we finished (last bracket)
+                            if brackets <= 0 {
+                                // We break the loop and are done (insert the last RBracket)
+                                tokens.insert(index, Token::RBrac);
+                                index = original_index+2; // The plus two comes from the original
+                                                          // bracket and function being where the
+                                                          // index points
+                                break
+                            }
+                            index += 1;
+                        }
+                        _ => {index += 1},
+                    }
+                }
+            }
+            else {
+                index += 1;
+            }
+        }
         _ => {index += 1;}
         }
     }

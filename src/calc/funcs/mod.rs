@@ -7,11 +7,11 @@ fn eval_argument(arg: Expr) -> Result<Expr, String> {
     temp_calc.eval(Some(arg))
 }
 
-// FIX: When should it be a function, and when a keyword / Variable?
+// When should it be a function, and when a keyword / Variable (-> Continue Categorization)?
 pub fn is_function(token_str: &str) -> bool {
-    match token_str {
-        "add_one"|","|"root"|"nth_root"|"n_root" => true,
-        _ => false,
+    match run_func(token_str, vec![]) {
+        Err(v) => v.as_str() != "Not a Function",
+        _ => true
     }
 }
 
@@ -36,10 +36,16 @@ pub fn unwrap_args(mut args: Option<Expr>) -> Vec<Expr> {
 pub fn func_call(func_str: &str, args: Option<Expr>) -> Result<Expr, String> {
     let args = unwrap_args(args); // This function unwraps the Arguments into a simple array of
                                   // expressions
+    return run_func(func_str, args);
+}
+
+fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
+
     // Eval each argument
     let args: Vec<Result<Expr, String>> = args.iter().map(|arg| {eval_argument(arg.clone())}).collect();
-    let wa = || {Err(String::from("Error: Something went wrong"))};
-    return match (func_str, args.len()) {
+    return match func_str {
+        // FIX: Here, we need to make a better system for precicely doing functions with arguments
+        // We should give different errors for too few Arguments and not having a valid function
         ("add_one", 1) => {
             match &args[0] {
                 Ok(Expr::Number(num)) => {
@@ -58,4 +64,4 @@ pub fn func_call(func_str: &str, args: Option<Expr>) -> Result<Expr, String> {
         }
         _ => {Err(String::from("Error: Wrong Number of Arguments or not a function!"))},
     }
-    }
+}
