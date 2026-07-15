@@ -46,6 +46,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] stop frequent crashes and handle errors instead (-> Operation is impossible, might require dimensionless argument, etc)
 - [ ] HEX to RGB, etc
 - [ ] Custom User defined functions
+- [ ] Fix (-3)^5 => NaN
 - [ ] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated)
 - [ ] Fix (-2)-2 != 4 (--> -2 * -2 is what is being calculated; same as above)
 - [ ] Fix 5 05 => 55 (should be 505)
