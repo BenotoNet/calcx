@@ -39,29 +39,39 @@ pub fn func_call(func_str: &str, args: Option<Expr>) -> Result<Expr, String> {
     return run_func(func_str, args);
 }
 
+fn expect(args: &Vec<Num>, num: usize) -> Result<(), String> {
+    if args.len() == num {Ok(())}
+    else if args.len() < num {Err(String::from("Too few Arguments"))}
+    else {Err(String::from("Too many Arguments!"))}
+}
+
 fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
 
     // Eval each argument
     let args: Vec<Result<Expr, String>> = args.iter().map(|arg| {eval_argument(arg.clone())}).collect();
-    return match func_str {
-        // FIX: Here, we need to make a better system for precicely doing functions with arguments
-        // We should give different errors for too few Arguments and not having a valid function
-        ("add_one", 1) => {
-            match &args[0] {
-                Ok(Expr::Number(num)) => {
-                    Ok(Expr::Number(num.add(&Num::unitless("1.0")).unwrap()))
-                }
-                _ => {wa()}
-            }
-        },
-        ("root"|"nth_root"|"n_root", 2) => {
-            match (&args[0], &args[1]) {
-                (Ok(Expr::Number(root)), Ok(Expr::Number(base))) => {
-                    Ok(Expr::Number(base.powf(&Num::unitless("1.0").div(root).unwrap()).unwrap()))
-                }
-                _ => {wa()}
-            }
+
+    // If one argument resulted in an Error, return that error: 
+    let mut new_args = vec![];
+    for arg in args {
+        match arg {
+            Ok(Expr::Number(num)) => new_args.push(num),
+            Err(err) => return Err(err),
+            _ => return Err(String::from("There was no Number in the Arguments!")),
         }
-        _ => {Err(String::from("Error: Wrong Number of Arguments or not a function!"))},
+    }
+    let args = new_args;
+
+    return match func_str {
+        "add_one" => {
+            expect(&args, 1)?;
+            Ok(Expr::Number(args[0].add(&Num::unitless("1.0")).unwrap()))
+        },
+
+        "root"|"nth_root"|"n_root" => {
+            expect(&args, 2)?;
+            Ok(Expr::Number(args[1].powf(&Num::unitless("1.0").div(&args[0]).unwrap()).unwrap()))
+        }
+
+        _ => {Err(String::from("Not a Function"))},
     }
 }

@@ -10,7 +10,6 @@ pub mod keys_func;
 use token::Token;
 use expr::Expr;
 
-
 pub struct Calc {
     tokens: Vec<Token>,
     current: usize,

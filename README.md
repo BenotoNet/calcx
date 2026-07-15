@@ -31,8 +31,10 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Fix bugs for Functions: add_one(add_one(5)) should be 7
 - [x] Fix: sqrt(add_one(8)) should be 3
 - [x] Fix 2 add_one(5) & 2 * add_one(5)
+- [x] Procedual categorization of functions by analyzing output Errors
+- [ ] Fix "hello = 2; add_one(hello)" => Variables as Arguments (-> Don't make a new calculator, use the current one (because variable storage is not transfered over currently), or replicate the entire calculator)
+- [ ] Add Semicolon to normal queries as well to execute multiple at once (e.g. 4+4; 5+5)
 - [ ] Fix 2 sqrt(2), 2*sqrt(2), sqrt(2) * 2, etc (-> Maybe with Brackets or by porting to function logic)
-- [ ] Procedual categorization of functions by analyzing output Errors
 - [ ] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
 - [ ] Port simple functions (except "to") to be functions which could take multiple arguments (-> Having everything in one place)
 - [ ] Fractional Units (e.g. Sqrt(second))

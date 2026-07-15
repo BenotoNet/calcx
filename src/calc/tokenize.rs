@@ -172,6 +172,7 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
             }
             index += 1;
         }
+
         // If we have a function, we want to add brackets around it
         (Token::Func(_), _) => {
             // We have a function and want to turn it from func(a, b) into (func(a, b))
