@@ -71,6 +71,16 @@ impl Calc {
         }
     }
 
+    // TODO: use this instead of building new Calculator for each evaluation of argument (for
+    // functions)
+    pub fn build_tree_from(&mut self, tokens: Vec<Token>) -> Option<Expr> {
+        let old_tokens = self.tokens.clone();
+        self.set_tokens(tokens);
+        let tree = self.build_tree();
+        self.set_tokens(old_tokens);
+        tree
+    }
+
     pub fn run(&mut self, query: &str) -> Result<Expr, String> {
         self.current = 0;
 
@@ -81,7 +91,7 @@ impl Calc {
         // println!{"Parsing Done"};
 
         let tree = self.build_tree();
-        println!{"{tree:?}"};
+        // println!{"{tree:?}"};
         let output = self.eval(tree);
 
         match &output {
