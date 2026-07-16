@@ -1,11 +1,20 @@
 use crate::ui::Setting;
 use crate::Float;
+use crate::calc::num::Num;
 
 pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
     match test_string.as_ref().parse::<f64>() {
         Ok(_) => true,
         Err(_) => false,
     }
+}
+
+pub fn eq(num1: &Num, num2: &Num) -> bool {
+    num1.get_quant() == num2.get_quant() && num1.get_units() == num2.get_units()
+}
+
+pub fn is_int(num: &Num) -> bool {
+    eq(num, &num.round().unwrap())
 }
 
 // Clean Output without CliClack

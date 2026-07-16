@@ -99,13 +99,42 @@ impl Num {
     pub fn powf(&self, num2: &Num) -> Option<Num> {
         // exponent is expected to be unitless / dimensionless
         assert!(num2.is_unitless());
-        
-        // x^y = e^(y ln x)
-        let output_quantity = (self.quantity.clone().ln() * num2.quantity.clone()).exp();
-        // TODO: Problem: Since we do not have units as floats, this is a sacrifice
-        let output_units = Units::operation(self.units.clone(), |unit| {unit * num2.quantity.to_f64() as i8});
 
-        return Some(Num::from(output_quantity, output_units));
+        // Taking a negative Number to the power of something is difficult (if exponent is not an
+        // integer, so we have different cases:)
+
+        match self.get_quant() < 0 {
+            true => {
+                // we have a negative number, therefore we need to see if exponent is an integer
+                match utils::is_int(num2) {
+                    true => {
+                        // We can calculate that!
+                        // Remove negative Sign
+                        let positive = self.abs().unwrap();
+                        let output_real = positive.powf(num2).unwrap();
+                        let pos_or_neg = num2.modf(&Num::unitless("2.0")).unwrap();
+                        // Uneven, therefore we still have a Negative sign
+                        if utils::eq(&pos_or_neg, &Num::unitless("1.0")) {
+                            return output_real.mul(&Num::unitless("-1"));
+                        }
+                        else {
+                            return Some(output_real);
+                        }
+                    },
+                    false => return None,
+                }
+            }
+            false => {
+                // Normal calculation
+                // x^y = e^(y ln x)
+                let output_quantity = (self.quantity.clone().ln() * num2.quantity.clone()).exp();
+                // TODO: Problem: Since we do not have units as floats, this is a sacrifice
+                let output_units = Units::operation(self.units.clone(), |unit| {unit * num2.quantity.to_f64() as i8});
+                return Some(Num::from(output_quantity, output_units));
+            }
+        }
+        
+
     }
 
     pub fn sin(&self) -> Option<Num> {

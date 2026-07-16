@@ -3,13 +3,10 @@ use super::*;
 use super::calc::Calc;
 use super::calc::expr::Expr;
 use super::calc::num::Num;
+use super::utils::eq;
 
 fn make_default_calc() -> Calc {
     Calc::new(15)
-}
-
-fn eq(num1: &Num, num2: &Num) -> bool {
-    num1.get_quant() == num2.get_quant() && num1.get_units() == num2.get_units()
 }
 
 fn query_eq(query: &str, num: Num) -> bool {
@@ -47,5 +44,12 @@ fn arithmatic_queries() {
 fn units() {
     assert! {
         query_eq("1 meter second ampere kilogram candela kelvin", Num::new("1.0", vec![('m', 1), ('s', 1), ('a', 1), ('K', 1), ('k', 1), ('c', 1)]))
+    }
+}
+
+#[test]
+fn num_power() {
+    assert! {
+        eq(Num::unitless("-2").powf(), Num::unit)
     }
 }
