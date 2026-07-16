@@ -42,3 +42,10 @@ fn arithmatic_queries() {
         query_eq("1+(4-2)-1+7--2-2++5-0.5+.2", Num::unitless("13.7"))
     }
 }
+
+#[test]
+fn units() {
+    assert! {
+        query_eq("1 meter second ampere kilogram candela kelvin", Num::new("1.0", vec![('m', 1), ('s', 1), ('a', 1), ('K', 1), ('k', 1), ('c', 1)]))
+    }
+}
