@@ -37,6 +37,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] Fix 2 sqrt(2), 2*sqrt(2), sqrt(2) * 2, etc (-> Maybe with Brackets or by porting to function logic)
 - [ ] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
 - [ ] Port simple functions (except "to") to be functions which could take multiple arguments (-> Having everything in one place)
+- [ ] Replace all Option<Expr> with Result<Expr, String> to be able to use ?
 - [ ] Fractional Units (e.g. Sqrt(second))
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Remove all possible Cloning of Floats & Units
