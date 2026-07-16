@@ -85,9 +85,8 @@ impl Calc {
 
         let mut out = None;
         for arg in args {
-            let mut temp_calc = Calc::new(self.precision);
-            temp_calc.set_tokens(arg.clone());
-            out = Some(Expr::Arg {arg: Box::new(temp_calc.build_tree()), right: Box::new(out) });
+            println!{"{arg:?}"}
+            out = Some(Expr::Arg {arg: Box::new(self.build_tree_from(arg.clone())), right: Box::new(out) });
         }
 
         // Undo the last going forward

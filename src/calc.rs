@@ -71,13 +71,14 @@ impl Calc {
         }
     }
 
-    // TODO: use this instead of building new Calculator for each evaluation of argument (for
-    // functions)
     pub fn build_tree_from(&mut self, tokens: Vec<Token>) -> Option<Expr> {
         let old_tokens = self.tokens.clone();
+        let old_current = self.current;
         self.set_tokens(tokens);
+        self.current = 0;
         let tree = self.build_tree();
         self.set_tokens(old_tokens);
+        self.current = old_current;
         tree
     }
 

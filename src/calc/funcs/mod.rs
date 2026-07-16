@@ -3,6 +3,7 @@ use crate::calc::num::Num;
 use crate::calc::tokenize::misc_units::unit_to_num;
 
 // Horrible Way, but works -> Evaluating an argument by using a new calculator instance
+// FIX: Please solve any other way!
 fn eval_argument(arg: Expr) -> Result<Expr, String> {
     let temp_calc = crate::calc::Calc::new(crate::PRECISION as usize);
     temp_calc.eval(Some(arg))
@@ -81,6 +82,10 @@ fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
         "root"|"nth_root"|"n_root" => {
             expect(&args, 2, true)?;
             wrap(args[1].powf(&Num::unitless("1.0").div(&args[0]).unwrap()).unwrap())
+        }
+        "log" => {
+            expect(&args, 2, true)?;
+            wrap(args[1].log(&args[0]).unwrap())
         }
 
         // All ported functions (like sqrt)
