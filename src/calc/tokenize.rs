@@ -156,6 +156,19 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
             tokens.insert(index+1, Token::Mul);
             index = 0;
         }
+        // Replace double Signs with a single one
+        (Token::Sub, Some(Token::Sub))|(Token::Add, Some(Token::Add)) => {
+            tokens.remove(index);
+            tokens.remove(index);
+            tokens.insert(index, Token::Add);
+            index = 0;
+        }
+        (Token::Sub, Some(Token::Add))|(Token::Add, Some(Token::Sub)) => {
+            tokens.remove(index);
+            tokens.remove(index);
+            tokens.insert(index, Token::Sub);
+            index = 0;
+        }
         // If we have two variables right next to each other, insert a multiplication, OR if we have
         // a number and then a var or the other way around
         (Token::Var(_), Some(Token::Var(_)))|(Token::Var(_), Some(Token::Number(_)))|(Token::Number(_), Some(Token::Var(_))) => {

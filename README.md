@@ -34,19 +34,18 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Procedual categorization of functions by analyzing output Errors
 - [x] Port simple functions (except "to") to be functions which could take multiple arguments (-> Having everything in one place)
 - [x] Fix "hello = 2; add_one(hello)" => Variables as Arguments (-> Don't make a new calculator, use the current one (because variable storage is not transfered over currently), or replicate the entire calculator)
-- [ ] Add Semicolon to normal queries as well to execute multiple at once (e.g. 4+4; 5+5)
-- [ ] Fix 2 sqrt(2), 2*sqrt(2), sqrt(2) * 2, etc (-> Maybe with Brackets or by porting to function logic)
+- [x] Add Semicolon to normal queries as well to execute multiple at once (e.g. 4+4; 5+5)
+- [x] Fix 2 sqrt(2), 2*sqrt(2), sqrt(2) * 2, etc (-> Maybe with Brackets or by porting to function logic)
 - [ ] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
 - [ ] Replace all Option<Expr> with Result<Expr, String> to be able to use ?
 - [ ] Fractional Units (e.g. Sqrt(second))
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Remove all possible Cloning of Floats & Units
-- [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work)
+<!-- - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work) -->
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
 - [ ] saving functions to profile (& settings)
 - [ ] stop frequent crashes and handle errors instead (-> Operation is impossible, might require dimensionless argument, etc)
 - [ ] HEX to RGB, etc
-- [ ] Custom User defined functions
 - [ ] Fix (-3)^5 => NaN
 - [ ] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated)
 - [ ] Fix (-2)-2 != 4 (--> -2 * -2 is what is being calculated; same as above)

@@ -85,7 +85,7 @@ impl Calc {
 
         let mut out = None;
         for arg in args {
-            println!{"{arg:?}"}
+            // println!{"{arg:?}"}
             out = Some(Expr::Arg {arg: Box::new(self.build_tree_from(arg.clone())), right: Box::new(out) });
         }
 
@@ -198,10 +198,10 @@ impl Calc {
                 return Some(expr);
             }
             // make - 2 into the number "-2" by parsing into (-1)2
-            Some(Token::Sub) => {
-                self.advance();
-                return Some(Expr::Number(super::num::Num::new("-1.0", vec![])));
-            }
+            // Some(Token::Sub) => {
+            //     self.advance();
+            //     return Some(Expr::Number(super::num::Num::new("-1.0", vec![])));
+            // }
             // We found a variable!
             Some(Token::Var(var)) => {
                 self.advance();

@@ -6,17 +6,6 @@ use crate::calc::conversion::convert;
 
 impl Calc {
     pub fn eval_keyword(&self, key: &str, num1: Option<&Num>, num2: Option<&Num>) -> Result<Expr, String> {
-        let mul_ans_or_ans = |num: Option<&Num>, ans| -> Result<Expr, String> {
-            return Ok(
-                Expr::Number(
-                    match num {
-                        Some(num) => {num.mul(&ans).unwrap()},
-                        _ => ans,
-                    }
-                )
-            )
-        };
-
         match (key, num1, num2) {
             // The last few functions actually requiring both sides of the current expression
             ("to"|"in"|"convert"|"convert_to", Some(num1), Some(num2)) => {

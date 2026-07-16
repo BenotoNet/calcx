@@ -53,28 +53,26 @@ impl UI {
                 Err(_) => {return},
             };
 
-            match query.as_str() {
-                "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {return}
-                "clear" => {self.stdout.clear_screen().expect("Failed to clear screen..."); return self.interactive();}
-                "help" => {
-                    // Printing Help Menu when typing help into the calc
-                    // clear_screen().expect("Failed to clear Screen..."); 
-                    utils::help_menu();
-                    return self.interactive();
+            // We can have multiple queries at once seperated by semicolons
+            for query in query.split(";") {
+                match query.replace(" ", "").as_str() {
+                    "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {exit(0)}
+                    "clear" => {self.stdout.clear_screen().expect("Failed to clear screen..."); return self.interactive();}
+                    "help" => {
+                        // Printing Help Menu when typing help into the calc
+                        // clear_screen().expect("Failed to clear Screen..."); 
+                        utils::help_menu();
+                        return self.interactive();
+                    }
+                    "" => {return self.interactive();}
+                    _ => {}
                 }
-                "" => {return self.interactive();}
-                _ => {}
+                
+                // Add to History
+                self.stdout.add_history_entry(query).expect("Could not add query to history...?");
+
+                self.run_query(&query);
             }
-            
-            // Add to History
-            self.stdout.add_history_entry(&query).expect("Could not add query to history...?");
-
-            self.run_query(&query);
-
-            // Deprecated, from CliClack
-            // if !self.history.contains(&query) {
-            //     self.history.push(query);
-            // }
         }
     }
 
