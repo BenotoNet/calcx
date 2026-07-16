@@ -41,15 +41,15 @@ fn arithmatic_queries() {
 }
 
 #[test]
-fn units() {
+fn advanced_arithmatic() {
     assert! {
-        query_eq("1 meter second ampere kilogram candela kelvin", Num::new("1.0", vec![('m', 1), ('s', 1), ('a', 1), ('K', 1), ('k', 1), ('c', 1)]))
+        query_eq("3+4*2/((1-5)^2)^3", Num::unitless("3.001953125"))
     }
 }
 
 #[test]
-fn num_power() {
+fn units() {
     assert! {
-        eq(Num::unitless("-2").powf(), Num::unit)
+        query_eq("1 meter second ampere kilogram candela kelvin", Num::new("1.0", vec![('m', 1), ('s', 1), ('a', 1), ('K', 1), ('k', 1), ('c', 1)]))
     }
 }
