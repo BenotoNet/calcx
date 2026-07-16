@@ -19,3 +19,6 @@ fn main() {
     // All options are set, therefore, we can start the interactive session with the options
     ui::UI::new(options).interactive();
 }
+
+#[cfg(test)]
+mod tests;

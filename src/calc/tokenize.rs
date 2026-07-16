@@ -127,22 +127,24 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
         // If current index and next one are numbers
         let current = &tokens[index];
         match (current, tokens.get(index + 1)) {
-        (Token::Number(num1), Some(Token::Number(num2))) => {
-                // When we have a negative number behind a positive one, we do not combine, but add
-                // "Add" Operation between them e.g. 4-2 => 4 + -2
-                if num2.get_quant() < 0.0 {
-                    tokens.insert(index+1, Token::Add);
-                    index = 0
-                }
-
+            (Token::Number(num1), Some(Token::Number(num2))) => {
                 // Check if the numbers are both unitless. If they are, we can combine, otherwise,
                 // we have to multiply
-                else if num1.is_unitless() && num2.is_unitless() {
-                    // Combine the numbers by putting strings right next to each other. (If Unitless)
-                    // e.g. 5 5 => 55
-                    tokens[index] = Token::Number(num1.append(&num2));
-                    tokens.remove(index+1);
-                    index = 0;
+                if num1.is_unitless() && num2.is_unitless() {
+                    // When we have a negative number behind a positive one, we do not combine, but add
+                    // "Add" Operation between them e.g. 4-2 => 4 + -2
+                    if num2.get_quant() < 0.0 {
+                        tokens.insert(index+1, Token::Add);
+                        index = 0
+                    }
+                    
+                    else {
+                        // Combine the numbers by putting strings right next to each other. (If Unitless)
+                        // e.g. 5 5 => 55
+                        tokens[index] = Token::Number(num1.append(&num2));
+                        tokens.remove(index+1);
+                        index = 0;
+                    }
                 }
 
                 // Numbers are not unitless, therefore multiply (Add Multiplication Token between
@@ -151,76 +153,86 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
                     tokens.insert(index+1, Token::Mul)
                 }
             },
-        // When we have a number after a closing bracket, it is implied that we want to multiply
-        (Token::RBrac, Some(Token::Number(_))) => {
-            tokens.insert(index+1, Token::Mul);
-            index = 0;
-        }
-        // Replace double Signs with a single one
-        (Token::Sub, Some(Token::Sub))|(Token::Add, Some(Token::Add)) => {
-            tokens.remove(index);
-            tokens.remove(index);
-            tokens.insert(index, Token::Add);
-            index = 0;
-        }
-        (Token::Sub, Some(Token::Add))|(Token::Add, Some(Token::Sub)) => {
-            tokens.remove(index);
-            tokens.remove(index);
-            tokens.insert(index, Token::Sub);
-            index = 0;
-        }
-        // If we have two variables right next to each other, insert a multiplication, OR if we have
-        // a number and then a var or the other way around
-        (Token::Var(_), Some(Token::Var(_)))|(Token::Var(_), Some(Token::Number(_)))|(Token::Number(_), Some(Token::Var(_))) => {
-            tokens.insert(index+1, Token::Mul);
-        }
-
-        // Adding Brackets around "ans" keyword to allow automatic multiplication & inserting into
-        // functions, etc
-        (Token::Keyword(key), _) => {
-            if key == "ans" {
-                tokens.insert(index, Token::LBrac);
-                tokens.insert(index+2, Token::RBrac);
-                index += 1;
-            }
-            index += 1;
-        }
-
-        // If we have a function, we want to add brackets around it
-        (Token::Func(_), _) => {
-            // We have a function and want to turn it from func(a, b) into (func(a, b))
-            // But save the original index (if we have a double number in the arguments, for
-            // example)
-            let original_index = index;
-
-            // We count brackets
-            let mut brackets = 0;
-
-            // we add the starting brackets
-            tokens.insert(index, Token::LBrac);
-            index += 1;
-            while index < tokens.len() {
-                match tokens.get(index) {
-                    // Increase counter on LBrackets
-                    Some(Token::LBrac) => {brackets += 1; index += 1;},
-                    // and decrease on Rbrackets
-                    Some(Token::RBrac) => {brackets -= 1; 
-                        // If we finished (last bracket)
-                        if brackets <= 0 {
-                            // We break the loop and are done (insert the last RBracket)
-                            tokens.insert(index, Token::RBrac);
-                            index = original_index+2; // The plus two comes from the original
-                                                      // bracket and function being where the
-                                                      // index points
-                            break
-                        }
-                        index += 1;
-                    }
-                    _ => {index += 1},
+            // When we have a number after a closing bracket, it is implied that we want to multiply
+            // (only if number is positive)
+            (Token::RBrac, Some(Token::Number(num))) => {
+                if num.get_quant() > 0.0 {
+                    tokens.insert(index+1, Token::Mul);
+                    index = 0;
+                }
+                // Otherwise, we are trying to subtract here, therefore add an "Add" Operation
+                else {
+                    tokens.insert(index+1, Token::Add);
+                    index = 0;
                 }
             }
-        }
-        _ => {index += 1;}
+            // Replace double Signs with a single one
+            (Token::Sub, Some(Token::Sub))|(Token::Add, Some(Token::Add)) => {
+                tokens.remove(index);
+                tokens.remove(index);
+                tokens.insert(index, Token::Add);
+                index = 0;
+            }
+            (Token::Sub, Some(Token::Add))|(Token::Add, Some(Token::Sub)) => {
+                tokens.remove(index);
+                tokens.remove(index);
+                tokens.insert(index, Token::Sub);
+                index = 0;
+            }
+            // If we have two variables right next to each other, insert a multiplication, OR if we have
+            // a number and then a var or the other way around
+            (Token::Var(_), Some(Token::Var(_)))
+                |(Token::Var(_), Some(Token::Number(_)))
+                |(Token::Number(_), Some(Token::Var(_))) => {
+                tokens.insert(index+1, Token::Mul);
+            }
+
+            // Adding Brackets around "ans" keyword to allow automatic multiplication & inserting into
+            // functions, etc
+            (Token::Keyword(key), _) => {
+                if key == "ans" {
+                    tokens.insert(index, Token::LBrac);
+                    tokens.insert(index+2, Token::RBrac);
+                    index += 1;
+                }
+                index += 1;
+            }
+
+            // If we have a function, we want to add brackets around it
+            (Token::Func(_), _) => {
+                // We have a function and want to turn it from func(a, b) into (func(a, b))
+                // But save the original index (if we have a double number in the arguments, for
+                // example)
+                let original_index = index;
+
+                // We count brackets
+                let mut brackets = 0;
+
+                // we add the starting brackets
+                tokens.insert(index, Token::LBrac);
+                index += 1;
+                while index < tokens.len() {
+                    match tokens.get(index) {
+                        // Increase counter on LBrackets
+                        Some(Token::LBrac) => {brackets += 1; index += 1;},
+                        // and decrease on Rbrackets
+                        Some(Token::RBrac) => {brackets -= 1; 
+                            // If we finished (last bracket)
+                            if brackets <= 0 {
+                                // We break the loop and are done (insert the last RBracket)
+                                tokens.insert(index, Token::RBrac);
+                                index = original_index+2; // The plus two comes from the original
+                                                          // bracket and function being where the
+                                                          // index points
+                                break
+                            }
+                            index += 1;
+                        }
+                        _ => {index += 1},
+                    }
+                }
+            }
+            _ => {index += 1;}
         }
     }
 
