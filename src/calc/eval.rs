@@ -3,17 +3,16 @@ use super::Calc;
 use super::{expr::Expr, token::Token, num::Num};
 
 impl Calc {
-    fn eval_atomic(&self, num1: Option<&Num>, op: Token, num2: Option<&Num>) -> Result<Expr, String> {
+    fn eval_atomic(&self, num1: Result<&Num, String>, op: Token, num2: Result<&Num, String>) -> Result<Expr, String> {
         // println!{"{num1:?}, {op:?}, {num2:?}"};
         match op {
             // When we have simple operations between the two numbers, we simply apply the operation
-            // FIX: Remove all Unwraps
-            Token::Add => {Ok(Expr::Number(num1.unwrap().add(&num2.unwrap()).unwrap()))},
-            Token::Sub => {Ok(Expr::Number(num1.unwrap().sub(&num2.unwrap()).unwrap()))},
-            Token::Mul => {Ok(Expr::Number(num1.unwrap().mul(&num2.unwrap()).unwrap()))},
-            Token::Div => {Ok(Expr::Number(num1.unwrap().div(&num2.unwrap()).unwrap()))},
-            Token::Mod => {Ok(Expr::Number(num1.unwrap().modf(&num2.unwrap()).unwrap()))},
-            Token::Pow => {Ok(Expr::Number(num1.unwrap().powf(&num2.unwrap()).unwrap()))},
+            Token::Add => {Ok(Expr::Number(num1?.add(&num2.cloned()?)?))},
+            Token::Sub => {Ok(Expr::Number(num1?.sub(&num2.cloned()?)?))},
+            Token::Mul => {Ok(Expr::Number(num1?.mul(&num2.cloned()?)?))},
+            Token::Div => {Ok(Expr::Number(num1?.div(&num2.cloned()?)?))},
+            Token::Mod => {Ok(Expr::Number(num1?.modf(&num2.cloned()?)?))},
+            Token::Pow => {Ok(Expr::Number(num1?.powf(&num2.cloned()?)?))},
 
             // We found a Keyword
             Token::Keyword(key) => {
@@ -25,9 +24,9 @@ impl Calc {
 
     }
 
-    pub fn eval(&self, tree: Option<Expr>) -> Result<Expr, String> {
+    pub fn eval(&self, tree: Result<Expr, String>) -> Result<Expr, String> {
         match tree {
-            Some(Expr::Binary { left, op, right }) => {
+            Ok(Expr::Binary { left, op, right }) => {
                 // if we have a function as the operator, run the code with given arguments
                 match op {
                     Token::Func(func) => {
@@ -43,34 +42,34 @@ impl Calc {
                 match (left, right) {
                     (Ok(Expr::Number(num1)), Ok(Expr::Number(num2))) => {
                         // We have an atomic Expression (only numbers on both sides of the operator)
-                        return self.eval_atomic(Some(&num1), op, Some(&num2));
+                        return self.eval_atomic(Ok(&num1), op, Ok(&num2));
                     },
 
-                    (Ok(Expr::Number(num1)), Err(_)) => {
+                    (Ok(Expr::Number(num1)), Err(v)) => {
                         // Right Eval failed
-                        return self.eval_atomic(Some(&num1), op, None);
+                        return self.eval_atomic(Ok(&num1), op, Err(v));
                     }
 
-                    (Err(_), Ok(Expr::Number(num2))) => {
+                    (Err(v), Ok(Expr::Number(num2))) => {
                         // Left Eval failed
-                        return self.eval_atomic(None, op, Some(&num2));
+                        return self.eval_atomic(Err(v), op, Ok(&num2));
                     }
 
-                    (Err(_), Err(_)) => {
+                    (Err(v1), Err(v2)) => {
                         // Both sides failed
-                        return self.eval_atomic(None, op, None);
+                        return self.eval_atomic(Err(v1), op, Err(v2));
                     }
 
                     (left, right) => Ok(Expr::Binary { 
                         // Not atomic yet, so evaluate: 
-                        left: Box::new(Some(left?)), 
+                        left: Box::new(Ok(left?)), 
                         op, 
-                        right: Box::new(Some(right?)),
+                        right: Box::new(Ok(right?)),
                     }),
                 }
             }
-            Some(v) => {Ok(v)}
-            _ => Err(format!{""}),
+            Ok(v) => {Ok(v)}
+            Err(v) => Err(v),
         }
     }
 }

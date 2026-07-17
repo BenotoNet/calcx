@@ -31,10 +31,10 @@ impl Calc {
         self.tokens = tokens;
     }
 
-    pub fn get_ans(&self) -> Option<Expr> {
+    pub fn get_ans(&self) -> Result<Expr, String> {
         match self.history.last() {
-            Some(Expr::Number(num)) => Some(Expr::Number(num.clone())),
-            _ => None,
+            Some(Expr::Number(num)) => Ok(Expr::Number(num.clone())),
+            _ => Err(String::from("There is no last answer")),
         }
     }
 
@@ -43,20 +43,28 @@ impl Calc {
     }
 
     // General Use Functions
-    fn expect(&mut self, token: Token) {
-        assert!{std::mem::discriminant(&self.advance().unwrap()) == std::mem::discriminant(&token)};
+    fn expect(&mut self, token: Token) -> Result<(), String> {
+        match std::mem::discriminant(&self.advance()?) == std::mem::discriminant(&token) {
+            true => Ok(()),
+            false => Err(String::from("Expected a Token which was not next."))
+        }
     }
 
     // Get current token
-    fn peek(&self) -> Option<Token> {
-        return self.tokens.get(self.current).cloned();
+    fn peek(&self) -> Result<Token, String> {
+        return match self.tokens.get(self.current).cloned() {
+            Some(v) => Ok(v),
+            _ => Err(String::from("self.peek failed"))
+        };
     }
 
     // Get current token, then advance pointer
-    fn advance(&mut self) -> Option<Token> {
-        let current_token = self.tokens.get(self.current).cloned();
+    fn advance(&mut self) -> Result<Token, String> {
         self.current += 1;
-        return current_token;
+        match self.tokens.get(self.current-1).cloned() {
+            Some(v) => Ok(v),
+            _ => Err(String::from("self.advance failed")),
+        }
     }
 
     fn rewind(&mut self) {
@@ -71,7 +79,7 @@ impl Calc {
         }
     }
 
-    pub fn build_tree_from(&mut self, tokens: Vec<Token>) -> Option<Expr> {
+    pub fn build_tree_from(&mut self, tokens: Vec<Token>) -> Result<Expr, String> {
         let old_tokens = self.tokens.clone();
         let old_current = self.current;
         self.set_tokens(tokens);

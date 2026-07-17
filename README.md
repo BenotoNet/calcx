@@ -37,9 +37,9 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Add Semicolon to normal queries as well to execute multiple at once (e.g. 4+4; 5+5)
 - [x] Fix 2 sqrt(2), 2*sqrt(2), sqrt(2) * 2, etc (-> Maybe with Brackets or by porting to function logic)
 - [x] Fractional Units (e.g. Sqrt(second))
-- [ ] Nicer display of output units
+- [x] Replace all Option<Expr> with Result<Expr, String> to be able to use ?
 - [ ] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
-- [ ] Replace all Option<Expr> with Result<Expr, String> to be able to use ?
+- [ ] Nicer display of output units
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Remove all possible Cloning of Floats & Units
 <!-- - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work) -->

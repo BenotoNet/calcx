@@ -4,11 +4,11 @@ use super::token::Token;
 
 
 impl Calc {
-    pub fn build_tree(&mut self) -> Option<Expr> {
+    pub fn build_tree(&mut self) -> Result<Expr, String> {
         self.parse_expression()
     }
 
-    pub fn parse_function_arguments(&mut self) -> Option<Expr> {
+    pub fn parse_function_arguments(&mut self) -> Result<Expr, String> {
         let mut args = vec![];
 
         // Splitting Arguments with ','
@@ -17,15 +17,15 @@ impl Calc {
 
         // First opening Bracket -> Opening Bracket should not be added to the calculation, but is optional nonetheless
         match self.peek() {
-            Some(Token::LBrac) => {
+            Ok(Token::LBrac) => {
                 brackets += 1;
-                self.advance();
+                self.advance()?;
             }
             _ => {}
         }
 
         while match self.advance() {
-            Some(Token::Septerator) => {
+            Ok(Token::Septerator) => {
                 if brackets <= 1 {
                     // one argument finished, appending to args, then continue (but only if we are
                     // in the root bracket structure)
@@ -43,9 +43,9 @@ impl Calc {
             // parsing args, e.g. func((5+2), 2)
             // Also add the brackets to the argument => ((5+2) / 2) otherwise becomes 5 + 2 / 2 
             //    -> Different results
-            Some(Token::LBrac) => {temp_arg.push(Token::LBrac); brackets += 1; true},
+            Ok(Token::LBrac) => {temp_arg.push(Token::LBrac); brackets += 1; true},
             // Check if we are at the last closing bracket, then append final arg and stop
-            Some(Token::RBrac) => {brackets -= 1; 
+            Ok(Token::RBrac) => {brackets -= 1; 
                 if brackets <= 0 {
                     args.push(temp_arg.clone());
                     false
@@ -59,7 +59,7 @@ impl Calc {
             // We are at the end, because self.advance does not give anything anymore, therefore
             // stop
             // But first, append what the temp is right now
-            None => {
+            Err(_) => {
                 args.push(temp_arg.clone());
                 false
             }
@@ -69,12 +69,12 @@ impl Calc {
                 // If we do not have brackets (-> originally brackets var is 0) we should stop right
                 // here...
                 match (brackets<=0, var) {
-                    (true, Some(v)) => {
+                    (true, Ok(v)) => {
                         temp_arg.push(v);
                         args.push(temp_arg.clone());
                         false
                     },
-                    (false, Some(v)) => {
+                    (false, Ok(v)) => {
                         temp_arg.push(v);
                         true
                     },
@@ -83,10 +83,10 @@ impl Calc {
             }
         } {};
 
-        let mut out = None;
+        let mut out = Err(String::from("No Arguments"));
         for arg in args {
             // println!{"{arg:?}"}
-            out = Some(Expr::Arg {arg: Box::new(self.build_tree_from(arg.clone())), right: Box::new(out) });
+            out = Ok(Expr::Arg {arg: Box::new(self.build_tree_from(arg.clone())), right: Box::new(out) });
         }
 
         // Undo the last going forward
@@ -95,31 +95,31 @@ impl Calc {
         out
     }
 
-    fn parse_expression(&mut self) -> Option<Expr> {
+    fn parse_expression(&mut self) -> Result<Expr, String> {
         let mut left = self.parse_keywords();
 
         while
             match self.peek() {
-            Some(Token::Add)|Some(Token::Sub) => true,
+            Ok(Token::Add)|Ok(Token::Sub) => true,
             _ => false,
         } {
-            let operation = self.advance().unwrap();
+            let operation = self.advance()?;
             let right = self.parse_keywords();
-            left = Some(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
+            left = Ok(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
         }
         return left;
     }
 
-    fn parse_keywords(&mut self) -> Option<Expr> {
+    fn parse_keywords(&mut self) -> Result<Expr, String> {
         let mut left = self.parse_term();
 
         while 
             match self.peek() {
-                Some(Token::Keyword(_)) => true,
-                Some(Token::Func(_)) => {
-                    let func_token = self.advance().unwrap();
+                Ok(Token::Keyword(_)) => true,
+                Ok(Token::Func(_)) => {
+                    let func_token = self.advance()?;
                     let args = self.parse_function_arguments();
-                    left = Some(Expr::Binary { left: Box::new(left), op: func_token, right: Box::new(args) });
+                    left = Ok(Expr::Binary { left: Box::new(left), op: func_token, right: Box::new(args) });
                     true
                 },
                 _ => false,
@@ -127,75 +127,75 @@ impl Calc {
         {
             // We have found a Keyword
             let keyword = match self.advance() {
-                Some(Token::Keyword(key)) => Token::Keyword(key),
+                Ok(Token::Keyword(key)) => Token::Keyword(key),
                 _ => {return left}
             };
             let right = self.parse_term();
 
-            left = Some(Expr::Binary { left: Box::new(left), op: keyword, right: Box::new(right) });
+            left = Ok(Expr::Binary { left: Box::new(left), op: keyword, right: Box::new(right) });
         }
         return left;
     }
 
-    fn parse_term(&mut self) -> Option<Expr> {
+    fn parse_term(&mut self) -> Result<Expr, String> {
         let mut left = self.parse_bracket();
 
         while
             match self.peek() {
-                Some(Token::Mul)|Some(Token::Div) => true,
+                Ok(Token::Mul)|Ok(Token::Div) => true,
                 _ => false,
         } {
             let operation = match self.advance() {
-                Some(v) => v,
+                Ok(v) => v,
                 _ => return left,
             };
             let right = self.parse_bracket();
-            left = Some(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
+            left = Ok(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
         }
         return left;
     }
 
-    fn parse_bracket(&mut self) -> Option<Expr> {
+    fn parse_bracket(&mut self) -> Result<Expr, String> {
         let mut left = self.parse_exponents();
 
         while match self.peek() {
-            Some(Token::LBrac) => true,
+            Ok(Token::LBrac) => true,
             _ => {false},
         } {
             let operation = Token::Mul;
             let right = self.parse_exponents();
-            left = Some(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) })
+            left = Ok(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) })
         }
         return left;
     }
 
-    fn parse_exponents(&mut self) -> Option<Expr> {
+    fn parse_exponents(&mut self) -> Result<Expr, String> {
         let mut left = self.parse_factor();
 
         while
             match self.peek() {
-                Some(Token::Mod)|Some(Token::Pow) => true,
+                Ok(Token::Mod)|Ok(Token::Pow) => true,
                 _ => false,
             } {
-                let operation = self.advance().unwrap();
+                let operation = self.advance()?;
                 let right = self.parse_factor();
-                left = Some(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
+                left = Ok(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
             }
         return left;
     }
 
-    fn parse_factor(&mut self) -> Option<Expr> {
+    fn parse_factor(&mut self) -> Result<Expr, String> {
         match self.peek() {
-            Some(Token::Number(num)) => {self.advance(); Some(Expr::Number(num))},
+            Ok(Token::Number(num)) => {self.advance()?; Ok(Expr::Number(num))},
             // Bracket Logic => Starting a new branch
-            Some(Token::LBrac) => {
-                self.advance();
+            Ok(Token::LBrac) => {
+                self.advance()?;
                 let expr = self.parse_expression()?;
 
                 // EXPECT RBrac
-                self.expect(Token::RBrac);
+                self.expect(Token::RBrac)?;
 
-                return Some(expr);
+                return Ok(expr);
             }
             // make - 2 into the number "-2" by parsing into (-1)2
             // Some(Token::Sub) => {
@@ -203,31 +203,28 @@ impl Calc {
             //     return Some(Expr::Number(super::num::Num::new("-1.0", vec![])));
             // }
             // We found a variable!
-            Some(Token::Var(var)) => {
-                self.advance();
+            Ok(Token::Var(var)) => {
+                self.advance()?;
                 match self.peek() {
-                    Some(Token::Assign) => {
-                            self.advance();
+                    Ok(Token::Assign) => {
+                            self.advance()?;
                             let right = self.parse_expression();
                             match self.eval(right) {
                                 Ok(Expr::Number(num)) => {
                                     self.variables.set_var(var, num.clone());
-                                    Some(Expr::Number(num))
+                                    Ok(Expr::Number(num))
                                 },
-                                _ => {panic!{"Could not evaluate right side of assignment!"};}
+                                _ => return Err(String::from("Could not evaluate right side of assignment!"))
                             }
                     }
                     _ => {
-                        return match self.variables.get_var(var) {
-                            Some(v) => Some(v),
-                            _ => None
-                        };
+                        return self.variables.get_var(var)
                     }
                 }
             }
             _ => {
                 // an unknown Token!
-                return None;
+                return Err(String::from("Operation not possible"));
             },
         }
     }

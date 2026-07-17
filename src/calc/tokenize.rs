@@ -45,13 +45,13 @@ fn is_keyword(unknown_token: &str) -> bool {
 
     // Check if it is a unit:
     match misc_units::unit_to_num(unknown_token) {
-        Some(_) => return true,
+        Ok(_) => return true,
         _ => {},
     };
 
     // Check if it's a reserved keyword:
     let temp_calc = crate::calc::Calc::new(1);
-    match temp_calc.eval_keyword(unknown_token, Some(&Num::unitless("1.0")), Some(&Num::unitless("1.0"))) {
+    match temp_calc.eval_keyword(unknown_token, Ok(&Num::unitless("1.0")), Ok(&Num::unitless("1.0"))) {
         Err(v) => {
             return !(v.as_str() == "Unknown Keyword Or Not enough Arguments! (Maybe not implemented yet?)")
         },
@@ -104,7 +104,7 @@ fn match_units(mut tokens: Vec<Token>) -> Vec<Token> {
             // volts, farad, etc
             Some(Token::Keyword(var)) => {
                 match misc_units::unit_to_num(var.as_str()) {
-                    Some(num) => {
+                    Ok(num) => {
                         tokens[index] = Token::RBrac; 
                         tokens.insert(index, Token::Number(num));
                         tokens.insert(index, Token::LBrac);

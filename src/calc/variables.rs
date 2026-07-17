@@ -11,10 +11,10 @@ impl VariableStorage {
         VariableStorage { storage: HashMap::new() }
     }
 
-    pub fn get_var(&self, var: String) -> Option<Expr> {
+    pub fn get_var(&self, var: String) -> Result<Expr, String> {
         match self.storage.get(&var) {
-            Some(v) => Some(Expr::Number(v.clone())),
-            _ => None,
+            Some(v) => Ok(Expr::Number(v.clone())),
+            _ => Err(String::from("Could not get Variable")),
         }
     }
 

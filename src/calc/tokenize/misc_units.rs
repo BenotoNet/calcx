@@ -1,6 +1,6 @@
 use crate::calc::num::Num;
-pub fn unit_to_num(ul: &str) -> Option<Num> {
-    Some(match ul {
+pub fn unit_to_num(ul: &str) -> Result<Num, String> {
+    Ok(match ul {
         "meter"|"meters"|"metre"|"metres" => Num::new("1.0", vec![('m', 1)]),
         "second"|"seconds"|"secs"|"sec" => Num::new("1.0", vec![('s', 1)]),
         "gram"|"grams" => Num::new("0.001", vec![('K', 1)]),
@@ -101,7 +101,7 @@ pub fn unit_to_num(ul: &str) -> Option<Num> {
         "ppb"|"partsperbillion" => {Num::unitless("1e-9")}
         "ppt"|"partspertrillion" => {Num::unitless("1e-12")}
 
-        "karat" => {Num::unitless("1.0").div(&Num::unitless("24.0")).unwrap()}
+        "karat" => {Num::unitless("1.0").div(&Num::unitless("24.0"))?}
 
         // Stupid Americans:
         "inch"|"inches" => {Num::new("2.54e-2", vec![('m', 1)])}
@@ -120,8 +120,8 @@ pub fn unit_to_num(ul: &str) -> Option<Num> {
         "gallon_UK" => {Num::new("0.00454609", vec![('m', 3)])}
         "gallon_US" => {Num::new("0.003785", vec![('m', 3)])}
 
-        "knot"|"knots" => {Num::new("1.0", vec![('m', 1), ('s', -1)]).mul(&Num::unitless("1852").div(&Num::unitless("3600")).unwrap()).unwrap()}
+        "knot"|"knots" => {Num::new("1.0", vec![('m', 1), ('s', -1)]).mul(&Num::unitless("1852").div(&Num::unitless("3600"))?)?}
 
-        _ => return None
+        _ => return Err(String::from("Not a pre defined Variable"))
     })
 }

@@ -6,7 +6,7 @@ use crate::calc::tokenize::misc_units::unit_to_num;
 // FIX: Please solve any other way!
 fn eval_argument(arg: Expr) -> Result<Expr, String> {
     let temp_calc = crate::calc::Calc::new(crate::PRECISION as usize);
-    temp_calc.eval(Some(arg))
+    temp_calc.eval(Ok(arg))
 }
 
 // When should it be a function, and when a keyword / Variable (-> Continue Categorization)?
@@ -17,13 +17,13 @@ pub fn is_function(token_str: &str) -> bool {
     }
 }
 
-pub fn unwrap_args(mut args: Option<Expr>) -> Vec<Expr> {
+fn unwrap_args(mut args: Result<Expr, String>) -> Vec<Expr> {
     let mut output = vec![];
     loop {
         match args {
-            Some(Expr::Arg { ref arg, ref right }) => {
+            Ok(Expr::Arg { ref arg, ref right }) => {
                 match *arg.clone() {
-                    Some(v) => output.push(v),
+                    Ok(v) => output.push(v),
                     _ => {},
                 }
                 args = *right.clone()
@@ -35,7 +35,7 @@ pub fn unwrap_args(mut args: Option<Expr>) -> Vec<Expr> {
     output
 }
 
-pub fn func_call(func_str: &str, args: Option<Expr>) -> Result<Expr, String> {
+pub fn func_call(func_str: &str, args: Result<Expr, String>) -> Result<Expr, String> {
     let args = unwrap_args(args); // This function unwraps the Arguments into a simple array of
                                   // expressions
     return run_func(func_str, args);
@@ -76,78 +76,78 @@ fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
         }
         "add_one" => {
             expect(&args, 1, true)?;
-            wrap(args[0].add(&Num::unitless("1.0")).unwrap())
+            wrap(args[0].add(&Num::unitless("1.0"))?)
         },
 
         "root"|"nth_root"|"n_root" => {
             expect(&args, 2, true)?;
-            wrap(args[1].powf(&Num::unitless("1.0").div(&args[0]).unwrap()).unwrap())
+            wrap(args[1].powf(&Num::unitless("1.0").div(&args[0])?)?)
         }
         "log" => {
             expect(&args, 2, true)?;
-            wrap(args[1].log(&args[0]).unwrap())
+            wrap(args[1].log(&args[0])?)
         }
 
         // All ported functions (like sqrt)
         "sqrt"|"square_root"|"2root"|"root2" => {
             expect(&args, 1, false)?;
-            wrap(args[0].powf(&Num::unitless("0.5")).unwrap())
+            wrap(args[0].powf(&Num::unitless("0.5"))?)
         }
         "sin"|"sine" => {
             expect(&args, 1, true)?;
-            wrap(args[0].sin().unwrap())
+            wrap(args[0].sin()?)
         }
         "cos"|"cosine" => {
             expect(&args, 1, true)?;
-            wrap(args[0].cos().unwrap())
+            wrap(args[0].cos()?)
         }
         "tan"|"tangent" => {
             expect(&args, 1, true)?;
-            wrap(args[0].tan().unwrap())
+            wrap(args[0].tan()?)
         }
         "arcsine"|"arcsin"|"asin"|"asine" => {
             expect(&args, 1, true)?;
-            wrap(args[0].arcsin().unwrap())
+            wrap(args[0].arcsin()?)
         }
         "arccosine"|"arccos"|"arcos"|"acos"|"acosine" => {
             expect(&args, 1, true)?;
-            wrap(args[0].arccos().unwrap())
+            wrap(args[0].arccos()?)
         }
         "arctan"|"arctangent"|"atan"|"atangent" => {
             expect(&args, 1, true)?;
-            wrap(args[0].arctan().unwrap())
+            wrap(args[0].arctan()?)
         }
         "ln"|"natural_log"|"natural_ln"|"log_natural" => {
             expect(&args, 1, true)?;
-            wrap(args[0].log(&unit_to_num("e").unwrap()).unwrap())
+            wrap(args[0].log(&unit_to_num("e")?)?)
         }
         "lg"|"log10"|"10log"|"log_base_10" => {
             expect(&args, 1, true)?;
-            wrap(args[0].log(&Num::unitless("10")).unwrap())
+            wrap(args[0].log(&Num::unitless("10"))?)
         }
         "log2"|"2log"|"log_base_2" => {
             expect(&args, 1, true)?;
-            wrap(args[0].log(&Num::unitless("2")).unwrap())
+            wrap(args[0].log(&Num::unitless("2"))?)
         }
         "exp" => {
             expect(&args, 1, true)?;
-            wrap(args[0].exp().unwrap())
+            wrap(args[0].exp()?)
         }
         "round_down"|"floor"|"rdown"|"roundd" => {
             expect(&args, 1, true)?;
-            wrap(args[0].floor().unwrap())
+            wrap(args[0].floor()?)
         }
         "round_up"|"ceil"|"rup"|"roundu"|"ceiling" => {
             expect(&args, 1, true)?;
-            wrap(args[0].ceil().unwrap())
+            wrap(args[0].ceil()?)
         }
         "round" => {
             expect(&args, 1, true)?;
-            wrap(args[0].round().unwrap())
+            wrap(args[0].round()?)
         }
         "abs"|"absolute"|"absol"|"absolutes" => {
             expect(&args, 1, true)?;
-            wrap(args[0].floor().unwrap())
+            wrap(args[0].floor()?)
         }
 
         _ => {Err(String::from("Not a Function"))},

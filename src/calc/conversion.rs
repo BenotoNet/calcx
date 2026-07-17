@@ -1,6 +1,7 @@
 use crate::calc;
 use crate::calc::num::Num;
 
+// NOTE: Old Functions, Deprecated
 // fn can_be_converted_to(base: &Num, to_units: &str) -> bool {
 //     can_be_converted(base, &calc::Calc::new().run(to_units))
 // }
@@ -14,7 +15,7 @@ use crate::calc::num::Num;
 //         calc::expr::Expr::Number(num) => {
 //             // Doing so by checking if when dividing by new units results in unitless number =>
 //             // Units match and can be converted
-//             return base.div(&num).unwrap().is_unitless();
+//             return base.div(&num)?.is_unitless();
 //         },
 //         _ => {return false}
 //     }
@@ -31,17 +32,17 @@ use crate::calc::num::Num;
 //     }
 // }
 
-pub fn convert(base: &Num, units: calc::expr::Expr) -> Option<Num> {
+pub fn convert(base: &Num, units: calc::expr::Expr) -> Result<Num, String> {
     // Convert by dividing quantity by parsed quantity of units -> This is the quantity of the
     // output num
     match units {
         calc::expr::Expr::Number(num) => {
-            let output = base.div(&num).unwrap();
+            let output = base.div(&num)?;
             match output.is_unitless() {
-                true => Some(output),
-                false => None
+                true => Ok(output),
+                false => Err(String::from("Conversion not Possible"))
             }
         }
-        _ => None
+        _ => Err(String::from("Something went wrong during Evaluation"))
     }
 }

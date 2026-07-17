@@ -5,13 +5,13 @@ use super::token::Token;
 pub enum Expr {
     Number(Num),
     Binary {
-        left: Box<Option<Expr>>,
+        left: Box<Result<Expr, String>>,
         op: Token,
-        right: Box<Option<Expr>>,
+        right: Box<Result<Expr, String>>,
     },
     Arg {
-        arg: Box<Option<Expr>>,
-        right: Box<Option<Expr>>,
+        arg: Box<Result<Expr, String>>,
+        right: Box<Result<Expr, String>>,
     },
 }
 
