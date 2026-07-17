@@ -90,7 +90,7 @@ fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
 
         // All ported functions (like sqrt)
         "sqrt"|"square_root"|"2root"|"root2" => {
-            expect(&args, 1, true)?;
+            expect(&args, 1, false)?;
             wrap(args[0].powf(&Num::unitless("0.5")).unwrap())
         }
         "sin"|"sine" => {

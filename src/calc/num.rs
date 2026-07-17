@@ -100,12 +100,12 @@ impl Num {
         // exponent is expected to be unitless / dimensionless
         assert!(num2.is_unitless());
 
-        // Taking a negative Number to the power of something is difficult (if exponent is not an
-        // integer, so we have different cases:)
+        // Taking a negative Number to the power of something is impossible (if exponent is *not* an
+        // integer, so we have different cases: )
 
 
-        // FIX: WHEN DOING (METERS^2)^0.5 IT DOES NOT WORK
-        let output_units = Units::operation(self.units.clone(), |unit| {unit * num2.quantity.to_f64() as i8});
+        let output_units = Units::operation(self.units.clone(), |unit| {unit * num2.get_quant().to_f64()});
+        println!{"{output_units:?}"}
         match self.get_quant() < 0 {
             true => {
                 // we have a negative number, therefore we need to see if exponent is an integer
