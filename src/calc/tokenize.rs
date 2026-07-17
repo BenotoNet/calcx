@@ -15,12 +15,18 @@ fn split_into_unknowns(query: &str) -> Vec<Token> {
             // number
             // -> Leads to being able to do operations like -1+2 while still allowing 5-1 by adding
             // Add Operation between two numbers (when the second number is negative)
+            // Above is Deprecated (Sort of)
             if partial != "" {
                 output.push(Token::Unknown(partial.clone()));
             }
             partial = String::new();
         }
         if splitters.contains(c) {
+            // We want to make 05 into 0 5
+            while partial.starts_with("0") {
+                output.push(Token::Unknown(String::from("0")));
+                partial.remove(0);
+            }
             if partial != "" {
                 output.push(Token::Unknown(partial.clone()));
             }
@@ -31,6 +37,11 @@ fn split_into_unknowns(query: &str) -> Vec<Token> {
         } else {
             partial += &c.to_string();
         }
+    }
+    // We want to make 05 into 0 5
+    while partial.starts_with("0") {
+        output.push(Token::Unknown(String::from("0")));
+        partial.remove(0);
     }
     if partial != "" {
         output.push(Token::Unknown(partial));
