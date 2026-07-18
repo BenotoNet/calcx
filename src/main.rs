@@ -5,7 +5,8 @@ mod utils;
 
 // External Library for Floating Point Number
 use rug::Float;
-const PRECISION: u32 = 4096;
+// FIX: Reset to 4096
+const PRECISION: u32 = 32;
 
 use std::env::args;
 

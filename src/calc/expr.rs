@@ -1,7 +1,7 @@
 use super::num::Num;
 use super::token::Token;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Expr {
     Number(Num),
     Binary {

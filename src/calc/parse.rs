@@ -8,99 +8,21 @@ impl Calc {
         self.parse_expression()
     }
 
-    pub fn parse_function_arguments(&mut self) -> Result<Expr, String> {
-        let mut args = vec![];
-
-        // Splitting Arguments with ','
-        let mut temp_arg: Vec<Token> = vec![];
-        let mut brackets = 0;
-
-        // First opening Bracket -> Opening Bracket should not be added to the calculation, but is optional nonetheless
-        match self.peek() {
-            Ok(Token::LBrac) => {
-                brackets += 1;
-                self.advance()?;
-            }
-            _ => {}
-        }
-
-        while match self.advance() {
-            Ok(Token::Septerator) => {
-                if brackets <= 1 {
-                    // one argument finished, appending to args, then continue (but only if we are
-                    // in the root bracket structure)
-                    args.push(temp_arg.clone());
-                    temp_arg = vec![];
-                    true
-                }
-                // We are not at the root branch yet, so just append
-                else {
-                    temp_arg.push(Token::Septerator);
-                    true
-                }
-            }
-            // Increase Bracket count by one, so that when we have the matching RBrac, we don't stop
-            // parsing args, e.g. func((5+2), 2)
-            // Also add the brackets to the argument => ((5+2) / 2) otherwise becomes 5 + 2 / 2 
-            //    -> Different results
-            Ok(Token::LBrac) => {temp_arg.push(Token::LBrac); brackets += 1; true},
-            // Check if we are at the last closing bracket, then append final arg and stop
-            Ok(Token::RBrac) => {brackets -= 1; 
-                if brackets <= 0 {
-                    args.push(temp_arg.clone());
-                    false
-                } 
-                else {
-                   temp_arg.push(Token::RBrac);
-                   true
-                }
-            },
-
-            // We are at the end, because self.advance does not give anything anymore, therefore
-            // stop
-            // But first, append what the temp is right now
-            Err(_) => {
-                args.push(temp_arg.clone());
-                false
-            }
-
-            // we got anything other than specified above, then append if not none and continue
-            var => {
-                // If we do not have brackets (-> originally brackets var is 0) we should stop right
-                // here...
-                match (brackets<=0, var) {
-                    (true, Ok(v)) => {
-                        temp_arg.push(v);
-                        args.push(temp_arg.clone());
-                        false
-                    },
-                    (false, Ok(v)) => {
-                        temp_arg.push(v);
-                        true
-                    },
-                    _ => true,
-                }
-            }
-        } {};
-
-        let mut out = Err(String::from("No Arguments"));
-        for arg in args {
-            // println!{"{arg:?}"}
-            out = Ok(Expr::Arg {arg: Box::new(self.build_tree_from(arg.clone())), right: Box::new(out) });
-        }
-
-        // Undo the last going forward
-        self.rewind();
-
-        out
-    }
-
     fn parse_expression(&mut self) -> Result<Expr, String> {
         let mut left = self.parse_keywords();
 
         while
             match self.peek() {
-            Ok(Token::Add)|Ok(Token::Sub) => true,
+            Ok(Token::Add) => true,
+            Ok(Token::Sub) => {
+                // Decide by context if minus should be considered an operation or a negate sign
+                // FIX: Here, I need to still figure out how to multiply by -1 if the negative sign
+                // is unary => just a sign and not an operation
+                match self.last_token() {
+                    Err(_)|Ok(Token::LBrac|Token::Add|Token::Sub|Token::Mod|Token::Septerator|Token::Div|Token::Mul|Token::Pow|Token::Assign) => false,
+                    _ => true
+                }
+            }
             _ => false,
         } {
             let operation = self.advance()?;
@@ -197,11 +119,6 @@ impl Calc {
 
                 return Ok(expr);
             }
-            // make - 2 into the number "-2" by parsing into (-1)2
-            // Some(Token::Sub) => {
-            //     self.advance();
-            //     return Some(Expr::Number(super::num::Num::new("-1.0", vec![])));
-            // }
             // We found a variable!
             Ok(Token::Var(var)) => {
                 self.advance()?;
@@ -228,4 +145,92 @@ impl Calc {
             },
         }
     }
+
+    pub fn parse_function_arguments(&mut self) -> Result<Expr, String> {
+        let mut args = vec![];
+
+        // Splitting Arguments with ','
+        let mut temp_arg: Vec<Token> = vec![];
+        let mut brackets = 0;
+
+        // First opening Bracket -> Opening Bracket should not be added to the calculation, but is optional nonetheless
+        match self.peek() {
+            Ok(Token::LBrac) => {
+                brackets += 1;
+                self.advance()?;
+            }
+            _ => {}
+        }
+
+        while match self.advance() {
+            Ok(Token::Septerator) => {
+                if brackets <= 1 {
+                    // one argument finished, appending to args, then continue (but only if we are
+                    // in the root bracket structure)
+                    args.push(temp_arg.clone());
+                    temp_arg = vec![];
+                    true
+                }
+                // We are not at the root branch yet, so just append
+                else {
+                    temp_arg.push(Token::Septerator);
+                    true
+                }
+            }
+            // Increase Bracket count by one, so that when we have the matching RBrac, we don't stop
+            // parsing args, e.g. func((5+2), 2)
+            // Also add the brackets to the argument => ((5+2) / 2) otherwise becomes 5 + 2 / 2 
+            //    -> Different results
+            Ok(Token::LBrac) => {temp_arg.push(Token::LBrac); brackets += 1; true},
+            // Check if we are at the last closing bracket, then append final arg and stop
+            Ok(Token::RBrac) => {brackets -= 1; 
+                if brackets <= 0 {
+                    args.push(temp_arg.clone());
+                    false
+                } 
+                else {
+                   temp_arg.push(Token::RBrac);
+                   true
+                }
+            },
+
+            // We are at the end, because self.advance does not give anything anymore, therefore
+            // stop
+            // But first, append what the temp is right now
+            Err(_) => {
+                args.push(temp_arg.clone());
+                false
+            }
+
+            // we got anything other than specified above, then append if not none and continue
+            var => {
+                // If we do not have brackets (-> originally brackets var is 0) we should stop right
+                // here...
+                match (brackets<=0, var) {
+                    (true, Ok(v)) => {
+                        temp_arg.push(v);
+                        args.push(temp_arg.clone());
+                        false
+                    },
+                    (false, Ok(v)) => {
+                        temp_arg.push(v);
+                        true
+                    },
+                    _ => true,
+                }
+            }
+        } {};
+
+        let mut out = Err(String::from("No Arguments"));
+        for arg in args {
+            // println!{"{arg:?}"}
+            out = Ok(Expr::Arg {arg: Box::new(self.build_tree_from(arg.clone())), right: Box::new(out) });
+        }
+
+        // Undo the last going forward
+        self.rewind();
+
+        out
+    }
+
 }

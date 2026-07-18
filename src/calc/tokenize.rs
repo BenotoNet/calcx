@@ -5,22 +5,21 @@ use crate::calc::num::Num;
 pub mod misc_units;
 
 fn split_into_unknowns(query: &str) -> Vec<Token> {
-    let splitters = String::from("+*/%!^()= ,");
+    let splitters = String::from("+*/-%!^()= ,");
     let mut output = vec![];
     let mut partial = String::new();
     for c in query.chars() {
         // Very Hacky, might need to change...
-        if c == '-' {
-            // When we can, we try to not append the minus as an operation, but rather a sign of a
-            // number
-            // -> Leads to being able to do operations like -1+2 while still allowing 5-1 by adding
-            // Add Operation between two numbers (when the second number is negative)
-            // Above is Deprecated (Sort of)
-            if partial != "" {
-                output.push(Token::Unknown(partial.clone()));
-            }
-            partial = String::new();
-        }
+        // if c == '-' {
+        //     // When we can, we try to not append the minus as an operation, but rather a sign of a
+        //     // number
+        //     // -> Leads to being able to do operations like -1+2 while still allowing 5-1 by adding
+        //     // Add Operation between two numbers (when the second number is negative)
+        //     if partial != "" {
+        //         output.push(Token::Unknown(partial.clone()));
+        //     }
+        //     partial = String::new();
+        // }
         if splitters.contains(c) {
             // We want to make 05 into 0 5
             while partial.starts_with("0") {

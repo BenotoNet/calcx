@@ -1,7 +1,6 @@
 use super::num::Num;
 
-#[derive(Debug, Clone)]
-#[allow(unused)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     Number(Num),
 

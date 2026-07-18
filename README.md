@@ -22,6 +22,12 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] ans / answer keyword for the result of last calculation
 - [x] Copy to clipboard function
 - [x] high ceiling for overflow (-> e.g. multiplying very large numbers with each other) (-> For that I will need to change from f64 to a custom type (probably external crate...))
+- [x] Fix (-3)^5 => NaN
+- [x] Fix (-2)-2 != 4 (--> -2 * -2 is what is being calculated; same as above)
+- [x] Fix 5 05 => 55 (should be 505)
+- [x] FIX 5 10 => 60
+- [x] Fix -(5+5) (currently crashes)
+- [x] Fix 10^31 planck => Is supposedly not unitless
 - [x] high precision (-> depending on user settings, but at least maximum of 1024 decimal digits) (-> See above)
 - [x] Make --output-only cli option with -o
 - [x] Improve Precision on "Variables (e.g. Pi)"
@@ -31,6 +37,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Fix bugs for Functions: add_one(add_one(5)) should be 7
 - [x] Fix: sqrt(add_one(8)) should be 3
 - [x] Fix 2 add_one(5) & 2 * add_one(5)
+- [x] Fix 5-+2 (originally gave error)
 - [x] Procedual categorization of functions by analyzing output Errors
 - [x] Port simple functions (except "to") to be functions which could take multiple arguments (-> Having everything in one place)
 - [x] Fix "hello = 2; add_one(hello)" => Variables as Arguments (-> Don't make a new calculator, use the current one (because variable storage is not transfered over currently), or replicate the entire calculator)
@@ -39,24 +46,15 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Fractional Units (e.g. Sqrt(second))
 - [x] Replace all Option<Expr> with Result<Expr, String> to be able to use ?
 - [x] stop frequent crashes and handle errors instead (-> Operation is impossible, might require dimensionless argument, etc)
+- [ ] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated) -> Fix by using context to switch between - as *-1 and - as binary operation
 - [ ] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
-- [ ] Nicer display of output units
+- [ ] Nicer display of output units + System for doing to keyword (appending unit string?)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Remove all possible Cloning of Floats & Units
 <!-- - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work) -->
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
 - [ ] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?))
 - [ ] HEX to RGB, etc
-- [ ] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated)
-- [x] Fix (-3)^5 => NaN
-- [x] Fix (-2)-2 != 4 (--> -2 * -2 is what is being calculated; same as above)
-- [x] Fix 5 05 => 55 (should be 505)
-- [x] FIX 5 10 => 60
-- [x] Fix -(5+5) (currently crashes)
-- [x] Fix 10^31 planck => Is supposedly not unitless
 
 
 Wow, the more I thought about this, the more this seems like a *HUGE* project. Let's see how long I will last before I will quit... xD
-
-TODOs for later improvement (optional):
-4--2 works, but 5-+2 does not, since plus is not considered the sign of a number

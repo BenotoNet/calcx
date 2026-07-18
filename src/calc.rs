@@ -67,6 +67,11 @@ impl Calc {
         }
     }
 
+    fn last_token(&mut self) -> Result<Token, String> {
+        self.rewind();
+        self.advance()
+    }
+
     fn rewind(&mut self) {
         self.current -= 1;
     }
@@ -95,12 +100,12 @@ impl Calc {
 
         // This function is supposed to tokenize the given query
         self.tokens = tokenize::tokenize(query);
-        // println!{"{:?}", self.tokens}
+        println!{"{:?}", self.tokens}
 
         // println!{"Parsing Done"};
 
         let tree = self.build_tree();
-        // println!{"{tree:?}"};
+        println!{"{tree:?}"};
         let output = self.eval(tree);
 
         match &output {

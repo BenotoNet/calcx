@@ -9,13 +9,8 @@ pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
     }
 }
 
-pub fn eq(num1: &Num, num2: &Num) -> bool {
-    num1.get_quant() == num2.get_quant() && num1.get_units() == num2.get_units()
-}
-
 pub fn is_int(num: &Num) -> bool {
-    // NOTE: Maybe remove the unwrap statement eventually
-    eq(num, &num.round().unwrap())
+    num.round_to(3).unwrap() == num.round().unwrap()
 }
 
 // Clean Output without CliClack

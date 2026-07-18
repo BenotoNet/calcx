@@ -50,6 +50,13 @@ fn expect(args: &Vec<Num>, num: usize, needs_unitless: bool) -> Result<(), Strin
     }
 }
 
+fn expect_unitless(args: &Vec<Num>) -> Result<(), String> {
+    if args.iter().any(|arg| {!arg.is_unitless()}) {Err(String::from("Argument is required to be dimensionless (unitless)"))}
+    else {
+        Ok(())
+    }
+}
+
 fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
 
     // Eval each argument
@@ -142,8 +149,16 @@ fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
             wrap(args[0].ceil()?)
         }
         "round" => {
-            expect(&args, 1, true)?;
-            wrap(args[0].round()?)
+            expect_unitless(&args)?;
+            if args.len() == 1 {
+                wrap(args[0].round()?)
+            }
+            else if args.len() == 2 {
+                wrap(args[0].round_to(args[1].get_quant().round().to_f32() as u32)?)
+            }
+            else {
+                Err(String::from("Wrong number of arguments"))
+            }
         }
         "abs"|"absolute"|"absol"|"absolutes" => {
             expect(&args, 1, true)?;

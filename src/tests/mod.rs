@@ -3,18 +3,9 @@ use super::*;
 use super::calc::Calc;
 use super::calc::expr::Expr;
 use super::calc::num::Num;
-use super::utils::eq;
 
 fn make_default_calc() -> Calc {
     Calc::new(15)
-}
-
-fn query_eq(query: &str, num: Num) -> bool {
-    let mut calc = make_default_calc();
-    match calc.run(query) {
-        Ok(Expr::Number(out_num)) => eq(&out_num, &num),
-        _ => false
-    }
 }
 
 #[test]
@@ -28,28 +19,50 @@ fn creating_calc() {
 
 #[test]
 fn simple_query() {
-    assert!{
-        query_eq("1+1", Num::unitless("2"))
+    let mut calc = make_default_calc();
+    assert_eq!{
+        calc.run("1+1"), Ok(Expr::Number(Num::unitless("2")))
     };
 }
 
 #[test]
 fn arithmatic_queries() {
-    assert! {
-        query_eq("1+(4-2)-1+7--2-2++5-0.5+.2", Num::unitless("13.7"))
-    }
+    let mut calc = make_default_calc();
+    assert_eq!{
+        calc.run("1+(4-2)-1+7--2-2++5-0.5+.2"), Ok(Expr::Number(Num::unitless("13.7")))
+    };
 }
 
 #[test]
 fn advanced_arithmatic() {
-    assert! {
-        query_eq("3+4*2/((1-5)^2)^3", Num::unitless("3.001953125"))
-    }
+    let mut calc = make_default_calc();
+    assert_eq!{
+        calc.run("3+4*2/(1-5)^(2^3)"), Ok(Expr::Number(Num::unitless("3.0001220703125")))
+    };
 }
 
 #[test]
 fn units() {
-    assert! {
-        query_eq("1 meter second ampere kilogram candela kelvin", Num::new("1.0", vec![('m', 1), ('s', 1), ('a', 1), ('K', 1), ('k', 1), ('c', 1)]))
+    let mut calc = make_default_calc();
+    assert_eq!{
+        calc.run("1 meter second ampere kilogram candela kelvin"), Ok(Expr::Number(Num::new("1.0", vec![('m', 1), ('s', 1), ('a', 1), ('K', 1), ('k', 1), ('c', 1)])))
+    };
+}
+
+#[test]
+fn failure() {
+    let mut calc = make_default_calc();
+    match calc.run("Hello") {
+        Err(_) => {},
+        _ => panic!{"This query should result in a failure!"}
     }
+}
+
+#[test]
+fn variable_storage() {
+    let mut calc = make_default_calc();
+    calc.run("var = 4");
+    assert_eq!{
+        calc.run("var * 5"), Ok(Expr::Number(Num::unitless("20")))
+    };
 }

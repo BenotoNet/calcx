@@ -1,12 +1,13 @@
 use crate::calc::units::Units;
 use crate::{Float, utils};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Num {
     quantity: Float,
     units: Units,
 }
 
+#[allow(unused)]
 impl Num {
     pub fn new(quantity: &str, units_vec: Vec<(char, i8)>) -> Num {
         let quantity = Float::parse(quantity).expect("Could not parse this number as a number? Should never happen!");
@@ -116,7 +117,7 @@ impl Num {
                         let output_real = positive.powf(num2)?;
                         let pos_or_neg = num2.modf(&Num::unitless("2.0"))?;
                         // Uneven, therefore we still have a Negative sign
-                        if utils::eq(&pos_or_neg, &Num::unitless("1.0")) {
+                        if &pos_or_neg == &Num::unitless("1.0") {
                             return Ok(Num::from(output_real.mul(&Num::unitless("-1"))?.get_quant(), output_units));
                         }
                         else {
@@ -190,6 +191,14 @@ impl Num {
     pub fn round(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().round())),
+            false => Err(String::from("Operation failed")),
+        }
+    }
+
+    pub fn round_to(&self, digits: u32) -> Result<Num, String> {
+        let bigger: Float = self.quantity.clone()*10u32.pow(digits);
+        match self.is_unitless() {
+            true => Ok(Num::unitless_float(bigger.round()/10u32.pow(digits))),
             false => Err(String::from("Operation failed")),
         }
     }

@@ -8,6 +8,7 @@ pub struct Units {
     candela: f64,
 }
 
+#[allow(unused)]
 impl Units {
     pub fn new(units_construct: Vec<(char, i8)>) -> Units {
         let mut units = Units {
