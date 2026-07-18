@@ -85,7 +85,7 @@ fn categorize(tokens: Vec<Token>) -> Vec<Token> {
                     ")" => {Token::RBrac}
                     "^" => {Token::Pow}
                     "=" => {Token::Assign}
-                    "," => {Token::Septerator}
+                    "," => {Token::Seperator}
                     _ => {
                         // No Operator Matches
                         // Test for Keyword:

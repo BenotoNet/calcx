@@ -8,6 +8,10 @@ fn make_default_calc() -> Calc {
     Calc::new(15)
 }
 
+fn query(calc: &mut Calc, query: &str, output_number_query: &str) {
+    assert_eq!{calc.run(query), calc.run(output_number_query)};
+}
+
 #[test]
 fn simple_arithmatic() {
 }
@@ -15,6 +19,14 @@ fn simple_arithmatic() {
 #[test]
 fn creating_calc() {
     make_default_calc();
+}
+
+#[test]
+fn simple_parsing() {
+    let mut calc = make_default_calc();
+    assert_eq!{
+        calc.run("1"), Ok(Expr::Number(Num::unitless("1")))
+    };
 }
 
 #[test]
@@ -65,4 +77,27 @@ fn variable_storage() {
     assert_eq!{
         calc.run("var * 5"), Ok(Expr::Number(Num::unitless("20")))
     };
+}
+
+#[test]
+fn negative_signs() {
+    let mut calc = make_default_calc();
+
+    query(&mut calc, "1-2^2", "(0-1)*(3)");
+    query(&mut calc, "-1*-1", "1");
+    query(&mut calc, "1-1", "0");
+}
+
+#[test]
+fn pre_defined_variables() {
+    let mut calc = make_default_calc();
+
+    query(&mut calc, "round(pi, 2)", "3.14");
+}
+
+#[test]
+fn functions() {
+    let mut calc = make_default_calc();
+
+    query(&mut calc, "test(add_one(sqrt(2^2)))", "3")
 }

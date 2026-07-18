@@ -20,6 +20,6 @@ pub enum Token {
 
     Keyword(String),
     Func(String),
-    Septerator,
+    Seperator,
     Unknown(String),
 }

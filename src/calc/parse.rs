@@ -1,5 +1,6 @@
 use super::Calc;
 use super::expr::Expr;
+use super::num::Num;
 use super::token::Token;
 
 
@@ -19,7 +20,7 @@ impl Calc {
                 // FIX: Here, I need to still figure out how to multiply by -1 if the negative sign
                 // is unary => just a sign and not an operation
                 match self.last_token() {
-                    Err(_)|Ok(Token::LBrac|Token::Add|Token::Sub|Token::Mod|Token::Septerator|Token::Div|Token::Mul|Token::Pow|Token::Assign) => false,
+                    Err(_)|Ok(Token::LBrac|Token::Add|Token::Sub|Token::Mod|Token::Seperator|Token::Div|Token::Mul|Token::Pow|Token::Assign) => false,
                     _ => true
                 }
             }
@@ -119,6 +120,14 @@ impl Calc {
 
                 return Ok(expr);
             }
+            // We have a negate-sign, therefore, we multiply with -1
+            Ok(Token::Sub) => {
+                self.advance()?;
+                return Ok(Expr::Binary { 
+                    left: Box::new(Ok(Expr::Number(Num::unitless("-1")))), 
+                    op: Token::Mul, 
+                    right: Box::new(self.parse_term()) })
+            }
             // We found a variable!
             Ok(Token::Var(var)) => {
                 self.advance()?;
@@ -163,7 +172,7 @@ impl Calc {
         }
 
         while match self.advance() {
-            Ok(Token::Septerator) => {
+            Ok(Token::Seperator) => {
                 if brackets <= 1 {
                     // one argument finished, appending to args, then continue (but only if we are
                     // in the root bracket structure)
@@ -173,7 +182,7 @@ impl Calc {
                 }
                 // We are not at the root branch yet, so just append
                 else {
-                    temp_arg.push(Token::Septerator);
+                    temp_arg.push(Token::Seperator);
                     true
                 }
             }

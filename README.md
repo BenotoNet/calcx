@@ -46,7 +46,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Fractional Units (e.g. Sqrt(second))
 - [x] Replace all Option<Expr> with Result<Expr, String> to be able to use ?
 - [x] stop frequent crashes and handle errors instead (-> Operation is impossible, might require dimensionless argument, etc)
-- [ ] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated) -> Fix by using context to switch between - as *-1 and - as binary operation
+- [x] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated) -> Fix by using context to switch between - as *-1 and - as binary operation
 - [ ] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
 - [ ] Nicer display of output units + System for doing to keyword (appending unit string?)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
