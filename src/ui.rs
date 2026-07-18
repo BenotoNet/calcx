@@ -33,7 +33,7 @@ impl UI {
             match option {
                 Setting::SingleQuery(query) => {ui.run_query(&query); exit_after_single_queries = true;},
                 Setting::Precision(precision) => {ui.calc.change_precision(precision);},
-                Setting::OutputOnly => ui.persistent.push(Setting::OutputOnly),
+                var => ui.persistent.push(var),
             }
         }
         if exit_after_single_queries {exit(0)};

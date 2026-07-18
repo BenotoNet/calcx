@@ -135,6 +135,9 @@ fn trim(mut s: String) -> String {
         if s.len() == dot {
             s.pop();
         }
+        if s.ends_with('.') {
+            s.pop();
+        }
     }
     s
 }
