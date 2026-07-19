@@ -80,6 +80,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated) -> Fix by using context to switch between - as *-1 and - as binary operation
 - [x] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
 - [x] Help Menu
+- [ ] Proper Clipboard support as a feature
 - [ ] Nicer display of output units + System for doing to keyword (appending unit string?)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Remove all possible Cloning of Floats & Units

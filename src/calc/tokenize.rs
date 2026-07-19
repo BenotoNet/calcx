@@ -63,7 +63,7 @@ fn is_keyword(unknown_token: &str) -> bool {
     let temp_calc = crate::calc::Calc::new(1);
     match temp_calc.eval_keyword(unknown_token, Ok(&Num::unitless("1.0")), Ok(&Num::unitless("1.0"))) {
         Err(v) => {
-            return !(v.as_str() == "Unknown Keyword Or Not enough Arguments! (Maybe not implemented yet?)")
+            return !(v.as_str() == "Unknown Keyword or not enough Arguments! (Maybe not implemented yet?)")
         },
         _ => true,
     }
