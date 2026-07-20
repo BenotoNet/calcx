@@ -1,8 +1,6 @@
 #![allow(unused)]
-use super::*;
-use super::calc::Calc;
-use super::calc::expr::Expr;
-use super::calc::num::Num;
+
+use crate::{Calc, Num, Expr};
 
 fn make_default_calc() -> Calc {
     Calc::new(15)
@@ -14,6 +12,10 @@ fn query(calc: &mut Calc, query: &str, output_number_query: &str) {
 
 #[test]
 fn simple_arithmatic() {
+    let mut calc = make_default_calc();
+    assert_eq!{
+        calc.run("5+5*2"), Ok(Expr::Number(Num::unitless("15")))
+    };
 }
 
 #[test]

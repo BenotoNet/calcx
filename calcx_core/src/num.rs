@@ -1,5 +1,6 @@
-use crate::calc::units::Units;
-use crate::{Float, utils};
+use crate::units::Units;
+use crate::utils;
+use rug::Float;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Num {

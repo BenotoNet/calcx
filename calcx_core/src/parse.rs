@@ -1,7 +1,7 @@
-use super::Calc;
-use super::expr::Expr;
-use super::num::Num;
-use super::token::Token;
+use crate::Calc;
+use crate::Expr;
+use crate::Num;
+use crate::tokens::Token;
 
 
 impl Calc {

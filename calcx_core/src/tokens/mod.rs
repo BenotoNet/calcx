@@ -1,6 +1,8 @@
+use crate::{Num, Calc};
 use crate::utils;
-use super::Token;
-use crate::calc::num::Num;
+
+pub mod token;
+pub use token::Token;
 
 pub mod misc_units;
 
@@ -60,7 +62,7 @@ fn is_keyword(unknown_token: &str) -> bool {
     };
 
     // Check if it's a reserved keyword:
-    let temp_calc = crate::calc::Calc::new(1);
+    let temp_calc = Calc::new(1);
     match temp_calc.eval_keyword(unknown_token, Ok(&Num::unitless("1.0")), Ok(&Num::unitless("1.0"))) {
         Err(v) => {
             return !(v.as_str() == "Unknown Keyword or not enough Arguments! (Maybe not implemented yet?)")

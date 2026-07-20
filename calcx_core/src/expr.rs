@@ -1,5 +1,5 @@
-use super::num::Num;
-use super::token::Token;
+use crate::Num;
+use crate::tokens::Token;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Expr {

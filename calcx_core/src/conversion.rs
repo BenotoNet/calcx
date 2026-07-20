@@ -1,5 +1,5 @@
-use crate::calc;
-use crate::calc::num::Num;
+use crate::Expr;
+use crate::Num;
 
 // NOTE: Old Functions, Deprecated
 // fn can_be_converted_to(base: &Num, to_units: &str) -> bool {
@@ -32,11 +32,11 @@ use crate::calc::num::Num;
 //     }
 // }
 
-pub fn convert(base: &Num, units: calc::expr::Expr) -> Result<Num, String> {
+pub fn convert(base: &Num, units: Expr) -> Result<Num, String> {
     // Convert by dividing quantity by parsed quantity of units -> This is the quantity of the
     // output num
     match units {
-        calc::expr::Expr::Number(num) => {
+        Expr::Number(num) => {
             let output = base.div(&num)?;
             match output.is_unitless() {
                 true => Ok(output),

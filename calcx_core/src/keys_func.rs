@@ -1,23 +1,5 @@
-use crate::calc::Calc;
-use crate::calc::{num::Num, expr::Expr};
-use crate::calc::conversion::convert;
-
-#[cfg(feature = "clipboard")]
-fn copy_to_clipboard(calc: &Calc, v: Expr) -> Result<Expr, String> {
-    // Copying
-    use cli_clipboard::set_contents;
-    match set_contents(v.display(calc.precision)) {
-        Ok(_) => Ok(v),
-        _ => Err(String::from("Could Not copy to clipboard, maybe clipboard agent not accessible"))
-    }
-
-}
-
-#[cfg(not(feature = "clipboard"))]
-fn copy_to_clipboard(_: &Calc, _: Expr) -> Result<Expr, String> {
-    // Throwing Error Message because clipboard is not available
-    Err(String::from("Clipboard is not available, because it was not compiled into the binary as a feature."))
-}
+use crate::{Calc, Num, Expr};
+use crate::conversion::convert;
 
 impl Calc {
     pub fn eval_keyword(&self, key: &str, num1: Result<&Num, String>, num2: Result<&Num, String>) -> Result<Expr, String> {
@@ -46,12 +28,7 @@ impl Calc {
             }
             // Copying last answer to clipboard:
             ("clip"|"copy"|"clipboard", _, _) => {
-                return match self.get_ans() {
-                    Ok(v) => {
-                        copy_to_clipboard(&self, v)
-                    },
-                    _ => Err(String::from("Could not copy last answer to Clipboard, maybe last answer is not accessible?")),
-                }
+                return self.get_ans();
             }
             _ => Err(String::from("Unknown Keyword or not enough Arguments! (Maybe not implemented yet?)")),
         }

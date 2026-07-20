@@ -1,6 +1,6 @@
-use crate::calc::funcs;
-use super::Calc;
-use super::{expr::Expr, token::Token, num::Num};
+use crate::funcs;
+use crate::Calc;
+use crate::{Expr, tokens::Token, Num};
 
 impl Calc {
     fn eval_atomic(&self, num1: Result<&Num, String>, op: Token, num2: Result<&Num, String>) -> Result<Expr, String> {

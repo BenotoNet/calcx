@@ -1,11 +1,12 @@
-use crate::calc::expr::Expr;
-use crate::calc::num::Num;
-use crate::calc::tokenize::misc_units::unit_to_num;
+use crate::Expr;
+use crate::Num;
+use crate::Calc;
+use crate::tokens::misc_units::unit_to_num;
 
 // Horrible Way, but works -> Evaluating an argument by using a new calculator instance
 // FIX: Please solve any other way!
 fn eval_argument(arg: Expr) -> Result<Expr, String> {
-    let temp_calc = crate::calc::Calc::new(crate::PRECISION as usize);
+    let temp_calc = Calc::new(crate::PRECISION as usize);
     temp_calc.eval(Ok(arg))
 }
 

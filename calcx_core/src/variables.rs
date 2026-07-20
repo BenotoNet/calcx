@@ -1,5 +1,5 @@
-use crate::calc::num::Num;
-use super::expr::Expr;
+use crate::Num;
+use crate::Expr;
 use std::collections::HashMap;
 
 pub struct VariableStorage {

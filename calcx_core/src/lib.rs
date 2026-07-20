@@ -1,14 +1,22 @@
-mod tokenize;
+mod tokens;
 pub mod num;
 pub mod units;
-pub mod token;
 pub mod expr;
 pub mod conversion;
 pub mod variables;
 pub mod keys_func;
+pub mod utils;
 
-use token::Token;
-use expr::Expr;
+pub use num::Num;
+pub use expr::Expr;
+
+use tokens::Token;
+
+const PRECISION: u32 = 4096;
+
+// Testing of Calcx-Core:
+#[cfg(test)]
+mod tests;
 
 pub struct Calc {
     tokens: Vec<Token>,
@@ -99,7 +107,7 @@ impl Calc {
         self.current = 0;
 
         // This function is supposed to tokenize the given query
-        self.tokens = tokenize::tokenize(query);
+        self.tokens = tokens::tokenize(query);
         // println!{"{:?}", self.tokens}
 
         // println!{"Parsing Done"};

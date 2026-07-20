@@ -1,4 +1,4 @@
-use super::num::Num;
+use crate::Num;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {

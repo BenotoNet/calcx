@@ -1,4 +1,4 @@
-use crate::calc::num::Num;
+use crate::Num;
 pub fn unit_to_num(ul: &str) -> Result<Num, String> {
     Ok(match ul {
         "meter"|"meters"|"metre"|"metres" => Num::new("1.0", vec![('m', 1)]),

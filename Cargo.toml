@@ -9,5 +9,5 @@ clipboard = ["dep:cli-clipboard"]
 
 [dependencies]
 cli-clipboard = { version = "0.4.0", optional=true }
-rug = "1.30.0"
 rustyline = { version = "18.0.0", default-features = false }
+calcx_core = { path="./calcx_core/" }
