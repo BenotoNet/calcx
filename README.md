@@ -22,6 +22,7 @@ Possible Meta-Keywords:
     - clear => clears the screen
     - quit / exit / CTRL-C => exits the interactive session
     - help => displays this help screen
+    - PRECISION:{{new precision}}
 
 To run a query, simply type the query and press enter. 
 Example queries to get to know the calculator and its capabilities:
@@ -81,9 +82,10 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
 - [x] Help Menu
 - [x] Seperation of Core and CLI
+- [x] Change Settings during runtime
+- [ ] Auto Complete (-> Functions, variables, keywords)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes up quite a lot of dependencies)
 - [ ] Nicer display of output units + System for doing to keyword (appending unit string?)
-- [ ] Auto Complete (-> Functions, variables, keywords)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Remove all possible Cloning of Floats & Units
 <!-- - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work) -->

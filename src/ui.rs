@@ -2,7 +2,7 @@ use crate::calcx_core::Calc;
 
 use std::process::exit;
 
-use rustyline::DefaultEditor;
+use rustyline::{DefaultEditor};
 use crate::utils;
 
 // NOTE: UI Library
@@ -55,7 +55,15 @@ impl UI {
 
             // We can have multiple queries at once seperated by semicolons
             for query in query.split(";") {
-                match query.replace(" ", "").as_str() {
+                let query = query.replace(" ", "");
+                // Change settings inside the calc:
+                if query.contains("PRECISION:") {
+                    // FIX: REMOVE UNWRAP
+                    self.calc.change_precision(query.split(":").nth(1).unwrap().parse::<usize>().unwrap());
+                    // Skip rest of for loop iteration
+                    continue;
+                }
+                match query.as_str() {
                     "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {exit(0)}
                     "clear" => {self.stdout.clear_screen().expect("Failed to clear screen..."); return self.interactive();}
                     "help" => {
@@ -69,7 +77,7 @@ impl UI {
                 }
                 
                 // Add to History
-                self.stdout.add_history_entry(query).expect("Could not add query to history...?");
+                self.stdout.add_history_entry(query.as_str()).expect("Could not add query to history...?");
 
                 self.run_query(&query);
             }
