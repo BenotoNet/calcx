@@ -1,8 +1,106 @@
 use crate::calcx_core::Calc;
 
 use std::process::exit;
+use std::borrow::Cow;
 
-use rustyline::{DefaultEditor};
+use rustyline::{
+    Editor, 
+    Helper, 
+    completion::{
+        Completer, 
+        Pair
+    }, 
+    highlight::Highlighter, 
+    hint::Hinter, 
+    validate::Validator,
+    history::DefaultHistory,
+};
+
+struct AutoComplete {
+    options: Vec<String>
+}
+
+impl AutoComplete {
+    fn build() -> AutoComplete {
+        let options = vec!["pi", "sqrt("];
+        let options = options.iter().map(|v| {v.to_string()}).collect();
+        AutoComplete { options }
+    }
+
+    fn get_current_word(line: &str, pos: usize) -> String {
+        let start = &line[..pos];
+        start.split(" ").last().unwrap().to_string()
+    }
+
+    fn match_possible_word_completions(word_list: &Vec<String>, word_part: &str) -> Vec<Pair> {
+        let mut output = vec![];
+        for word in word_list {
+            if word.starts_with(word_part) {
+                let word_ending_to_completion = &word[word_part.len()..];
+                output.push(word_ending_to_completion.to_string());
+            }
+        }
+        return output.iter().map(|v| {Pair { display: v.clone(), replacement: v.clone()}}).collect();
+    }
+
+
+    fn match_possible_words(word_list: &Vec<String>, word_part: &str) -> Vec<Pair> {
+        let mut output = vec![];
+        for word in word_list {
+            if word.starts_with(word_part) {
+                output.push(word.clone())
+            }
+        }
+        return output.iter().map(|v| {Pair { display: v.clone(), replacement: v.clone()}}).collect();
+    }
+}
+
+impl Validator for AutoComplete {}
+impl Helper for AutoComplete {}
+
+impl Highlighter for AutoComplete {
+    fn highlight<'l>(&self, line: &'l str, _pos: usize) -> Cow<'l, str> {
+        Cow::Borrowed(line)
+    }
+
+    fn highlight_hint<'h>(&self, hint: &'h str) -> Cow<'h, str> {
+        // e.g. dim cyan hint
+        Cow::Owned(format!("\x1b[38;5;244m{hint}\x1b[0m"))
+    }
+}
+
+impl Hinter for AutoComplete {
+    type Hint = String;
+    fn hint(&self, line: &str, pos: usize, _ctx: &rustyline::Context<'_>) -> Option<Self::Hint> {
+        let word = AutoComplete::get_current_word(line, pos);
+        if word != "" {
+            return Some(AutoComplete::match_possible_word_completions(&self.options, &word)
+                .get(0)?
+                .replacement
+                .clone())
+        }
+        return None;
+    }
+}
+
+impl Completer for AutoComplete {
+    type Candidate = Pair;
+
+    fn complete(
+        &self,
+        line: &str,
+        pos: usize,
+        _ctx: &rustyline::Context<'_>,
+    ) -> rustyline::Result<(usize, Vec<Self::Candidate>)>
+    {
+        let word = AutoComplete::get_current_word(line, pos);
+        if word != "" {
+            return Ok((pos-word.len(), AutoComplete::match_possible_words(&self.options, &word)))
+        }
+        return Err(rustyline::error::ReadlineError::Interrupted)
+    }
+}
+
 use crate::utils;
 
 // NOTE: UI Library
@@ -17,7 +115,7 @@ pub enum Setting {
 
 pub struct UI {
     calc: Calc,
-    stdout: DefaultEditor,
+    stdout: Editor<AutoComplete, DefaultHistory>,
     persistent: Vec<Setting>
 }
 
@@ -25,7 +123,10 @@ impl UI {
     pub fn new(options: Vec<Setting>) -> UI {
         // Default Precision
         let default_precision = 15;
-        let rl = DefaultEditor::new().unwrap();
+        let mut rl = Editor::new().unwrap();
+
+        let helper = AutoComplete::build();
+        rl.set_helper(Some(helper));
 
         let mut ui = UI { calc: Calc::new(default_precision), stdout: rl, persistent: vec![] };
         let mut exit_after_single_queries = false;
