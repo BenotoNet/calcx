@@ -29,7 +29,7 @@ impl AutoComplete {
 
     fn get_current_word(line: &str, pos: usize) -> String {
         let start = &line[..pos];
-        start.split(|c: char| c.is_ascii_punctuation() || c.is_ascii_whitespace()).last().unwrap().to_string()
+        start.split(&[' ', '\n', '.', ',']).last().unwrap().to_string()
     }
 
     fn match_possible_word_completions(word_list: &Vec<String>, word_part: &str) -> Vec<Pair> {
@@ -40,7 +40,13 @@ impl AutoComplete {
                 output.push(word_ending_to_completion.to_string());
             }
         }
-        return output.iter().map(|v| {Pair { display: v.clone(), replacement: v.clone()}}).collect();
+        let mut output: Vec<Pair> = output.iter()
+            .map(|v| {Pair { display: v.clone(), replacement: v.clone()}})
+            .collect();
+
+        // Sort pairs by length before returning the vector
+        output.sort_by(|a, b| {a.display.len().cmp(&b.display.len())});
+        return output;
     }
 
 
@@ -51,7 +57,13 @@ impl AutoComplete {
                 output.push(word.clone())
             }
         }
-        return output.iter().map(|v| {Pair { display: v.clone(), replacement: v.clone()}}).collect();
+        let mut output: Vec<Pair> = output.iter()
+            .map(|v| {Pair { display: v.clone(), replacement: v.clone()}})
+            .collect();
+
+        // Sort pairs by length before returning the vector
+        output.sort_by(|a, b| {a.display.len().cmp(&b.display.len())});
+        return output;
     }
 }
 

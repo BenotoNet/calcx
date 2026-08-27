@@ -83,7 +83,8 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Help Menu
 - [x] Seperation of Core and CLI
 - [x] Change Settings during runtime
-- [ ] Auto Complete (-> Functions, variables, keywords)
+- [x] Auto Complete (-> Functions, variables, keywords)
+- [x] Sort Auto Complete Recomendations by length (shortest answer first)
 - [ ] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] Nicer display of output units + System for doing "to" keyword (appending unit string?)

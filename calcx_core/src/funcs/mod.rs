@@ -129,11 +129,11 @@ fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
             expect(&args, 1, true)?;
             wrap(args[0].log(&unit_to_num("e")?)?)
         }
-        "lg"|"log10"|"10log"|"log_base_10" => {
+        "lg"|"log10"|"10log"|"log_base_10"|"log_base_ten" => {
             expect(&args, 1, true)?;
             wrap(args[0].log(&Num::unitless("10"))?)
         }
-        "log2"|"2log"|"log_base_2" => {
+        "log2"|"2log"|"log_base_2"|"log_base_two" => {
             expect(&args, 1, true)?;
             wrap(args[0].log(&Num::unitless("2"))?)
         }
