@@ -16,20 +16,20 @@ use rustyline::{
     history::DefaultHistory,
 };
 
-struct AutoComplete {
+mod autocomplete;
+pub struct AutoComplete {
     options: Vec<String>
 }
 
 impl AutoComplete {
     fn build() -> AutoComplete {
-        let options = vec!["pi", "sqrt("];
-        let options = options.iter().map(|v| {v.to_string()}).collect();
+        let options = autocomplete::get_options();
         AutoComplete { options }
     }
 
     fn get_current_word(line: &str, pos: usize) -> String {
         let start = &line[..pos];
-        start.split(" ").last().unwrap().to_string()
+        start.split(|c: char| c.is_ascii_punctuation() || c.is_ascii_whitespace()).last().unwrap().to_string()
     }
 
     fn match_possible_word_completions(word_list: &Vec<String>, word_part: &str) -> Vec<Pair> {
@@ -97,7 +97,7 @@ impl Completer for AutoComplete {
         if word != "" {
             return Ok((pos-word.len(), AutoComplete::match_possible_words(&self.options, &word)))
         }
-        return Err(rustyline::error::ReadlineError::Interrupted)
+        return Ok((0, vec![]));
     }
 }
 
@@ -156,15 +156,15 @@ impl UI {
 
             // We can have multiple queries at once seperated by semicolons
             for query in query.split(";") {
-                let query = query.replace(" ", "");
+                let compact_query = query.replace(" ", "");
                 // Change settings inside the calc:
-                if query.contains("PRECISION:") {
+                if compact_query.contains("PRECISION:") {
                     // FIX: REMOVE UNWRAP
                     self.calc.change_precision(query.split(":").nth(1).unwrap().parse::<usize>().unwrap());
                     // Skip rest of for loop iteration
                     continue;
                 }
-                match query.as_str() {
+                match compact_query.as_str() {
                     "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {exit(0)}
                     "clear" => {self.stdout.clear_screen().expect("Failed to clear screen..."); return self.interactive();}
                     "help" => {
@@ -178,7 +178,7 @@ impl UI {
                 }
                 
                 // Add to History
-                self.stdout.add_history_entry(query.as_str()).expect("Could not add query to history...?");
+                self.stdout.add_history_entry(query).expect("Could not add query to history...?");
 
                 self.run_query(&query);
             }
