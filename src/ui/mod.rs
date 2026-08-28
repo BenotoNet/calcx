@@ -119,11 +119,12 @@ use crate::utils;
 // NOTE: UI Library
 
 // Enums for setting Options
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub enum Setting {
     SingleQuery(String),
     Precision(usize),
     OutputOnly,
+    AppendUnits(String),
 }
 
 const HISTORY_PATH: &str = "history.txt";
@@ -183,6 +184,21 @@ impl UI {
                     // Skip rest of for loop iteration
                     continue;
                 }
+
+                // to append the unit we convert to, we want to see, if there is a conversion string
+                // present and then append a respective setting with appendage
+                for conversion_splitter in &["in ", "to ", "convert_to ", "convert "] {
+                    if query.contains(conversion_splitter) {
+                        self.persistent.push(
+                            Setting::AppendUnits(query.split(conversion_splitter)
+                                .nth(
+                                    query.split(conversion_splitter).collect::<Vec<_>>().len()-1)
+                                // FIX: Remove Unwrap
+                                .unwrap()
+                                .to_string()));
+                    }
+                }
+
                 match compact_query.as_str() {
                     "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {exit(0)}
                     "clear" => {self.stdout.clear_screen().expect("Failed to clear screen..."); return self.interactive();}
@@ -199,7 +215,7 @@ impl UI {
                 // Add to History
                 self.stdout.add_history_entry(query).expect("Could not add query to history...?");
                 // Save to History
-                self.stdout.save_history(HISTORY_PATH).unwrap();
+                // self.stdout.save_history(HISTORY_PATH).unwrap();
 
                 self.run_query(&query);
             }
@@ -207,14 +223,23 @@ impl UI {
     }
 
     pub fn run_query(&mut self, query: &str) {
+        // Have empty append unit string by default
+        let mut append_units = String::new();
+        self.persistent.retain(|v| {match v.clone() {
+            // Then see if we have a setting present and if so, change the append unit string to
+            // [unit]
+            Setting::AppendUnits(b) => {append_units = format!{"[{}]", b}; true},
+            _ => false,
+        }});
         if self.persistent
             .contains(
                 &Setting::OutputOnly
                 ) {
-            println!{"{}", self.calc.run_ouput(&query)};
-        } else {
+                    println!{"{} {}", self.calc.run_ouput(&query), append_units};
+                } 
+        else {
             // Normal output with nice formatting
-            UI::output(&self.calc.run_ouput(&query));
+            UI::output(&format!{"{} {}", &self.calc.run_ouput(&query), append_units});
         }
     }
 
