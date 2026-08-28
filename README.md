@@ -86,9 +86,9 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Auto Complete (-> Functions, variables, keywords)
 - [x] Sort Auto Complete Recomendations by length (shortest answer first)
 - [ ] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?)
-- [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] Nicer display of output units + System for doing "to" keyword (appending unit string?)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
+- [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] Remove all possible Cloning of Floats & Units
 <!-- - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work) -->
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)

@@ -2,6 +2,7 @@ use crate::calcx_core::Calc;
 
 use std::process::exit;
 use std::borrow::Cow;
+use std::path::Path;
 
 use rustyline::{
     Editor, 
@@ -125,6 +126,7 @@ pub enum Setting {
     OutputOnly,
 }
 
+const HISTORY_PATH: &str = "history.txt";
 pub struct UI {
     calc: Calc,
     stdout: Editor<AutoComplete, DefaultHistory>,
@@ -136,6 +138,11 @@ impl UI {
         // Default Precision
         let default_precision = 15;
         let mut rl = Editor::new().unwrap();
+
+        // Load previous settings, history, and variables
+        if Path::new(HISTORY_PATH).exists() {
+            rl.load_history(HISTORY_PATH).unwrap();
+        }
 
         let helper = AutoComplete::build();
         rl.set_helper(Some(helper));
@@ -191,6 +198,8 @@ impl UI {
                 
                 // Add to History
                 self.stdout.add_history_entry(query).expect("Could not add query to history...?");
+                // Save to History
+                self.stdout.save_history(HISTORY_PATH).unwrap();
 
                 self.run_query(&query);
             }
