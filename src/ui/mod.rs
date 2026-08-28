@@ -142,7 +142,8 @@ impl UI {
 
         // Load previous settings, history, and variables
         if Path::new(HISTORY_PATH).exists() {
-            rl.load_history(HISTORY_PATH).unwrap();
+            // FIX: currently not implemented
+            // rl.load_history(HISTORY_PATH).unwrap();
         }
 
         let helper = AutoComplete::build();
@@ -215,6 +216,7 @@ impl UI {
                 // Add to History
                 self.stdout.add_history_entry(query).expect("Could not add query to history...?");
                 // Save to History
+                // FIX: currently not implemented
                 // self.stdout.save_history(HISTORY_PATH).unwrap();
 
                 self.run_query(&query);
