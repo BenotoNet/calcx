@@ -180,9 +180,36 @@ impl UI {
                 let compact_query = query.replace(" ", "");
                 // Change settings inside the calc:
                 if compact_query.contains("PRECISION:") {
-                    // FIX: REMOVE UNWRAP
-                    self.calc.change_precision(query.split(":").nth(1).unwrap().parse::<usize>().unwrap());
+                    // Check if the next thing after ":" is a number:
+                    match query.split(":").nth(1).unwrap().parse::<usize>() {
+                        Ok(new_precision) => {
+                            self.calc.change_precision(new_precision);
+                        },
+                        // If its not, we should return an error
+                        Err(e) => {println!{"{e}"}}
+                    }
+                    // Add a new line
+                    println!{""}
                     // Skip rest of for loop iteration
+                    continue;
+                }
+                if compact_query.contains("OUTPUT_ONLY:1") {
+                    // Add the Output Only setting to the persistent storage
+                    self.persistent.push(Setting::OutputOnly);
+
+                    // Add a new line
+                    println!{""}
+                    continue;
+                }
+                if compact_query.contains("OUTPUT_ONLY:0") {
+                    // Remove all occurences of output only in the storage
+                    self.persistent.retain(|v| {match v {
+                        Setting::OutputOnly => false,
+                        _ => true,
+                    }});
+
+                    // Add a new line
+                    println!{""}
                     continue;
                 }
 
@@ -215,6 +242,7 @@ impl UI {
                 
                 // Add to History
                 self.stdout.add_history_entry(query).expect("Could not add query to history...?");
+
                 // Save to History
                 // FIX: currently not implemented
                 // self.stdout.save_history(HISTORY_PATH).unwrap();
@@ -230,8 +258,8 @@ impl UI {
         self.persistent.retain(|v| {match v.clone() {
             // Then see if we have a setting present and if so, change the append unit string to
             // [unit]
-            Setting::AppendUnits(b) => {append_units = format!{"[{}]", b}; true},
-            _ => false,
+            Setting::AppendUnits(b) => {append_units = format!{"[{}]", b}; false},
+            _ => true,
         }});
         if self.persistent
             .contains(
