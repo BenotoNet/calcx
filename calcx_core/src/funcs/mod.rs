@@ -192,6 +192,10 @@ fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
                 wrap(Num::unitless("0.0"))
             }
         }
+        "c_to_k"|"celsius_to_kelvin"|"celsius" => {
+            expect(&args, 1, true)?;
+            wrap(args[0].mul(&Num::new("1", vec![('k', 1)]))?.add(&Num::new("273.2", vec![('k', 1)]))?)
+        }
 
         _ => {Err(String::from("Not a Function"))},
     }

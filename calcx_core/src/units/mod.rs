@@ -1,3 +1,5 @@
+mod smart_units;
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct Units {
     second: f64,
@@ -75,15 +77,56 @@ impl Units {
     }
 
     pub fn display(&self) -> String {
-        // TODO: Later this needs to adapt to other units (like newton => 1 kilo gram * meter /
-        // second^-2)
-        let mut output = String::new();
-        if self.second != 0.0 {output += &format!{"{}^{} ", "second", self.second}};
-        if self.metre != 0.0 {output += &format!{"{}^{} ", "meter", self.metre}};
-        if self.kilogram != 0.0 {output += &format!{"{}^{} ", "kilogram", self.kilogram}};
-        if self.ampere != 0.0 {output += &format!{"{}^{} ", "ampere", self.ampere}};
-        if self.kelvin != 0.0 {output += &format!{"{}^{} ", "kelvin", self.kelvin}};
-        if self.candela != 0.0 {output += &format!{"{}^{} ", "candela", self.candela}};
-        return output;
+        // NOTE: Smart Units System (try to match a nice one, otherwise just show SI units):
+        return match smart_units::try_match(&self.second, &self.metre, &self.kilogram, &self.ampere, &self.kelvin, &self.candela) {
+            Some(unit) => return unit,
+            _ => {
+                // Backup when there is no good unit
+                let mut output = String::new();
+
+                // Seconds
+                if self.second == 1.0 {
+                    output += "second ";
+                } else if self.second != 0.0 {
+                    output += &format!("second^{} ", self.second);
+                }
+
+                // Metres 
+                if self.metre == 1.0 {
+                    output += "meter ";
+                } else if self.metre != 0.0 {
+                    output += &format!("meter^{} ", self.metre);
+                }
+
+                // kilograms
+                if self.kilogram == 1.0 {
+                    output += "kilogram ";
+                } else if self.kilogram != 0.0 {
+                    output += &format!("kilogram^{} ", self.kilogram);
+                }
+
+                // ampere
+                if self.ampere == 1.0 {
+                    output += "ampere ";
+                } else if self.ampere != 0.0 {
+                    output += &format!("ampere^{} ", self.ampere);
+                }
+
+                // kelvin
+                if self.kelvin == 1.0 {
+                    output += "kelvin ";
+                } else if self.kelvin != 0.0 {
+                    output += &format!("kelvin^{} ", self.kelvin);
+                }
+
+                // candelas
+                if self.candela == 1.0 {
+                    output += "candela ";
+                } else if self.candela != 0.0 {
+                    output += &format!("candela^{} ", self.candela);
+                }
+                output
+            }
+        }
     }
 }
