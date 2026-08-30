@@ -165,6 +165,33 @@ fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
             expect(&args, 1, true)?;
             wrap(args[0].floor()?)
         }
+        "eq"|"equal"|"is_equal"|"is_equal_to"|"equal_to" => {
+            expect(&args, 2, false)?;
+            if args[0] == args[1] {
+                wrap(Num::unitless("1.0"))
+            }
+            else {
+                wrap(Num::unitless("0.0"))
+            }
+        }
+        "gt"|"greater"|"greater_than" => {
+            expect(&args, 2, false)?;
+            if args[0].get_units() == args[1].get_units() && args[0].get_quant() > args[1].get_quant() {
+                wrap(Num::unitless("1.0"))
+            }
+            else {
+                wrap(Num::unitless("0.0"))
+            }
+        }
+        "lt"|"less"|"less_than" => {
+            expect(&args, 2, false)?;
+            if args[0].get_units() == args[1].get_units() && args[0].get_quant() < args[1].get_quant() {
+                wrap(Num::unitless("1.0"))
+            }
+            else {
+                wrap(Num::unitless("0.0"))
+            }
+        }
 
         _ => {Err(String::from("Not a Function"))},
     }
