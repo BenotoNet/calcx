@@ -89,14 +89,12 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Automatic display of correct unit (5 volt * ampere should automatically be watt)
 - [x] function to just get units
 - [x] Add all special units (-> Maybe system for handling hash map in reverse?)
+- [x] List SI units in order (with negatives last)
 - [ ] way to display special units as standard SI units again (Maybe Setting?)
-- [ ] List SI units in order (with negatives last)
 - [ ] Combined units (like volt / second) (maybe just leave it like it currently is)
 - [ ] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
-- [ ] Remove all possible Cloning of Floats & Units
-<!-- - [ ] working with dates & time (e.g. 14:00 + 5 hours) (-> I need to figure out a good way to do this, as it's not very easy without clipping other features -> 14:00 won't work) -->
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
 - [ ] HEX to RGB, etc
 

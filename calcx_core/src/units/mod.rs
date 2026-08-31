@@ -87,42 +87,63 @@ impl Units {
                 // Seconds
                 if self.second == 1.0 {
                     output += "second ";
-                } else if self.second != 0.0 {
+                } else if self.second > 0.0 {
                     output += &format!("second^{} ", self.second);
                 }
 
                 // Metres 
                 if self.metre == 1.0 {
                     output += "meter ";
-                } else if self.metre != 0.0 {
+                } else if self.metre > 0.0 {
                     output += &format!("meter^{} ", self.metre);
                 }
 
                 // kilograms
                 if self.kilogram == 1.0 {
                     output += "kilogram ";
-                } else if self.kilogram != 0.0 {
+                } else if self.kilogram > 0.0 {
                     output += &format!("kilogram^{} ", self.kilogram);
                 }
 
                 // ampere
                 if self.ampere == 1.0 {
                     output += "ampere ";
-                } else if self.ampere != 0.0 {
+                } else if self.ampere > 0.0 {
                     output += &format!("ampere^{} ", self.ampere);
                 }
 
                 // kelvin
                 if self.kelvin == 1.0 {
                     output += "kelvin ";
-                } else if self.kelvin != 0.0 {
+                } else if self.kelvin > 0.0 {
                     output += &format!("kelvin^{} ", self.kelvin);
                 }
 
                 // candelas
                 if self.candela == 1.0 {
                     output += "candela ";
-                } else if self.candela != 0.0 {
+                } else if self.candela > 0.0 {
+                    output += &format!("candela^{} ", self.candela);
+                }
+
+
+                // Negatives last, because they are below the imaginary division line
+                if self.second < 0.0 {
+                    output += &format!("second^{} ", self.second);
+                }
+                if self.metre < 0.0 {
+                    output += &format!("meter^{} ", self.metre);
+                }
+                if self.kilogram < 0.0 {
+                    output += &format!("kilogram^{} ", self.kilogram);
+                }
+                if self.ampere < 0.0 {
+                    output += &format!("ampere^{} ", self.ampere);
+                }
+                if self.kelvin < 0.0 {
+                    output += &format!("kelvin^{} ", self.kelvin);
+                }
+                if self.candela < 0.0 {
                     output += &format!("candela^{} ", self.candela);
                 }
                 output
