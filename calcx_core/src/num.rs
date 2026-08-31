@@ -11,7 +11,7 @@ pub struct Num {
 #[allow(unused)]
 impl Num {
     pub fn new(quantity: &str, units_vec: Vec<(char, i8)>) -> Num {
-        let quantity = Float::parse(quantity).expect("Could not parse this number as a number? Should never happen!");
+        let quantity = Float::parse(quantity).expect("Could not parse this number as a number? This should never happen!");
         let quantity = Float::with_val(crate::PRECISION, quantity);
         Num { quantity, units: Units::new(units_vec) }
     }
@@ -22,6 +22,10 @@ impl Num {
 
     pub fn unitless(quantity: &str) -> Num {
         Num::new(quantity, vec![])
+    }
+
+    pub fn from_units(units: Units) -> Num {
+        Num::from(Num::unitless("1.0").get_quant(), units)
     }
 
     pub fn unitless_float(quantity: Float) -> Num {
@@ -132,7 +136,6 @@ impl Num {
                 // Normal calculation
                 // x^y = e^(y ln x)
                 let output_quantity = (self.quantity.clone().ln() * num2.quantity.clone()).exp();
-                // TODO: Problem: Since we do not have units as floats, this is a sacrifice
                 return Ok(Num::from(output_quantity, output_units));
             }
         }

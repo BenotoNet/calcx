@@ -196,6 +196,10 @@ fn run_func(func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
             expect(&args, 1, true)?;
             wrap(args[0].mul(&Num::new("1", vec![('k', 1)]))?.add(&Num::new("273.2", vec![('k', 1)]))?)
         }
+        "units"|"get_units"|"unit" => {
+            expect(&args, 1, false)?;
+            wrap(Num::from_units(args[0].get_units().clone()))
+        }
 
         _ => {Err(String::from("Not a Function"))},
     }
