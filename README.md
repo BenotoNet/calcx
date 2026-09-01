@@ -93,7 +93,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] When using "in" or "to" keyword, keep the units alive
 - [x] sqrt(ans) always says last answer is not accessible
 - [x] add color => green for a successful output, red for error, etc
-- [ ] fix kelvin / second => currently gives error
+- [x] fix kelvin / second => currently gives error
 - [ ] temporary output while typing (5+5) already gives 10 before I press enter
 - [ ] make a demo on the github page for showing what the calc can do
 - [ ] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?)
