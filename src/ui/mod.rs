@@ -124,7 +124,6 @@ pub enum Setting {
     SingleQuery(String),
     Precision(usize),
     OutputOnly,
-    AppendUnits(String),
 }
 
 const HISTORY_PATH: &str = "history.txt";
@@ -213,7 +212,6 @@ impl UI {
                     continue;
                 }
 
-
                 match compact_query.as_str() {
                     "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {exit(0)}
                     "clear" => {self.stdout.clear_screen().expect("Failed to clear screen..."); return self.interactive();}
@@ -249,10 +247,10 @@ impl UI {
                                 .unwrap()
                                 .to_string();
 
-                        // NOTE: we convert by dividing the input by the wanted units
+                        //  we convert by dividing the input by the wanted units
                         let out = &self.calc.run_ouput(&format!{"{} / ({})", before, after});
 
-                        // NOTE: Make the ans what it was before
+                        // Make the ans what it was before conversion
                         let _ = self.calc.run_ouput(&format!{"{} * {}", out, after});
                         // Check if unitless:
                         if ["meter", "second", "kilogram", "ampere", "candela", "kelvin"].iter().any(|v| {
