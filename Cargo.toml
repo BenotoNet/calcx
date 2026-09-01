@@ -11,3 +11,4 @@ clipboard = ["dep:cli-clipboard"]
 cli-clipboard = { version = "0.4.0", optional=true }
 rustyline = { version = "18.0.1", default-features = false }
 calcx_core = { path="./calcx_core/" }
+colored-print = "1.0.1"

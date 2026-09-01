@@ -46,9 +46,8 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Setting> {
     return option_queue;
 }
 
-// Clean Output without CliClack
 pub fn success(output: &str) {
-    println!{"> {output}\n"};
+    println!{"            = {output}\n"};
 }
 
 pub fn info(output: &str) {

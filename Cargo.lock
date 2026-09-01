@@ -38,6 +38,7 @@ version = "0.1.0"
 dependencies = [
  "calcx_core",
  "cli-clipboard",
+ "colored-print",
  "rustyline",
 ]
 
@@ -92,6 +93,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bde03770d3df201d4fb868f2c9c59e66a3e4e2bd06692a0fe701e7103c7e84d4"
 dependencies = [
  "error-code 3.4.0",
+]
+
+[[package]]
+name = "colored-print"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "433a524eab85a4322495238c75542d57ede4ceb93edd8abaaf2646c644048740"
+dependencies = [
+ "quote",
+ "syn 2.0.119",
 ]
 
 [[package]]

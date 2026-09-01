@@ -1,5 +1,7 @@
 use crate::calcx_core::Calc;
 
+use colored_print::cformat;
+
 use std::process::exit;
 use std::borrow::Cow;
 use std::path::Path;
@@ -166,10 +168,8 @@ impl UI {
         // ask for new user input
 
         loop {
-            // Old Way of getting input via CliClack, Deprecated because of History management
-            // let query: String = input("Calcxulate!").autocomplete(self.history.clone()).interact().expect("Could not get input...");
             // New: rustyline, less styling but more useful
-            let query: String = match self.stdout.readline("Calcxulate >> ") {
+            let query: String = match self.stdout.readline(&cformat!{"%G:%b^Calcxulate >> "}) {
                 Ok(input) => {input},
                 Err(_) => {return},
             };
@@ -235,7 +235,7 @@ impl UI {
                 // to append the unit we convert to, we want to see, if there is a conversion string
                 // present and then append a respective setting with appendage
                 let mut conversion_present = false;
-                for conversion_splitter in &["in ", "to ", "convert_to ", "convert "] {
+                for conversion_splitter in &[" in ", " to ", " convert_to ", " convert "] {
                     if query.contains(conversion_splitter) {
                         conversion_present = true;
 
@@ -278,7 +278,7 @@ impl UI {
                 } 
         else {
             // Normal output with nice formatting
-            UI::format_output(&format!{"{}", result});
+            UI::format_output(&cformat!{"{}", result});
         }
     }
 
