@@ -213,19 +213,6 @@ impl UI {
                     continue;
                 }
 
-                // to append the unit we convert to, we want to see, if there is a conversion string
-                // present and then append a respective setting with appendage
-                for conversion_splitter in &["in ", "to ", "convert_to ", "convert "] {
-                    if query.contains(conversion_splitter) {
-                        self.persistent.push(
-                            Setting::AppendUnits(query.split(conversion_splitter)
-                                .nth(
-                                    query.split(conversion_splitter).collect::<Vec<_>>().len()-1)
-                                // FIX: Remove Unwrap
-                                .unwrap()
-                                .to_string()));
-                    }
-                }
 
                 match compact_query.as_str() {
                     "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {exit(0)}
@@ -247,33 +234,63 @@ impl UI {
                 // FIX: currently not implemented
                 // self.stdout.save_history(HISTORY_PATH).unwrap();
 
-                self.run_query(&query);
+                // to append the unit we convert to, we want to see, if there is a conversion string
+                // present and then append a respective setting with appendage
+                let mut conversion_present = false;
+                for conversion_splitter in &["in ", "to ", "convert_to ", "convert "] {
+                    if query.contains(conversion_splitter) {
+                        conversion_present = true;
+
+                        // FIX: Remove Unwrap
+                        let before = query.split(conversion_splitter).nth(0).unwrap().to_string();
+                        let after = query.split(conversion_splitter)
+                                .nth(
+                                    query.split(conversion_splitter).collect::<Vec<_>>().len()-1)
+                                .unwrap()
+                                .to_string();
+
+                        // NOTE: we convert by dividing the input by the wanted units
+                        let out = &self.calc.run_ouput(&format!{"{} / ({})", before, after});
+
+                        // NOTE: Make the ans what it was before
+                        let _ = self.calc.run_ouput(&format!{"{} * {}", out, after});
+                        // Check if unitless:
+                        if ["meter", "second", "kilogram", "ampere", "candela", "kelvin"].iter().any(|v| {
+                            out.contains(v)}) {
+                            self.output("Conversion not possible");
+                        }
+                        else {
+                            self.output(&format!{"{} [{}]", out, after});
+                        }
+                    }
+                }
+                if !conversion_present {
+                    self.run_query(&query);
+                }
             }
+        }
+    }
+
+    pub fn output(&self, result: &str) {
+        if self.persistent
+            .contains(
+                &Setting::OutputOnly
+                ) {
+                    println!{"{}", result};
+                } 
+        else {
+            // Normal output with nice formatting
+            UI::format_output(&format!{"{}", result});
         }
     }
 
     pub fn run_query(&mut self, query: &str) {
         // Have empty append unit string by default
-        let mut append_units = String::new();
-        self.persistent.retain(|v| {match v.clone() {
-            // Then see if we have a setting present and if so, change the append unit string to
-            // [unit]
-            Setting::AppendUnits(b) => {append_units = format!{"[{}]", b}; false},
-            _ => true,
-        }});
-        if self.persistent
-            .contains(
-                &Setting::OutputOnly
-                ) {
-                    println!{"{} {}", self.calc.run_ouput(&query), append_units};
-                } 
-        else {
-            // Normal output with nice formatting
-            UI::output(&format!{"{} {}", &self.calc.run_ouput(&query), append_units});
-        }
+        let out = self.calc.run_ouput(query);
+        self.output(&out);
     }
 
-    pub fn output(output_string: &str) {
+    pub fn format_output(output_string: &str) {
         utils::success(output_string);
     }
 }
