@@ -1,4 +1,3 @@
-use crate::funcs;
 use crate::Calc;
 use crate::{Expr, tokens::Token, Num};
 
@@ -31,7 +30,7 @@ impl Calc {
                 match op {
                     Token::Func(func) => {
                         // We run the function code and also pass along the arguments
-                        return funcs::func_call(&func, *right);
+                        return self.func_call(&func, *right);
                     }
                     _ => {}
                 }

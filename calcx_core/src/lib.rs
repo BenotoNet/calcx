@@ -2,7 +2,6 @@ mod tokens;
 pub mod num;
 pub mod units;
 pub mod expr;
-pub mod conversion;
 pub mod variables;
 pub mod keys_func;
 pub mod utils;
