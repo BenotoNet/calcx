@@ -202,10 +202,13 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
             // Adding Brackets around "ans" keyword to allow automatic multiplication & inserting into
             // functions, etc
             (Token::Keyword(key), _) => {
-                if key == "ans" {
-                    tokens.insert(index, Token::LBrac);
-                    tokens.insert(index+2, Token::RBrac);
-                    index += 1;
+                match key.as_str() {
+                    "ans"|"last"|"answer"|"last_answer" => {
+                        tokens.insert(index, Token::LBrac);
+                        tokens.insert(index+2, Token::RBrac);
+                        index += 1;
+                    }
+                    _ => {},
                 }
                 index += 1;
             }

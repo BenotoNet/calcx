@@ -10,7 +10,7 @@ impl Calc {
             //         Err(v) => Err(v),
             //     }
             // }
-            ("ans"|"last", num1, num2) => {
+            ("ans"|"last"|"last_answer"|"answer", num1, num2) => {
                 let mut last_answer = match self.get_ans() {
                     Ok(Expr::Number(num3)) => {num3}
                     _ => {return Err(String::from("Last Answer not accessible!"))},
