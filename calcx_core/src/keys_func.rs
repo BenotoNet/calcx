@@ -1,5 +1,4 @@
 use crate::{Calc, Num, Expr};
-use crate::conversion::convert;
 
 impl Calc {
     pub fn eval_keyword(&self, key: &str, num1: Result<&Num, String>, num2: Result<&Num, String>) -> Result<Expr, String> {
