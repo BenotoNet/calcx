@@ -103,5 +103,6 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 
 
 Wow, the more I thought about this, the more this seems like a *HUGE* project. Let's see how long I will last before I will quit... xD
+
 This sentence in the line above has been standing there since the very beginning of this project, which is (as of right now) ~3 months ago. For me, this really does represent the biggest project, even if it may not seem like it can do much. And still, it's not even done. 
 I must say, I am quite proud of what I've been able to complete. 
