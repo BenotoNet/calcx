@@ -84,8 +84,8 @@ impl Calc {
     }
 
     // API to run a specific command and capture its output
-    pub fn run_ouput(&mut self, query: &str) -> String {
-        match self.run(query) {
+    pub fn run_output(&mut self, query: &str, save_history: bool) -> String {
+        match self.run(query, save_history) {
             Ok(output) => output.display(self.precision),
             Err(error) => error
         }
@@ -102,7 +102,7 @@ impl Calc {
         tree
     }
 
-    pub fn run(&mut self, query: &str) -> Result<Expr, String> {
+    pub fn run(&mut self, query: &str, save_history: bool) -> Result<Expr, String> {
         self.current = 0;
 
         // This function is supposed to tokenize the given query
@@ -115,8 +115,8 @@ impl Calc {
         // println!{"{tree:?}"};
         let output = self.eval(tree);
 
-        match &output {
-            Ok(Expr::Number(num)) => {self.history.push(Expr::Number(num.clone()))}
+        match (&output, save_history) {
+            (Ok(Expr::Number(num)), true) => {self.history.push(Expr::Number(num.clone()))}
             _ => {},
         }
 

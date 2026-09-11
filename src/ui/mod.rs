@@ -1,4 +1,5 @@
 use crate::calcx_core::Calc;
+use crate::calcx_core::Expr;
 
 use colored_print::cformat;
 
@@ -154,7 +155,7 @@ impl UI {
         let mut exit_after_single_queries = false;
         for option in options {
             match option {
-                Setting::SingleQuery(query) => {ui.run_query(&query); exit_after_single_queries = true;},
+                Setting::SingleQuery(query) => {ui.run_query(&query, true); exit_after_single_queries = true;},
                 Setting::Precision(precision) => {ui.calc.change_precision(precision);},
                 var => ui.persistent.push(var),
             }
@@ -248,22 +249,37 @@ impl UI {
                                 .to_string();
 
                         //  we convert by dividing the input by the wanted units
-                        let out = &self.calc.run_ouput(&format!{"{} / ({})", before, after});
+                        let query = format!{"{} / ({})", before, after};
+                        let out = &self.calc.run_output(&query, false);
 
-                        // Make the ans what it was before conversion
-                        let _ = self.calc.run_ouput(&format!{"{} * {}", out, after});
-                        // Check if unitless:
-                        if ["meter", "second", "kilogram", "ampere", "candela", "kelvin"].iter().any(|v| {
-                            out.contains(v)}) {
-                            self.output("Conversion not possible");
-                        }
-                        else {
-                            self.output(&format!{"{} [{}]", out, after});
+                        // Save to History as the multiplication of the base and conversion -> true value of conversion
+                        let _ = self.calc.run_output(&format!{"({}) * ({})", out, after}, true);
+
+                        // Check if unitless or if query fails:
+                        match self.calc.run(&query, false) {
+                            Ok(Expr::Number(num)) => {
+                                if num.is_unitless() {
+                                    // Everything worked and we got good output
+                                    self.output(&format!{"{} [{}]", out, after});
+                                }
+                                else {
+                                    // not unitless -> conversion failed
+                                    self.output("Conversion not possible");
+                                }
+                            },
+                            Err(e) => {
+                                // Some operation failed for some reason
+                                self.output(&e);
+                            },
+                            Ok(_) => {
+                                self.output("Something strange happened and the query failed...");
+                            }
                         }
                     }
                 }
+                // A normal query without any conversion keyword
                 if !conversion_present {
-                    self.run_query(&query);
+                    self.run_query(&query, true);
                 }
             }
         }
@@ -282,9 +298,9 @@ impl UI {
         }
     }
 
-    pub fn run_query(&mut self, query: &str) {
+    pub fn run_query(&mut self, query: &str, save_history: bool) {
         // Have empty append unit string by default
-        let out = self.calc.run_ouput(query);
+        let out = self.calc.run_output(query, save_history);
         self.output(&out);
     }
 
