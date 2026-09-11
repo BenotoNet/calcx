@@ -92,15 +92,16 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] List SI units in order (with negatives last)
 - [x] When using "in" or "to" keyword, keep the units alive
 - [x] sqrt(ans) always says last answer is not accessible
-- [x] add color => green for a successful output, red for error, etc
+- [x] add slight color 
 - [x] fix kelvin / second => currently gives error
-- [ ] speed_of_light / (6.11*10^-7 meter)
-- [ ] make a demo on the github page for showing what the calc can do
+- [x] bug: 10^-7 meter throws error -> what is calculated is: 10^(-7 * meter)
 - [ ] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
-- [ ] HEX to RGB, etc
+- [ ] make a demo on the github page for showing what the calc can do
 
 
 Wow, the more I thought about this, the more this seems like a *HUGE* project. Let's see how long I will last before I will quit... xD
+This sentence in the line above has been standing there since the very beginning of this project, which is (as of right now) ~3 months ago. For me, this really does represent the biggest project, even if it may not seem like it can do much. And still, it's not even done. 
+I must say, I am quite proud of what I've been able to complete. 

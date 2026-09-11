@@ -17,8 +17,6 @@ impl Calc {
             Ok(Token::Add) => true,
             Ok(Token::Sub) => {
                 // Decide by context if minus should be considered an operation or a negate sign
-                // FIX: Here, I need to still figure out how to multiply by -1 if the negative sign
-                // is unary => just a sign and not an operation
                 match self.last_token() {
                     Err(_)|Ok(Token::LBrac|Token::Add|Token::Sub|Token::Mod|Token::Seperator|Token::Div|Token::Mul|Token::Pow|Token::Assign) => false,
                     _ => true
@@ -126,7 +124,7 @@ impl Calc {
                 return Ok(Expr::Binary { 
                     left: Box::new(Ok(Expr::Number(Num::unitless("-1")))), 
                     op: Token::Mul, 
-                    right: Box::new(self.parse_term()) })
+                    right: Box::new(self.parse_exponents()) })
             }
             // We found a variable!
             Ok(Token::Var(var)) => {

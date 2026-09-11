@@ -7,14 +7,14 @@ fn make_default_calc() -> Calc {
 }
 
 fn query(calc: &mut Calc, query: &str, output_number_query: &str) {
-    assert_eq!{calc.run(query), calc.run(output_number_query)};
+    assert_eq!{calc.run_output(query, true), calc.run_output(output_number_query, true)};
 }
 
 #[test]
 fn simple_arithmatic() {
     let mut calc = make_default_calc();
     assert_eq!{
-        calc.run("5+5*2"), Ok(Expr::Number(Num::unitless("15")))
+        calc.run("5+5*2", true), Ok(Expr::Number(Num::unitless("15")))
     };
 }
 
@@ -27,7 +27,7 @@ fn creating_calc() {
 fn simple_parsing() {
     let mut calc = make_default_calc();
     assert_eq!{
-        calc.run("1"), Ok(Expr::Number(Num::unitless("1")))
+        calc.run("1", true), Ok(Expr::Number(Num::unitless("1")))
     };
 }
 
@@ -35,7 +35,7 @@ fn simple_parsing() {
 fn simple_query() {
     let mut calc = make_default_calc();
     assert_eq!{
-        calc.run("1+1"), Ok(Expr::Number(Num::unitless("2")))
+        calc.run("1+1", true), Ok(Expr::Number(Num::unitless("2")))
     };
 }
 
@@ -43,7 +43,7 @@ fn simple_query() {
 fn arithmatic_queries() {
     let mut calc = make_default_calc();
     assert_eq!{
-        calc.run("1+(4-2)-1+7--2-2++5-0.5+.2"), Ok(Expr::Number(Num::unitless("13.7")))
+        calc.run("1+(4-2)-1+7--2-2++5-0.5+.2", true), Ok(Expr::Number(Num::unitless("13.7")))
     };
 }
 
@@ -51,7 +51,7 @@ fn arithmatic_queries() {
 fn advanced_arithmatic() {
     let mut calc = make_default_calc();
     assert_eq!{
-        calc.run("3+4*2/(1-5)^(2^3)"), Ok(Expr::Number(Num::unitless("3.0001220703125")))
+        calc.run("3+4*2/(1-5)^(2^3)", true), Ok(Expr::Number(Num::unitless("3.0001220703125")))
     };
 }
 
@@ -59,14 +59,14 @@ fn advanced_arithmatic() {
 fn units() {
     let mut calc = make_default_calc();
     assert_eq!{
-        calc.run("1 meter second ampere kilogram candela kelvin"), Ok(Expr::Number(Num::new("1.0", vec![('m', 1), ('s', 1), ('a', 1), ('K', 1), ('k', 1), ('c', 1)])))
+        calc.run("1 meter second ampere kilogram candela kelvin", true), Ok(Expr::Number(Num::new("1.0", vec![('m', 1), ('s', 1), ('a', 1), ('K', 1), ('k', 1), ('c', 1)])))
     };
 }
 
 #[test]
 fn failure() {
     let mut calc = make_default_calc();
-    match calc.run("Hello") {
+    match calc.run("Hello", true) {
         Err(_) => {},
         _ => panic!{"This query should result in a failure!"}
     }
@@ -75,9 +75,9 @@ fn failure() {
 #[test]
 fn variable_storage() {
     let mut calc = make_default_calc();
-    calc.run("var = 4");
+    calc.run("var = 4", true);
     assert_eq!{
-        calc.run("var * 5"), Ok(Expr::Number(Num::unitless("20")))
+        calc.run("var * 5", true), Ok(Expr::Number(Num::unitless("20")))
     };
 }
 
@@ -88,6 +88,10 @@ fn negative_signs() {
     query(&mut calc, "1-2^2", "(0-1)*(3)");
     query(&mut calc, "-1*-1", "1");
     query(&mut calc, "1-1", "0");
+    query(&mut calc, "2^-2", "0.25");
+    query(&mut calc, "2^-2 meter", "0.25 meter");
+    query(&mut calc, "2^-2 - 2", "-1.75");
+    query(&mut calc, "-2^2", "-4");
 }
 
 #[test]
