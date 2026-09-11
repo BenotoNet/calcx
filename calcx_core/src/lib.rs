@@ -5,6 +5,7 @@ pub mod expr;
 pub mod variables;
 pub mod keys_func;
 pub mod utils;
+pub mod persistence;
 
 pub use num::Num;
 pub use expr::Expr;
@@ -107,12 +108,12 @@ impl Calc {
 
         // This function is supposed to tokenize the given query
         self.tokens = tokens::tokenize(query);
-        println!{"{:?}", self.tokens}
+        // println!{"{:?}", self.tokens}
 
         // println!{"Parsing Done"};
 
         let tree = self.build_tree();
-        println!{"{tree:?}"};
+        // println!{"{tree:?}"};
         let output = self.eval(tree);
 
         match (&output, save_history) {

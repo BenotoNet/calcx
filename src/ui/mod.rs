@@ -129,7 +129,8 @@ pub enum Setting {
     OutputOnly,
 }
 
-const HISTORY_PATH: &str = "history.txt";
+fn history_path() -> String {format!{"{}/.config/calcx/history.txt", std::env::home_dir().unwrap().display()}}
+fn config_path() -> String {format!{"{}/.config/calcx/config.cfg", std::env::home_dir().unwrap().display()}}
 pub struct UI {
     calc: Calc,
     stdout: Editor<AutoComplete, DefaultHistory>,
@@ -142,16 +143,26 @@ impl UI {
         let default_precision = 15;
         let mut rl = Editor::new().unwrap();
 
-        // Load previous settings, history, and variables
-        if Path::new(HISTORY_PATH).exists() {
-            // FIX: currently not implemented
-            // rl.load_history(HISTORY_PATH).unwrap();
-        }
-
         let helper = AutoComplete::build();
         rl.set_helper(Some(helper));
 
         let mut ui = UI { calc: Calc::new(default_precision), stdout: rl, persistent: vec![] };
+
+        // Load previous settings, history, and variables
+        if Path::new(&history_path()).exists() {
+            // FIX: currently not implemented
+            // rl.load_history(HISTORY_PATH).unwrap();
+        }
+        if Path::new(&config_path()).exists() {
+            // FIX: IT's all just random, no purpose yet
+            println!{"Path exists"}
+            ui.calc = calcx_core::persistence::load_from_file(&config_path()).expect("Could not parse config file");
+            let _ = calcx_core::persistence::save_to_file(&ui.calc, &config_path());
+        }
+        else {
+            // FIX: Make the Path for saving
+        }
+
         let mut exit_after_single_queries = false;
         for option in options {
             match option {
