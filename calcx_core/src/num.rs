@@ -200,9 +200,10 @@ impl Num {
     }
 
     pub fn round_to(&self, digits: u32) -> Result<Num, String> {
-        let bigger: Float = self.quantity.clone()*10u32.pow(digits);
+        let shift_tens = Num::unitless("10").powf(&Num::unitless(&format!{"{}", digits}))?;
+        let bigger: Float = self.quantity.clone()*shift_tens.quantity.clone();
         match self.is_unitless() {
-            true => Ok(Num::unitless_float(bigger.round()/10u32.pow(digits))),
+            true => Ok(Num::unitless_float(bigger.round()/shift_tens.quantity.clone())),
             false => Err(String::from("Operation failed")),
         }
     }
