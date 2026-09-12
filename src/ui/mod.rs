@@ -4,119 +4,11 @@ use crate::calcx_core::Expr;
 use colored_print::cformat;
 
 use std::process::exit;
-use std::borrow::Cow;
 use std::path::Path;
 use std::fs;
 
-use rustyline::{
-    Editor, 
-    Helper, 
-    completion::{
-        Completer, 
-        Pair
-    }, 
-    highlight::Highlighter, 
-    hint::Hinter, 
-    validate::Validator,
-    history::DefaultHistory,
-};
-
 mod autocomplete;
-pub struct AutoComplete {
-    options: Vec<String>
-}
-
-impl AutoComplete {
-    fn build() -> AutoComplete {
-        let options = autocomplete::get_options();
-        AutoComplete { options }
-    }
-
-    fn get_current_word(line: &str, pos: usize) -> String {
-        let start = &line[..pos];
-        start.split(&[' ', '\n', '.', ',']).last().unwrap().to_string()
-    }
-
-    fn match_possible_word_completions(word_list: &Vec<String>, word_part: &str) -> Vec<Pair> {
-        let mut output = vec![];
-        for word in word_list {
-            if word.starts_with(word_part) {
-                let word_ending_to_completion = &word[word_part.len()..];
-                output.push(word_ending_to_completion.to_string());
-            }
-        }
-        let mut output: Vec<Pair> = output.iter()
-            .map(|v| {Pair { display: v.clone(), replacement: v.clone()}})
-            .collect();
-
-        // Sort pairs by length before returning the vector
-        output.sort_by(|a, b| {a.display.len().cmp(&b.display.len())});
-        return output;
-    }
-
-
-    fn match_possible_words(word_list: &Vec<String>, word_part: &str) -> Vec<Pair> {
-        let mut output = vec![];
-        for word in word_list {
-            if word.starts_with(word_part) {
-                output.push(word.clone())
-            }
-        }
-        let mut output: Vec<Pair> = output.iter()
-            .map(|v| {Pair { display: v.clone(), replacement: v.clone()}})
-            .collect();
-
-        // Sort pairs by length before returning the vector
-        output.sort_by(|a, b| {a.display.len().cmp(&b.display.len())});
-        return output;
-    }
-}
-
-impl Validator for AutoComplete {}
-impl Helper for AutoComplete {}
-
-impl Highlighter for AutoComplete {
-    fn highlight<'l>(&self, line: &'l str, _pos: usize) -> Cow<'l, str> {
-        Cow::Borrowed(line)
-    }
-
-    fn highlight_hint<'h>(&self, hint: &'h str) -> Cow<'h, str> {
-        // e.g. dim cyan hint
-        Cow::Owned(format!("\x1b[38;5;244m{hint}\x1b[0m"))
-    }
-}
-
-impl Hinter for AutoComplete {
-    type Hint = String;
-    fn hint(&self, line: &str, pos: usize, _ctx: &rustyline::Context<'_>) -> Option<Self::Hint> {
-        let word = AutoComplete::get_current_word(line, pos);
-        if word != "" {
-            return Some(AutoComplete::match_possible_word_completions(&self.options, &word)
-                .get(0)?
-                .replacement
-                .clone())
-        }
-        return None;
-    }
-}
-
-impl Completer for AutoComplete {
-    type Candidate = Pair;
-
-    fn complete(
-        &self,
-        line: &str,
-        pos: usize,
-        _ctx: &rustyline::Context<'_>,
-    ) -> rustyline::Result<(usize, Vec<Self::Candidate>)>
-    {
-        let word = AutoComplete::get_current_word(line, pos);
-        if word != "" {
-            return Ok((pos-word.len(), AutoComplete::match_possible_words(&self.options, &word)))
-        }
-        return Ok((0, vec![]));
-    }
-}
+use rustyline::{Editor, history::DefaultHistory};
 
 use crate::utils;
 
@@ -137,7 +29,7 @@ fn config_path() -> String {format!{"{}/config.yaml", home_path()}}
 
 pub struct UI {
     calc: Calc,
-    stdout: Editor<AutoComplete, DefaultHistory>,
+    stdout: Editor<autocomplete::AutoComplete, DefaultHistory>,
     persistent: Vec<Setting>
 }
 
@@ -147,7 +39,7 @@ impl UI {
         let default_precision = 15;
         let mut rl = Editor::new().unwrap();
 
-        let helper = AutoComplete::build();
+        let helper = autocomplete::AutoComplete::build();
         rl.set_helper(Some(helper));
 
         let mut ui = UI { calc: Calc::new(default_precision), stdout: rl, persistent: vec![] };
@@ -162,13 +54,7 @@ impl UI {
             // NOTE: If we have a config file present, we want to load it
             ui.calc = calcx_core::persistence::load_from_file(&config_path()).unwrap();
         }
-        else if !Path::new(&home_path()).exists() {
-            // There is no config home folder ($HOME/.config/calcx), therefore, we want to make it
-            match fs::create_dir(home_path()) {
-                Ok(_) => {},
-                Err(e) => {panic!{"There is no configuration folder present on this device?! Error: {e}"}}
-            }
-        }
+        
 
         let mut exit_after_single_queries = false;
         for option in options {
@@ -249,6 +135,15 @@ impl UI {
                         return self.interactive()
                     },
                     "save"|"SAVE" => {
+                        // Check if the parent dir exists
+                        if !Path::new(&home_path()).exists() {
+                            // There is no config home folder ($HOME/.config/calcx), therefore, we want to make it
+                            match fs::create_dir(home_path()) {
+                                Ok(_) => {},
+                                Err(e) => {panic!{"There is no configuration folder present on this device?! Error: {e}"}}
+                            }
+                        }
+                        // Save config
                         calcx_core::persistence::save_to_file(&self.calc, &config_path()).unwrap(); 
                         self.output("Done");
                         return self.interactive()

@@ -95,10 +95,11 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] add slight color 
 - [x] fix kelvin / second => currently gives error
 - [x] bug: 10^-7 meter throws error -> what is calculated is: 10^(-7 * meter)
-- [ ] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?) (use serde)
-- [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
+- [x] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?) (use serde)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
+- [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
+- [ ] refactor to have nicer code
 - [ ] make a demo on the github page for showing what the calc can do
 
 
