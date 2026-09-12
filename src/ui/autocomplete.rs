@@ -2,7 +2,7 @@ pub fn get_options() -> Vec<String> { "meter, meters, metre, metres, second, sec
 add_one, root, nth_root, n_root, log, sqrt, square_root, 2root, root2, sin, sine, cos, cosine, tan, tangent, arcsine, arcsin, asin, asine, arccosine, arccos, arcos, acos, acosine, arctan, arctangent, atan, atangent, ln, natural_log, natural_ln, log_natural, lg, log10, log_base_10, log_base_ten, log2, 2log, log_base_2, log_base_two, exp, round_down, floor, rdown, roundd, round_up, ceil, rup, roundu, ceiling, round, abs, absolute, absol, absolutes, to, in, convert, convert_to, ans, last, answer, last_answer, clip, copy, clipboard
 PRECISION:, help, exit, quit, clear, OUTPUT_ONLY:,
 eq, equal, is_equal, is_equal_to, equal_to, gt, greater, greater_than, lt, less, less_than,
-c_to_k, celsius_to_kelvin, celsius, units, get_units, unit
+c_to_k, celsius_to_kelvin, celsius, units, get_units, unit, save, reset
 "
         .split(&[' ', ',', '\n'])
         .into_iter()

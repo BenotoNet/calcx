@@ -1,7 +1,9 @@
 use crate::Num;
 use crate::tokens::Token;
 
-#[derive(Debug, Clone, PartialEq)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Expr {
     Number(Num),
     Binary {

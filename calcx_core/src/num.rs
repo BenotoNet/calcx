@@ -1,8 +1,9 @@
 use crate::units::Units;
 use crate::utils;
 use rug::Float;
+use serde::{Serialize, Deserialize};
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Num {
     quantity: Float,
     units: Units,

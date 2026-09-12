@@ -12,12 +12,15 @@ pub use expr::Expr;
 
 use tokens::Token;
 
+use serde::{Serialize, Deserialize};
+
 const PRECISION: u32 = 4096;
 
 // Testing of Calcx-Core:
 #[cfg(test)]
 mod tests;
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Calc {
     tokens: Vec<Token>,
     current: usize,

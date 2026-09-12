@@ -6,6 +6,7 @@ use colored_print::cformat;
 use std::process::exit;
 use std::borrow::Cow;
 use std::path::Path;
+use std::fs;
 
 use rustyline::{
     Editor, 
@@ -129,8 +130,11 @@ pub enum Setting {
     OutputOnly,
 }
 
-fn history_path() -> String {format!{"{}/.config/calcx/history.txt", std::env::home_dir().unwrap().display()}}
-fn config_path() -> String {format!{"{}/.config/calcx/config.cfg", std::env::home_dir().unwrap().display()}}
+// NOTE: Getting the paths for saving history and config
+fn home_path() -> String {format!{"{}/.config/calcx", std::env::home_dir().unwrap().display()} }
+fn history_path() -> String {format!{"{}/history.txt", home_path()}}
+fn config_path() -> String {format!{"{}/config.yaml", home_path()}}
+
 pub struct UI {
     calc: Calc,
     stdout: Editor<AutoComplete, DefaultHistory>,
@@ -150,17 +154,20 @@ impl UI {
 
         // Load previous settings, history, and variables
         if Path::new(&history_path()).exists() {
+            // NOTE: Load previous history from history path
             // FIX: currently not implemented
             // rl.load_history(HISTORY_PATH).unwrap();
         }
         if Path::new(&config_path()).exists() {
-            // FIX: IT's all just random, no purpose yet
-            println!{"Path exists"}
-            ui.calc = calcx_core::persistence::load_from_file(&config_path()).expect("Could not parse config file");
-            let _ = calcx_core::persistence::save_to_file(&ui.calc, &config_path());
+            // NOTE: If we have a config file present, we want to load it
+            ui.calc = calcx_core::persistence::load_from_file(&config_path()).unwrap();
         }
-        else {
-            // FIX: Make the Path for saving
+        else if !Path::new(&home_path()).exists() {
+            // There is no config home folder ($HOME/.config/calcx), therefore, we want to make it
+            match fs::create_dir(home_path()) {
+                Ok(_) => {},
+                Err(e) => {panic!{"There is no configuration folder present on this device?! Error: {e}"}}
+            }
         }
 
         let mut exit_after_single_queries = false;
@@ -233,6 +240,20 @@ impl UI {
                         utils::help_menu();
                         return self.interactive();
                     }
+
+                    // NOTE: Logic for saving calculator & resetting to factory defaults
+                    "reset"|"RESET" => {
+                        self.calc = Calc::new(15); 
+                        self.persistent = vec![]; 
+                        self.output("Done");
+                        return self.interactive()
+                    },
+                    "save"|"SAVE" => {
+                        calcx_core::persistence::save_to_file(&self.calc, &config_path()).unwrap(); 
+                        self.output("Done");
+                        return self.interactive()
+                    }
+
                     "" => {return self.interactive();}
                     _ => {}
                 }
