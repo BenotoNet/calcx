@@ -68,7 +68,7 @@ impl UI {
         return ui;
     }
 
-    pub fn interactive(mut self) {
+    pub fn interactive(mut self) -> Result<(), String> {
         // Interaction loop: wait for user input -> parse user input -> query -> return output ->
         // ask for new user input
 
@@ -76,7 +76,7 @@ impl UI {
             // New: rustyline, less styling but more useful
             let query: String = match self.stdout.readline(&cformat!{"%G:%b^Calcxulate >> "}) {
                 Ok(input) => {input},
-                Err(_) => {return},
+                Err(e) => {return Err(e.to_string())},
             };
 
             // We can have multiple queries at once seperated by semicolons
@@ -85,13 +85,10 @@ impl UI {
                 // Change settings inside the calc:
                 if compact_query.contains("PRECISION:") {
                     // Check if the next thing after ":" is a number:
-                    match query.split(":").nth(1).unwrap().parse::<usize>() {
-                        Ok(new_precision) => {
-                            self.calc.change_precision(new_precision);
-                        },
-                        // If its not, we should return an error
-                        Err(e) => {println!{"{e}"}}
-                    }
+                    self.calc.change_precision(query.split(":").nth(1)
+                        .ok_or("There is no : in the query")?
+                        .parse::<usize>()
+                        .map_err(|e| {e.to_string()})?);
                     // Add a new line
                     println!{""}
                     // Skip rest of for loop iteration
@@ -167,12 +164,11 @@ impl UI {
                     if query.contains(conversion_splitter) {
                         conversion_present = true;
 
-                        // FIX: Remove Unwrap
                         let before = query.split(conversion_splitter).nth(0).unwrap().to_string();
                         let after = query.split(conversion_splitter)
                                 .nth(
                                     query.split(conversion_splitter).collect::<Vec<_>>().len()-1)
-                                .unwrap()
+                                .ok_or("Query could not be split using a query spliter")?
                                 .to_string();
 
                         //  we convert by dividing the input by the wanted units

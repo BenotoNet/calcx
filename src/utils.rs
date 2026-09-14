@@ -8,7 +8,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Setting> {
 
     let mut index = 0;
     while index < args.len() {
-        let opt = args.get(index).unwrap();
+        let opt = &args[index];
 
         // Command line argument
         if opt.starts_with("-") {
@@ -17,7 +17,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Setting> {
                 "--precision"|"-p" => {
                     // new precision
                     index += 1;
-                    let precision: usize = args.get(index).unwrap().parse().expect("Not a valid new Precision Value!");
+                    let precision: usize = opt.parse().expect("Not a valid new Precision Value!");
                     option_queue.push(Setting::Precision(precision));
                 }
                 "--output-only"|"-o" => {
