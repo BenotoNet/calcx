@@ -34,7 +34,7 @@ impl AutoComplete {
 
     fn get_current_word(line: &str, pos: usize) -> String {
         let start = &line[..pos];
-        start.split(&[' ', '\n', '.', ',']).last().unwrap().to_string()
+        start.split(&[' ', '\n', '.', ',']).last().expect("Somehow the Autocomplete Line was completely empty").to_string()
     }
 
     fn match_possible_word_completions(word_list: &Vec<String>, word_part: &str) -> Vec<Pair> {

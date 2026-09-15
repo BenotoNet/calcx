@@ -13,7 +13,11 @@ pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
 }
 
 pub fn is_int(num: &Num) -> bool {
-    num.round_to(3).unwrap() == num.round().unwrap()
+    println!{"{:?} {:?}", num.round_to(3), num.round()}
+    match (num.round_to(50), num.round()) {
+        (Ok(n), Ok(m)) => {n == m}
+        _ => {false}
+    }
 }
 
 // Written by AI, sorry...

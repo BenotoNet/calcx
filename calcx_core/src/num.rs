@@ -1,6 +1,7 @@
 use crate::units::Units;
 use crate::utils;
 use rug::Float;
+use rug::ops::Pow;
 use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -201,12 +202,11 @@ impl Num {
     }
 
     pub fn round_to(&self, digits: u32) -> Result<Num, String> {
-        let shift_tens = Num::unitless("10").powf(&Num::unitless(&format!{"{}", digits}))?;
-        let bigger: Float = self.quantity.clone()*shift_tens.quantity.clone();
-        match self.is_unitless() {
-            true => Ok(Num::unitless_float(bigger.round()/shift_tens.quantity.clone())),
-            false => Err(String::from("Operation failed")),
-        }
+        if !self.is_unitless() {return Err(String::from("Operation failed, not unitless"))}
+        let mut shift_ten = Float::with_val(crate::PRECISION, 10).pow(digits);
+
+        let bigger: Float = (self.quantity.clone()*shift_ten.clone()).round();
+        Ok(Num::unitless_float((bigger/shift_ten)))
     }
 
     pub fn ceil(&self) -> Result<Num, String> {
