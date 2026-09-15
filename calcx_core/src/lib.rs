@@ -49,6 +49,14 @@ impl Calc {
         }
     }
 
+    pub fn get_last_nth_ans(&self, nth: usize) -> Result<Expr, String> {
+        if nth >= self.history.len() {return Err(String::from("That Answer does not exist"))}
+        match self.history.iter().nth(self.history.len()-nth) {
+            Some(Expr::Number(num)) => Ok(Expr::Number(num.clone())),
+            _ => Err(String::from("Answer not accessible")),
+        }
+    }
+
     pub fn change_precision(&mut self, precision: usize) {
         self.precision = precision;
     }
