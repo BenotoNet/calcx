@@ -13,9 +13,8 @@ pub fn is_number<T: AsRef<str>>(test_string: T) -> bool {
 }
 
 pub fn is_int(num: &Num) -> bool {
-    println!{"{:?} {:?}", num.round_to(3), num.round()}
-    match (num.round_to(50), num.round()) {
-        (Ok(n), Ok(m)) => {n == m}
+    match (num, &num.round()) {
+        (n, Ok(m)) => {n == m}
         _ => {false}
     }
 }
