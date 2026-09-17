@@ -135,10 +135,7 @@ fn precedence() {
     query(&mut calc, "2*3+4", "10");
     query(&mut calc, "8/4/2", "1");
     query(&mut calc, "8/(4/2)", "4");
-
-    // FIX: This test fails, because what is calculated is: (2^3)^2
     query(&mut calc, "2^3^2", "512");
-    
     query(&mut calc, "(2^3)^2", "64");
     query(&mut calc, "2 * 3 ^ 2", "18");
     query(&mut calc, "-2^2", "-4");

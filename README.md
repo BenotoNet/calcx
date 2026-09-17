@@ -98,7 +98,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?) (use serde)
 - [x] Quick copying of previous answers (also before directly last one)
 - [x] Fix nth_last 3 * 2
-- [ ] Fix 2^3^2 != 512
+- [x] Fix 2^3^2 != 512
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)

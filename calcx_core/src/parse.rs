@@ -99,7 +99,8 @@ impl Calc {
                 _ => false,
             } {
                 let operation = self.advance()?;
-                let right = self.parse_factor();
+                // FIX: ??
+                let right = self.parse_exponents();
                 left = Ok(Expr::Binary { left: Box::new(left), op: operation, right: Box::new(right) });
             }
         return left;
