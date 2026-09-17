@@ -13,5 +13,13 @@ fn main() {
     let options = utils::parse_cli_args(args);
 
     // All options are set, therefore, we can start the interactive session with the options
-    ui::UI::new(options).interactive();
+    match ui::UI::new(options).interactive() {
+        Ok(_) => {},
+        Err(e) => {
+            match e.as_str() {
+                "Interrupted" => {},
+                _ => {println!{"{e}"}}
+            }
+        }
+    };
 }

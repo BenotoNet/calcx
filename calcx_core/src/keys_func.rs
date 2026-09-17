@@ -26,7 +26,6 @@ impl Calc {
                 return Ok(Expr::Number(last_answer));
             }
             ("nth_last"|"nth_ans", num1, num2) => {
-                // FIX: 2 * nth_last
                 let mut last_answer = match self.get_last_nth_ans(num2?.get_quant().to_f32() as usize) {
                     Ok(Expr::Number(num3)) => {num3}
                     _ => {return Err(String::from("Last Answer not accessible!"))},

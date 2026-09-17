@@ -124,6 +124,8 @@ fn last_answer() {
     query(&mut calc, "nth_last 2 * 2", "62");
     query(&mut calc, "2 * nth_last 2", "64");
     query(&mut calc, "2 nth_last 2", "124");
+    calc.run("4", true);
+    query(&mut calc, "sqrt(ans)", "2");
 }
 
 #[test]
