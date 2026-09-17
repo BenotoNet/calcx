@@ -7,7 +7,7 @@ fn make_default_calc() -> Calc {
 }
 
 fn query(calc: &mut Calc, query: &str, output_number_query: &str) {
-    assert_eq!{calc.run_output(query, true), calc.run_output(output_number_query, true)};
+    assert_eq!{calc.run_output(query, true), calc.run_output(output_number_query, false)};
 }
 
 #[test]
@@ -106,4 +106,22 @@ fn functions() {
     let mut calc = make_default_calc();
 
     query(&mut calc, "test(add_one(sqrt(2^2)))", "3")
+}
+
+
+#[test]
+fn last_answer() {
+    let mut calc = make_default_calc();
+
+    calc.run("2", true);
+    query(&mut calc, "ans", "2");
+    query(&mut calc, "2 ans", "4");
+    query(&mut calc, "2 * ans", "8");
+    query(&mut calc, "ans 2", "16");
+    query(&mut calc, "ans * 2", "32");
+    query(&mut calc, "ans - 1", "31");
+    query(&mut calc, "nth_last 2", "32");
+    query(&mut calc, "nth_last 2 * 2", "62");
+    query(&mut calc, "2 * nth_last 2", "64");
+    query(&mut calc, "2 nth_last 2", "124");
 }
