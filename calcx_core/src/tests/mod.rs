@@ -125,3 +125,25 @@ fn last_answer() {
     query(&mut calc, "2 * nth_last 2", "64");
     query(&mut calc, "2 nth_last 2", "124");
 }
+
+#[test]
+fn precedence() {
+    let mut calc = make_default_calc();
+
+    query(&mut calc, "2+3*4", "14");
+    query(&mut calc, "(2+3)*4", "20");
+    query(&mut calc, "2*3+4", "10");
+    query(&mut calc, "8/4/2", "1");
+    query(&mut calc, "8/(4/2)", "4");
+
+    // FIX: This test fails, because what is calculated is: (2^3)^2
+    query(&mut calc, "2^3^2", "512");
+    
+    query(&mut calc, "(2^3)^2", "64");
+    query(&mut calc, "2 * 3 ^ 2", "18");
+    query(&mut calc, "-2^2", "-4");
+    query(&mut calc, "1 / 2 meter", "0.5 meter^-1");
+    query(&mut calc, "2 (3 + 4) meter", "14 meter");
+    query(&mut calc, "10^-7 meter", "(10^(-7)) * meter");
+    query(&mut calc, "2^log2(8)", "8");
+}
