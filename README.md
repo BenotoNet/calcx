@@ -100,9 +100,9 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Fix nth_last 3 * 2
 - [x] Fix 2^3^2 != 512
 - [x] Autosave Option
+- [ ] custom user-defined functions (add_one(number) = number + 1, etc)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
-- [ ] custom user-defined functions (add_one(number) = number + 1, etc)
 - [ ] refactor to have nicer code
 - [ ] make a demo on the github page for showing what the calc can do
 

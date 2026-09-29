@@ -129,9 +129,12 @@ impl Calc {
             // We found a variable!
             Ok(Token::Var(var)) => {
                 self.advance()?;
-                match self.peek() {
-                    Ok(Token::Assign) => {
-                            self.advance()?;
+                // Next, we see if there is an assign keyword in the query:
+                if self.contains(Token::Assign) {
+                    // We either have a function or variable definition
+                    // if the next token is an assign sign, it's a variable definition
+                    match self.advance()? {
+                        Token::Assign => {
                             let right = self.parse_expression();
                             match self.eval(right) {
                                 Ok(Expr::Number(num)) => {
@@ -140,10 +143,17 @@ impl Calc {
                                 },
                                 _ => return Err(String::from("Could not evaluate right side of assignment!"))
                             }
+                        },
+                        Token::LBrac => {
+                            // We have a function assignment / definition
+                            todo!{};
+                        },
+                        _ => {return Err(String::from("Something is wrong, there is an assign sign at the wrong place"))}
                     }
-                    _ => {
-                        return self.variables.get_var(var)
-                    }
+                }
+                else {
+                    // we just have a normal variable
+                    return self.variables.get_var(var)
                 }
             }
             _ => {
