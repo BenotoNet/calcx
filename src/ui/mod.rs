@@ -20,6 +20,7 @@ pub enum Setting {
     SingleQuery(String),
     Precision(usize),
     OutputOnly,
+    AutoSave,
 }
 
 // NOTE: Getting the paths for saving history and config
@@ -42,7 +43,7 @@ impl UI {
         let helper = autocomplete::AutoComplete::build();
         rl.set_helper(Some(helper));
 
-        let mut ui = UI { calc: Calc::new(default_precision), stdout: rl, persistent: vec![] };
+        let mut ui = UI { calc: Calc::new(default_precision), stdout: rl, persistent: vec![Setting::AutoSave] };
 
         // Load previous settings, history, and variables
         if Path::new(&history_path()).exists() {
@@ -66,6 +67,33 @@ impl UI {
         }
         if exit_after_single_queries {exit(0)};
         return ui;
+    }
+
+    fn exit(&self, output_code: i32) -> Result<(), String> {
+        if self.persistent.contains(&Setting::AutoSave) {
+            self.save()?;
+        };
+        exit(output_code);
+    }
+
+    fn save(&self) -> Result<(), String> {
+        // Check if the parent dir exists
+        if !Path::new(&home_path()).exists() {
+            // There is no config home folder ($HOME/.config/calcx), therefore, we want to make it
+            match fs::create_dir(home_path()) {
+                Ok(_) => {},
+                Err(e) => {panic!{"There is no configuration folder present on this device?! Error: {e}"}}
+            }
+        }
+        // Save config
+        calcx_core::persistence::save_to_file(&self.calc, &config_path()).unwrap(); 
+
+        // Save History
+        // FIX: currently not implemented
+        // self.stdout.save_history(HISTORY_PATH).unwrap();
+
+        self.output("Done");
+        Ok(())
     }
 
     pub fn interactive(mut self) -> Result<(), String> {
@@ -98,6 +126,8 @@ impl UI {
                     // Add the Output Only setting to the persistent storage
                     self.persistent.push(Setting::OutputOnly);
 
+                    self.save()?;
+
                     // Add a new line
                     println!{""}
                     continue;
@@ -109,13 +139,41 @@ impl UI {
                         _ => true,
                     }});
 
+                    self.save()?;
+
+                    // Add a new line
+                    println!{""}
+                    continue;
+                }
+
+                if compact_query.contains("AUTOSAVE:1") {
+                    // Add the Output Only setting to the persistent storage
+                    self.persistent.push(Setting::AutoSave);
+
+                    self.save()?;
+
+                    // Add a new line
+                    println!{""}
+                    continue;
+                }
+                if compact_query.contains("AUTOSAVE:0") {
+                    // Remove all occurences of output only in the storage
+                    self.persistent.retain(|v| {match v {
+                        Setting::AutoSave => false,
+                        _ => true,
+                    }});
+
+                    self.save()?;
+
                     // Add a new line
                     println!{""}
                     continue;
                 }
 
                 match compact_query.as_str() {
-                    "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {exit(0)}
+                    "quit"|"Quit"|"QUIT"|"exit"|"Exit"|"EXIT" => {
+                        self.exit(0)?;
+                    }
                     "clear" => {self.stdout.clear_screen().expect("Failed to clear screen..."); return self.interactive();}
                     "help" => {
                         // Printing Help Menu when typing help into the calc
@@ -127,23 +185,13 @@ impl UI {
                     // NOTE: Logic for saving calculator & resetting to factory defaults
                     "reset"|"RESET" => {
                         self.calc = Calc::new(15); 
-                        self.persistent = vec![]; 
+                        self.persistent = vec![Setting::AutoSave]; 
                         self.output("Done");
                         return self.interactive()
                     },
                     "save"|"SAVE" => {
-                        // Check if the parent dir exists
-                        if !Path::new(&home_path()).exists() {
-                            // There is no config home folder ($HOME/.config/calcx), therefore, we want to make it
-                            match fs::create_dir(home_path()) {
-                                Ok(_) => {},
-                                Err(e) => {panic!{"There is no configuration folder present on this device?! Error: {e}"}}
-                            }
-                        }
-                        // Save config
-                        calcx_core::persistence::save_to_file(&self.calc, &config_path()).unwrap(); 
-                        self.output("Done");
-                        return self.interactive()
+                        self.save()?;
+                        return self.interactive();
                     }
 
                     "" => {return self.interactive();}
@@ -152,10 +200,6 @@ impl UI {
                 
                 // Add to History
                 self.stdout.add_history_entry(query).expect("Could not add query to history...?");
-
-                // Save to History
-                // FIX: currently not implemented
-                // self.stdout.save_history(HISTORY_PATH).unwrap();
 
                 // to append the unit we convert to, we want to see, if there is a conversion string
                 // present and then append a respective setting with appendage

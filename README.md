@@ -20,7 +20,7 @@ $ ./calcx --output-only --precision 32 \"sqrt(2)\" \"-tan(pi)\" > output.txt
 When the program is run without any single-execute commands, you are thrown into an interactive session. 
 Possible Meta-Keywords:
     - clear => clears the screen
-    - quit / exit / CTRL-C => exits the interactive session
+    - quit / exit / CTRL-C => exits the interactive session (CTRL-C however does not save history)
     - help => displays this help screen
     - PRECISION:{{new precision}}
 
@@ -99,7 +99,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Quick copying of previous answers (also before directly last one)
 - [x] Fix nth_last 3 * 2
 - [x] Fix 2^3^2 != 512
-- [ ] Autosave Option
+- [x] Autosave Option
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] custom user-defined functions (add_one(number) = number + 1, etc)
