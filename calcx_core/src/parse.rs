@@ -129,8 +129,8 @@ impl Calc {
             // We found a variable!
             Ok(Token::Var(var)) => {
                 self.advance()?;
-                // Next, we see if there is an assign keyword in the query:
-                if self.contains(Token::Assign) {
+                // Next, we see if there is an assign keyword LATER in the query:
+                if self.contains_later(Token::Assign) {
                     // We either have a function or variable definition
                     // if the next token is an assign sign, it's a variable definition
                     match self.advance()? {
@@ -146,13 +146,60 @@ impl Calc {
                         },
                         Token::LBrac => {
                             // We have a function assignment / definition
-                            todo!{};
+
+                            let mut variable_list_ordered = vec![];
+
+                            // First, see what input variables we have
+                            while match self.advance()? {
+                                Token::Assign => {
+                                    // We are at the end, now the right side has to be parsed
+                                    false
+                                }, 
+                                Token::Var(v) => {variable_list_ordered.push(v); true},
+                                _ => {true},
+                            } {}
+
+                            fn token_replace(tokens: &Vec<Token>, from: Token, to: Token) -> Vec<Token> {
+                                let mut output_tokens = tokens.clone();
+                                let mut index = 0;
+                                while index < output_tokens.len() {
+                                    if output_tokens[index..=index].contains(&from) {
+                                        output_tokens[index] = to.clone();
+                                    }
+                                    index += 1;
+                                }
+                                output_tokens
+                            }
+
+                            // Replace all Variables with "0[respective arg number]"
+                            for (i, v) in variable_list_ordered.iter().enumerate() {
+                                self.tokens = token_replace(&self.tokens, Token::Var(v.clone()), Token::Var(format!{"0{i}"}))
+                            }
+
+                            let right = self.parse_expression();
+                            
+                            self.userfunctions.set_func(var, right);
+                            Ok(Expr::Number(Num::unitless("1.0")))
                         },
                         _ => {return Err(String::from("Something is wrong, there is an assign sign at the wrong place"))}
                     }
                 }
                 else {
                     // we just have a normal variable
+
+                    // It might be a custom function argument, therefore we test if the first
+                    // character is a 0
+                    if var.chars().nth(0) == Some('0') {
+                        // It's an argument for a function, just pass back as variable
+                        return Ok(Expr::Binary { 
+                            left: Box::from(Err(String::new())), 
+
+                            // This is the important part
+                            op: Token::Var(var), 
+
+                            right: Box::from(self.parse_expression()) })
+                    }
+                    // Otherwise it really is just a normal variable
                     return self.variables.get_var(var)
                 }
             }

@@ -71,7 +71,7 @@ fn is_keyword(unknown_token: &str) -> bool {
     }
 }
 
-fn categorize(tokens: Vec<Token>) -> Vec<Token> {
+fn categorize(calc: &Calc, tokens: Vec<Token>) -> Vec<Token> {
     tokens.iter().map(|token| {
         match token {
             Token::Unknown(token_string) => {
@@ -94,7 +94,7 @@ fn categorize(tokens: Vec<Token>) -> Vec<Token> {
                         if is_keyword(token_string) {
                             return Token::Keyword(token_string.clone());
                         }
-                        if super::funcs::is_function(token_string) {
+                        if super::funcs::is_function(calc, token_string) {
                             return Token::Func(token_string.clone())
                         }
                         else {
@@ -263,11 +263,11 @@ fn clean(tokens: Vec<Token>) -> Vec<Token> {
 }
 
 // Tokenize (Parse a given Query into Tokens)
-pub fn tokenize(query: &str) -> Vec<Token> {
+pub fn tokenize(calc: &Calc, query: &str) -> Vec<Token> {
     // First, we split the query into semantic blocks (uncategorized) then, we categorize each block
     // into a token and finally clean up the list of tokens (combine two adjecent Numbers)
     let mut tokens = split_into_unknowns(query);
-    tokens = categorize(tokens);
+    tokens = categorize(calc, tokens);
     tokens = match_units(tokens);
     tokens = clean(tokens);
 

@@ -83,6 +83,11 @@ impl Calc {
         return self.tokens.contains(&tokentype)
     }
 
+    // Check if there is a specific token later in the query
+    fn contains_later(&self, tokentype: Token) -> bool {
+        self.tokens[self.current..self.tokens.len()].contains(&tokentype)
+    }
+
     // Get current token, then advance pointer
     fn advance(&mut self) -> Result<Token, String> {
         self.current += 1;
@@ -124,8 +129,8 @@ impl Calc {
         self.current = 0;
 
         // This function is supposed to tokenize the given query
-        self.tokens = tokens::tokenize(query);
-        println!{"{:?}", self.tokens}
+        self.tokens = tokens::tokenize(self, query);
+        // println!{"{:?}", self.tokens}
 
         // println!{"Parsing Done"};
 

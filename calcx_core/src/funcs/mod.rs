@@ -7,10 +7,8 @@ pub mod custom;
 
 
 // When should it be a function, and when a keyword / Variable (-> Continue Categorization)?
-pub fn is_function(token_str: &str) -> bool {
-    // FIX: HORRIBLE PLEASE FIX AT SOME POINT
-    let temp_calc = Calc::new(crate::PRECISION as usize);
-    match temp_calc.run_func(token_str, vec![]) {
+pub fn is_function(calc: &Calc, token_str: &str) -> bool {
+    match calc.run_func(token_str, vec![]) {
         Err(v) => v.as_str() != "Not a Function",
         _ => true
     }
