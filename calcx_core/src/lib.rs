@@ -25,6 +25,7 @@ pub struct Calc {
     tokens: Vec<Token>,
     current: usize,
     variables: variables::VariableStorage,
+    userfunctions: funcs::custom::FunctionStorage,
     precision: usize,
     history: Vec<Expr>,
 }
@@ -35,7 +36,7 @@ mod funcs;
 
 impl Calc {
     pub fn new(precision: usize) -> Calc {
-        Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new(), precision: precision, history: vec![] }
+        Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new(), userfunctions: funcs::custom::FunctionStorage::new(), precision: precision, history: vec![] }
     }
 
     pub fn set_tokens(&mut self, tokens: Vec<Token>) {

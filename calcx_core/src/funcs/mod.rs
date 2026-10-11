@@ -3,6 +3,8 @@ use crate::Num;
 use crate::Calc;
 use crate::tokens::misc_units::unit_to_num;
 
+pub mod custom;
+
 
 // When should it be a function, and when a keyword / Variable (-> Continue Categorization)?
 pub fn is_function(token_str: &str) -> bool {
@@ -60,6 +62,10 @@ impl Calc {
     }
 
     fn run_func(&self, func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
+        // check if the function is a custom defined one:
+        if self.is_custom_func(func_str) {
+            return self.run_custom_func(func_str, args);
+        }
 
         // Eval each argument
         let args: Vec<Result<Expr, String>> = args.iter().map(|arg| {self.eval_argument(arg.clone())}).collect();

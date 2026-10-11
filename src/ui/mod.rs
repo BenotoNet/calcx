@@ -53,7 +53,13 @@ impl UI {
         }
         if Path::new(&config_path()).exists() {
             // NOTE: If we have a config file present, we want to load it
-            ui.calc = calcx_core::persistence::load_from_file(&config_path()).unwrap();
+            match calcx_core::persistence::load_from_file(&config_path()) {
+                Ok(v) => {
+                    // there is actual useful data here, set calculator to the loaded one
+                    ui.calc = v
+                },
+                _ => {println!("There was an error reading the config file, consider deleting or overwriting.")},
+            };
         }
         
 
