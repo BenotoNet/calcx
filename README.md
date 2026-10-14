@@ -105,6 +105,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Tests with variables and functions and user-defined functions all combined
 - [x] multiple re-assignment of user-functions
 - [x] Fix saving custom user-defined functions
+- [ ] Migration from YAML to TOML or JSON
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] Improve Error Messages
