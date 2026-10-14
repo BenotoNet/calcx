@@ -192,12 +192,12 @@ impl Calc {
                     if var.chars().nth(0) == Some('0') {
                         // It's an argument for a function, just pass back as variable
                         return Ok(Expr::Binary { 
-                            left: Box::from(Err(String::new())), 
+                            left: Box::new(Err(String::new())), 
 
                             // This is the important part
                             op: Token::Var(var), 
 
-                            right: Box::from(self.parse_expression()) })
+                            right: Box::from(Err(String::new())) })
                     }
                     // Otherwise it really is just a normal variable
                     return self.variables.get_var(var)
