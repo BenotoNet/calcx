@@ -79,6 +79,7 @@ impl Calc {
     }
 
     // Check if there is a token anywhere in the tokens
+    #[allow(unused)]
     fn contains(&self, tokentype: Token) -> bool {
         return self.tokens.contains(&tokentype)
     }

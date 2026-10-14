@@ -102,10 +102,12 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [x] Autosave Option
 - [x] custom user-defined functions (add_one(number) = number + 1, etc)
 - [x] Add tests to set custom user defined functions in stone
-- [ ] Fix saving custom user-defined functions
-- [ ] multiple assignment of user-functions
+- [x] Tests with variables and functions and user-defined functions all combined
+- [x] multiple re-assignment of user-functions
+- [x] Fix saving custom user-defined functions
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
+- [ ] Improve Error Messages
 - [ ] refactor to have nicer code (e.g. more fragmentation)
 - [ ] make a demo on the github page for showing what the calc can do
 

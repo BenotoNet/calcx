@@ -42,8 +42,6 @@ impl Calc {
         // println!{"{args:?}"}
         let mut calculation_recursive: Result<Expr, String> = self.userfunctions.get_func(func_str);
 
-        println!{"From {func_str} before: \n{calculation_recursive:?}\n\n"}
-
         // We want to replace Binary operator Tokens (e.g. Var("00")) with the actual numbers given
         // for these variable places (e.g. Var("00") represents the first variable)
 
@@ -60,7 +58,7 @@ impl Calc {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FunctionStorage {
-    storage: HashMap<String, Result<Expr, String>>,
+    storage: HashMap<String, Expr>,
 }
 
 impl FunctionStorage {
@@ -70,12 +68,13 @@ impl FunctionStorage {
 
     pub fn get_func(&self, func: &str) -> Result<Expr, String> {
         match self.storage.get(func) {
-            Some(v) => v.clone(),
+            Some(v) => Ok(v.clone()),
             _ => Err(String::from("Could not get Function")),
         }
     }
 
-    pub fn set_func(&mut self, key: String, value: Result<Expr, String>) {
-        self.storage.insert(key, value);
+    pub fn set_func(&mut self, key: String, value: Result<Expr, String>) -> Result<(), String> {
+        self.storage.insert(key, value?);
+        Ok(())
     }
 }

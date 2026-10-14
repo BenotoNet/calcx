@@ -169,3 +169,26 @@ fn user_defined_functions() {
     query(&mut calc, "custom_add_fail(3) = 3+1", "1");
     query(&mut calc, "custom_add_fail(0)", "4");
 }
+
+#[test]
+fn custom_functions_with_variables() {
+    let mut calc = make_default_calc();
+
+    query(&mut calc, "custom_function(x) = pi*x", "1");
+    query(&mut calc, "custom_function(3)", "3*pi");
+    query(&mut calc, "variable = 4", "4");
+    query(&mut calc, "custom_function_two(x) = variable*x", "1");
+    query(&mut calc, "custom_function_two(variable)", "16");
+    query(&mut calc, "custom_function_two(sqrt(variable))", "8");
+    query(&mut calc, "custom_function_three(more_chars) = sqrt(more_chars)", "1");
+    query(&mut calc, "custom_function_three(16)", "4");
+}
+
+#[test]
+fn reassigning_functions() {
+    let mut calc = make_default_calc();
+
+    query(&mut calc, "reassign_function(x) = x", "1");
+    query(&mut calc, "reassign_function(x) = 2*x", "1");
+    query(&mut calc, "reassign_function(2)", "4");
+}

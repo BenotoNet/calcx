@@ -72,40 +72,52 @@ fn is_keyword(unknown_token: &str) -> bool {
 }
 
 fn categorize(calc: &Calc, tokens: Vec<Token>) -> Vec<Token> {
-    tokens.iter().map(|token| {
+    let mut out_tokens = vec![];
+    for (idx, token) in tokens.iter().enumerate() {
         match token {
             Token::Unknown(token_string) => {
                 let token_str = token_string.as_str();
-                if utils::is_number(token_str) {return Token::Number(Num::unitless(token_str));}
-                match token_str {
-                    "+" => {Token::Add}
-                    "-" => {Token::Sub}
-                    "*" => {Token::Mul}
-                    "/" => {Token::Div}
-                    "%" => {Token::Mod}
-                    "(" => {Token::LBrac}
-                    ")" => {Token::RBrac}
-                    "^" => {Token::Pow}
-                    "=" => {Token::Assign}
-                    "," => {Token::Seperator}
-                    _ => {
-                        // No Operator Matches
-                        // Test for Keyword:
-                        if is_keyword(token_string) {
-                            return Token::Keyword(token_string.clone());
+                if utils::is_number(token_str) {out_tokens.push(Token::Number(Num::unitless(token_str)));}
+                else {
+                    out_tokens.push(match token_str {
+                        "+" => {Token::Add}
+                        "-" => {Token::Sub}
+                        "*" => {Token::Mul}
+                        "/" => {Token::Div}
+                        "%" => {Token::Mod}
+                        "(" => {Token::LBrac}
+                        ")" => {Token::RBrac}
+                        "^" => {Token::Pow}
+                        "=" => {Token::Assign}
+                        "," => {Token::Seperator}
+                        _ => {
+                            // No Operator Matches
+                            // Test for Keyword:
+                            if is_keyword(token_string) {
+                                Token::Keyword(token_string.clone())
+                            }
+                            else if super::funcs::is_function(calc, token_string) {
+                                // Check if there is an assign token later (after current token):
+                                if tokens[idx..tokens.len()].contains(&Token::Unknown("=".to_string())) {
+                                    Token::Var(token_string.clone())
+                                }
+                                // We have a normal function call, because there is no assign token
+                                // later
+                                else {
+                                    Token::Func(token_string.clone())
+                                }
+                            }
+                            else {
+                                Token::Var(token_string.clone())
+                            }
                         }
-                        if super::funcs::is_function(calc, token_string) {
-                            return Token::Func(token_string.clone())
-                        }
-                        else {
-                            return Token::Var(token_string.clone());
-                        }
-                    }
+                    });
                 }
             },
             _ => {panic!()}
         }
-    }).collect()
+    }
+    out_tokens
 }
 
 fn match_units(mut tokens: Vec<Token>) -> Vec<Token> {
