@@ -146,3 +146,26 @@ fn precedence() {
     query(&mut calc, "10^-7 meter", "(10^(-7)) * meter");
     query(&mut calc, "2^log2(8)", "8");
 }
+
+#[test]
+fn user_defined_functions() {
+    let mut calc = make_default_calc();
+
+    query(&mut calc, "custom_add_one(x) = x+1", "1");
+    query(&mut calc, "custom_add_one(0)", "1");
+
+    // Multiple Variables
+    query(&mut calc, "custom_add(x,y) = x+y", "1");
+    query(&mut calc, "custom_add(2,7)", "9");
+
+    // No Variable
+    query(&mut calc, "custom_add_no_var(x) = 6+1", "1");
+    query(&mut calc, "custom_add_no_var(0)", "7");
+    query(&mut calc, "custom_add_no_var(500)", "7");
+
+    // Edge cases
+    // This could fail, because variables should not be numbers, only letters? 
+    // FIX: DECIDE FOR ONE OF THE OPTIONS
+    query(&mut calc, "custom_add_fail(3) = 3+1", "1");
+    query(&mut calc, "custom_add_fail(0)", "4");
+}
