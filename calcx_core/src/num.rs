@@ -13,7 +13,7 @@ pub struct Num {
 #[allow(unused)]
 impl Num {
     pub fn new(quantity: &str, units_vec: Vec<(char, i8)>) -> Num {
-        let quantity = Float::parse(quantity).expect("Could not parse this number as a number? This should never happen!");
+        let quantity = Float::parse(quantity).expect("Could not parse this number as a number? This should never happen! Developer must have been stupid");
         let quantity = Float::with_val(crate::PRECISION, quantity);
         Num { quantity, units: Units::new(units_vec) }
     }
@@ -74,14 +74,14 @@ impl Num {
         if self.units == num2.units {
             return Ok(Num::from(self.quantity.clone()+num2.quantity.clone(), self.units.clone()))
         }
-        Err(String::from("Operation failed"))
+        Err(String::from("Operation failed, number not unitsless"))
     }
 
     pub fn sub(&self, num2: &Num) -> Result<Num, String> {
         if self.units == num2.units {
             return Ok(Num::from(self.quantity.clone()-num2.quantity.clone(), self.units.clone()))
         }
-        Err(String::from("Operation failed"))
+        Err(String::from("Operation failed, number not unitsless"))
     }
 
     pub fn mul(&self, num2: &Num) -> Result<Num, String> {
@@ -105,7 +105,7 @@ impl Num {
 
     pub fn powf(&self, num2: &Num) -> Result<Num, String> {
         // exponent is expected to be unitless / dimensionless
-        if !num2.is_unitless() {return Err(String::from("Exponent is not dimensionless"))}
+        if !num2.is_unitless() {return Err(String::from("Exponent is not unitless"))}
 
         // Taking a negative Number to the power of something is impossible (if exponent is *not* an
         // integer, so we have different cases: )
@@ -148,61 +148,61 @@ impl Num {
     pub fn sin(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().sin())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn cos(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().cos())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn tan(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().tan())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn arcsin(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().asin())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn arccos(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().acos())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn arctan(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().atan())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn abs(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().abs())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn round(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().round())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn round_to(&self, digits: u32) -> Result<Num, String> {
-        if !self.is_unitless() {return Err(String::from("Operation failed, not unitless"))}
+        if !self.is_unitless() {return Err(String::from("Operation failed, number not unitless"))}
         let mut shift_ten = Float::with_val(crate::PRECISION, 10).pow(digits);
 
         let bigger: Float = (self.quantity.clone()*shift_ten.clone()).round();
@@ -212,24 +212,24 @@ impl Num {
     pub fn ceil(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().ceil())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn floor(&self) -> Result<Num, String> {
         match self.is_unitless() {
             true => Ok(Num::unitless_float(self.quantity.clone().floor())),
-            false => Err(String::from("Operation failed")),
+            false => Err(String::from("Operation failed, number not unitless")),
         }
     }
 
     pub fn log(&self, base: &Num) -> Result<Num, String> {
-        if !self.is_unitless() || !base.is_unitless() {return Err(String::from("Base and log required to be unitless"))};
+        if !self.is_unitless() || !base.is_unitless() {return Err(String::from("Base and Log are required to be unitless"))};
         Ok(Num::unitless_float(self.quantity.clone().log2()).div(&Num::unitless_float(base.get_quant().log2()))?)
     }
 
     pub fn exp(&self) -> Result<Num, String> {
-        if !self.is_unitless() {return Err(String::from("Base required to be unitless"))};
+        if !self.is_unitless() {return Err(String::from("Base is required to be unitless"))};
         Ok(Num::unitless_float(self.quantity.clone().exp()))
     }
 

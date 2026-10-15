@@ -42,6 +42,9 @@ impl Calc {
         // println!{"{args:?}"}
         let mut calculation_recursive: Result<Expr, String> = self.userfunctions.get_func(func_str);
 
+        // First test if we have the right number of arguments
+        // TODO: Test if the number of arguments is correct
+
         // We want to replace Binary operator Tokens (e.g. Var("00")) with the actual numbers given
         // for these variable places (e.g. Var("00") represents the first variable)
 

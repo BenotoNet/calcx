@@ -46,15 +46,15 @@ impl Calc {
     pub fn get_ans(&self) -> Result<Expr, String> {
         match self.history.last() {
             Some(Expr::Number(num)) => Ok(Expr::Number(num.clone())),
-            _ => Err(String::from("There is no last answer")),
+            _ => Err(String::from("There is no last answer yet or it is not accessible")),
         }
     }
 
     pub fn get_last_nth_ans(&self, nth: usize) -> Result<Expr, String> {
-        if nth >= self.history.len() {return Err(String::from("That Answer does not exist"))}
+        if nth >= self.history.len() {return Err(String::from("That answer does not exist"))}
         match self.history.iter().nth(self.history.len()-nth) {
             Some(Expr::Number(num)) => Ok(Expr::Number(num.clone())),
-            _ => Err(String::from("Answer not accessible")),
+            _ => Err(String::from("That answer is not accessible")),
         }
     }
 
@@ -66,7 +66,7 @@ impl Calc {
     fn expect(&mut self, token: Token) -> Result<(), String> {
         match std::mem::discriminant(&self.advance()?) == std::mem::discriminant(&token) {
             true => Ok(()),
-            false => Err(String::from("Expected a Token which was not next."))
+            false => Err(String::from("Unexpected token (different one was expected)"))
         }
     }
 
@@ -74,7 +74,7 @@ impl Calc {
     fn peek(&self) -> Result<Token, String> {
         return match self.tokens.get(self.current).cloned() {
             Some(v) => Ok(v),
-            _ => Err(String::from("self.peek failed"))
+            _ => Err(String::from("There is a character missing"))
         };
     }
 
@@ -94,7 +94,7 @@ impl Calc {
         self.current += 1;
         match self.tokens.get(self.current-1).cloned() {
             Some(v) => Ok(v),
-            _ => Err(String::from("self.advance failed")),
+            _ => Err(String::from("Another character was expected but did not exist")),
         }
     }
 
