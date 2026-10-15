@@ -26,7 +26,7 @@ pub enum Setting {
 // NOTE: Getting the paths for saving history and config
 fn home_path() -> String {format!{"{}/.config/calcx", std::env::home_dir().unwrap().display()} }
 fn history_path() -> String {format!{"{}/history.txt", home_path()}}
-fn config_path() -> String {format!{"{}/config.yaml", home_path()}}
+fn config_path() -> String {format!{"{}/config.json", home_path()}}
 
 pub struct UI {
     calc: Calc,
@@ -56,7 +56,7 @@ impl UI {
             match calcx_core::persistence::load_from_file(&config_path()) {
                 Ok(v) => {
                     // there is actual useful data here, set calculator to the loaded one
-                    ui.calc = v
+                    ui.calc = v;
                 },
                 _ => {println!("There was an error reading the config file, consider deleting or overwriting.")},
             };

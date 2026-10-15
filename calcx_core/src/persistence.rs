@@ -1,9 +1,9 @@
 use std::fs;
-use serde_yaml;
+use serde_json;
 use crate::Calc;
 
 pub fn save_to_file(calc: &Calc, path: &str) -> Result<(), String> {
-    let serialized = match serde_yaml::to_string(calc) {
+    let serialized = match serde_json::to_string(calc) {
         Ok(v) => v,
         Err(e) => return Err(e.to_string()),
     };
@@ -27,7 +27,7 @@ pub fn load_from_file(path: &str) -> Result<Calc, String> {
     };
 
     // Rebuild calculator from config file
-    let calc = match serde_yaml::from_str(&file_contents) {
+    let calc = match serde_json::from_str(&file_contents) {
         Ok(v) => v,
         Err(e) => return Err(e.to_string()),
     };
