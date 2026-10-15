@@ -1,4 +1,6 @@
-# SpeedCrunch has fallen
+# This Project does **NOT** allow code contribution by large language models. 
+
+# History and Context: SpeedCrunch has fallen
 
 The main contributor to the calculator this whole project was originally "based on" (at least the idea) has recently changed from a human to *claude code*... 
 For me, that results in my inability to use said software; I might seem old-fashioned or stupid, but I hate everything about AI; 
