@@ -13,6 +13,7 @@ This program is a calculator with advanced features like units, functions, varia
 Most things are designed as intuitively as possible (at least from a programmer's perspective)
 
 Command Line Interface options are: 
+
     -o / --output-only => output each result of each query on its own line without any formatting (useful for piping)
     -h / --help => printing this help menu
     -p / --precision <Integer> => The number of digits to show (correct up to ~1200 decimal digits; 4096 bits of precision)
@@ -24,6 +25,7 @@ $ ./calcx --output-only --precision 32 \"sqrt(2)\" \"-tan(pi)\" > output.txt
 
 When the program is run without any single-execute commands, you are thrown into an interactive session. 
 Possible Meta-Keywords:
+
     - clear => clears the screen
     - quit / exit / CTRL-C => exits the interactive session (CTRL-C however does not save history)
     - help => displays this help screen
@@ -31,6 +33,7 @@ Possible Meta-Keywords:
 
 To run a query, simply type the query and press enter. 
 Example queries to get to know the calculator and its capabilities:
+
     - 60 + 4.5 * (3+-1)^2 - 9
     - 5 meters / second + 5 kilo meters / hour to miles / day
     - sin((sqrt(log(10, 1000000000)) + root(3, 27)) * 10 degrees)
