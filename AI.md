@@ -2,7 +2,7 @@
 
 # History and Context: SpeedCrunch has fallen
 
-The main contributor to the calculator this whole project was originally "based on" (at least the idea) has recently changed from a human to *claude code*... 
+The contributor to the calculator this whole project was originally "based on" (at least the idea) has recently changed from a human to *claude code*... To be fair, not actually. Claude only has a small number of contributions, but nonetheless the amount of contributions has recently sky-rocketed; I would guess the maintainer uses at least some amount of AI as a tool. 
 For me, that results in my inability to use said software; I might seem old-fashioned or stupid, but I hate everything about AI; 
 The high cost for the environment, the injustice of data it was trained on, the stupid hype bound to burst at some point; just to mention a few. 
 Therefore, I prompty decided to never use SpeedCrunch ever again...

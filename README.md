@@ -3,9 +3,10 @@ Hey there!
 This is my personal project, so don't expect high code quality or any type of reliability; there are already known bugs I will not bother to fix...
 It is simply and solely a hobby project. 
 
-Current ToDo-List:
-[Link to ToDo-List](./todo.md)
-[AI](./AI.md)
+Important Links:
+
+- [Link to ToDo-List](./todo.md)
+- [AI](./AI.md)
 
 Tutorial:
 This program is a calculator with advanced features like units, functions, variables and many more to come. 

@@ -1,71 +1,4 @@
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions / requirements / ToDos:
-- [x] normal math operations (+, -, *, /, (), ^, etc)
-- [x] leaving out * for multiplication
-- [x] Getting negative Numbers to work
-- [x] Refactoring of Document Structure (more splitting into smaller files)
-- [x] add powers of 10 keywords functionality
-- [x] Adding all obscure units (volts -> Si units)
-- [x] Handling Keywords (e.g. "to" correctly)
-- [x] System for unit-conversion (-> 5 gram to kilogram)
-- [x] working with units (-> kilo gram to gram)
-- [x] Variables & Assignments (-> "hello = 2", "2*hello => 4")
-- [x] Variable Multiplication if left out (hello world => hello * world)
-- [x] Functions like sqrt() or sin()
-- [x] ans / answer keyword for the result of last calculation
-- [x] Copy to clipboard function
-- [x] high ceiling for overflow (-> e.g. multiplying very large numbers with each other) (-> For that I will need to change from f64 to a custom type (probably external crate...))
-- [x] Fix (-3)^5 => NaN
-- [x] Fix (-2)-2 != 4 (--> -2 * -2 is what is being calculated; same as above)
-- [x] Fix 5 05 => 55 (should be 505)
-- [x] FIX 5 10 => 60
-- [x] Fix -(5+5) (currently crashes)
-- [x] Fix 10^31 planck => Is supposedly not unitless
-- [x] high precision (-> depending on user settings, but at least maximum of 1024 decimal digits) (-> See above)
-- [x] Make --output-only cli option with -o
-- [x] Improve Precision on "Variables (e.g. Pi)"
-- [x] user defined settings (precision, etc)
-- [x] implement other misc functions: ln, exp, arcsin, arccos, floor, ...
-- [x] Functions (with multiple arguments)
-- [x] Fix bugs for Functions: add_one(add_one(5)) should be 7
-- [x] Fix: sqrt(add_one(8)) should be 3
-- [x] Fix 2 add_one(5) & 2 * add_one(5)
-- [x] Fix 5-+2 (originally gave error)
-- [x] Procedual categorization of functions by analyzing output Errors
-- [x] Port simple functions (except "to") to be functions which could take multiple arguments (-> Having everything in one place)
-- [x] Fix "hello = 2; add_one(hello)" => Variables as Arguments (-> Don't make a new calculator, use the current one (because variable storage is not transfered over currently), or replicate the entire calculator)
-- [x] Add Semicolon to normal queries as well to execute multiple at once (e.g. 4+4; 5+5)
-- [x] Fix 2 sqrt(2), 2*sqrt(2), sqrt(2) * 2, etc (-> Maybe with Brackets or by porting to function logic)
-- [x] Fractional Units (e.g. Sqrt(second))
-- [x] Replace all Option<Expr> with Result<Expr, String> to be able to use ?
-- [x] stop frequent crashes and handle errors instead (-> Operation is impossible, might require dimensionless argument, etc)
-- [x] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated) -> Fix by using context to switch between - as *-1 and - as binary operation
-- [x] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
-- [x] Help Menu
-- [x] Seperation of Core and CLI
-- [x] Change Settings during runtime
-- [x] Auto Complete (-> Functions, variables, keywords)
-- [x] Sort Auto Complete Recomendations by length (shortest answer first)
-- [x] Nicer display of output units + System for doing "to" keyword (appending unit string?)
-- [x] Automatic display of correct unit (5 volt * ampere should automatically be watt)
-- [x] function to just get units
-- [x] Add all special units (-> Maybe system for handling hash map in reverse?)
-- [x] List SI units in order (with negatives last)
-- [x] When using "in" or "to" keyword, keep the units alive
-- [x] sqrt(ans) always says last answer is not accessible
-- [x] add slight color 
-- [x] fix kelvin / second => currently gives error
-- [x] bug: 10^-7 meter throws error -> what is calculated is: 10^(-7 * meter)
-- [x] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?) (use serde)
-- [x] Quick copying of previous answers (also before directly last one)
-- [x] Fix nth_last 3 * 2
-- [x] Fix 2^3^2 != 512
-- [x] Autosave Option
-- [x] custom user-defined functions (add_one(number) = number + 1, etc)
-- [x] Add tests to set custom user defined functions in stone
-- [x] Tests with variables and functions and user-defined functions all combined
-- [x] multiple re-assignment of user-functions
-- [x] Fix saving custom user-defined functions
-- [x] Migration from YAML to TOML or JSON
 - [ ] System of distribution & standardized way to run (-> any terminal, automatic installation, icon)
 - [ ] Improve Error Messages
 - [ ] make a demo on the codeberg page for showing what calcx can do (README, [brainstorming](./project_showcase.md))
@@ -74,3 +7,70 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] refactor to have nicer code (e.g. more fragmentation)
+- [x] Migration from YAML to TOML or JSON
+- [x] Fix saving custom user-defined functions
+- [x] multiple re-assignment of user-functions
+- [x] Tests with variables and functions and user-defined functions all combined
+- [x] Add tests to set custom user defined functions in stone
+- [x] custom user-defined functions (add_one(number) = number + 1, etc)
+- [x] Autosave Option
+- [x] Fix 2^3^2 != 512
+- [x] Fix nth_last 3 * 2
+- [x] Quick copying of previous answers (also before directly last one)
+- [x] saving functions to profile (+ settings, Variables (only after save keyword?; Drop Variable keyword? Reset?), history?) (use serde)
+- [x] bug: 10^-7 meter throws error -> what is calculated is: 10^(-7 * meter)
+- [x] fix kelvin / second => currently gives error
+- [x] add slight color 
+- [x] sqrt(ans) always says last answer is not accessible
+- [x] When using "in" or "to" keyword, keep the units alive
+- [x] List SI units in order (with negatives last)
+- [x] Add all special units (-> Maybe system for handling hash map in reverse?)
+- [x] function to just get units
+- [x] Automatic display of correct unit (5 volt * ampere should automatically be watt)
+- [x] Nicer display of output units + System for doing "to" keyword (appending unit string?)
+- [x] Sort Auto Complete Recomendations by length (shortest answer first)
+- [x] Auto Complete (-> Functions, variables, keywords)
+- [x] Change Settings during runtime
+- [x] Seperation of Core and CLI
+- [x] Help Menu
+- [x] Make an extensive testing suite => testing if it gives the same answers as expected (use AI to generate testing suite?)
+- [x] Fix 1-2^2 (currently gives answer 5 since 1+(-2)^2 is what is being calculated) -> Fix by using context to switch between - as *-1 and - as binary operation
+- [x] stop frequent crashes and handle errors instead (-> Operation is impossible, might require dimensionless argument, etc)
+- [x] Replace all Option<Expr> with Result<Expr, String> to be able to use ?
+- [x] Fractional Units (e.g. Sqrt(second))
+- [x] Fix 2 sqrt(2), 2*sqrt(2), sqrt(2) * 2, etc (-> Maybe with Brackets or by porting to function logic)
+- [x] Add Semicolon to normal queries as well to execute multiple at once (e.g. 4+4; 5+5)
+- [x] Fix "hello = 2; add_one(hello)" => Variables as Arguments (-> Don't make a new calculator, use the current one (because variable storage is not transfered over currently), or replicate the entire calculator)
+- [x] Port simple functions (except "to") to be functions which could take multiple arguments (-> Having everything in one place)
+- [x] Procedual categorization of functions by analyzing output Errors
+- [x] Fix 5-+2 (originally gave error)
+- [x] Fix 2 add_one(5) & 2 * add_one(5)
+- [x] Fix: sqrt(add_one(8)) should be 3
+- [x] Fix bugs for Functions: add_one(add_one(5)) should be 7
+- [x] Functions (with multiple arguments)
+- [x] implement other misc functions: ln, exp, arcsin, arccos, floor, ...
+- [x] user defined settings (precision, etc)
+- [x] Improve Precision on "Variables (e.g. Pi)"
+- [x] Make --output-only cli option with -o
+- [x] high precision (-> depending on user settings, but at least maximum of 1024 decimal digits) (-> See above)
+- [x] Fix 10^31 planck => Is supposedly not unitless
+- [x] Fix -(5+5) (currently crashes)
+- [x] FIX 5 10 => 60
+- [x] Fix 5 05 => 55 (should be 505)
+- [x] Fix (-2)-2 != 4 (--> -2 * -2 is what is being calculated; same as above)
+- [x] Fix (-3)^5 => NaN
+- [x] high ceiling for overflow (-> e.g. multiplying very large numbers with each other) (-> For that I will need to change from f64 to a custom type (probably external crate...))
+- [x] Copy to clipboard function
+- [x] ans / answer keyword for the result of last calculation
+- [x] Functions like sqrt() or sin()
+- [x] Variable Multiplication if left out (hello world => hello * world)
+- [x] Variables & Assignments (-> "hello = 2", "2*hello => 4")
+- [x] working with units (-> kilo gram to gram)
+- [x] System for unit-conversion (-> 5 gram to kilogram)
+- [x] Handling Keywords (e.g. "to" correctly)
+- [x] Adding all obscure units (volts -> Si units)
+- [x] add powers of 10 keywords functionality
+- [x] Refactoring of Document Structure (more splitting into smaller files)
+- [x] Getting negative Numbers to work
+- [x] leaving out * for multiplication
+- [x] normal math operations (+, -, *, /, (), ^, etc)
