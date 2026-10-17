@@ -1,4 +1,5 @@
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions / requirements / ToDos:
+- [ ] Autocomplete custom defined functions and variables
 - [ ] Improve Error Messages
 - [ ] make a demo on the codeberg page for showing what calcx can do (README, [brainstorming](./project_showcase.md))
 - [ ] **Release V1.0.0**
