@@ -1,4 +1,4 @@
-# This Project does **NOT** allow code contribution by large language models. 
+# This Project does **NOT** Allow Code Contribution by Large Language Models. Code written by AI may also **NOT** be submitted, you as the programmer are held responsible for any code contribution. 
 
 # History and Context: SpeedCrunch has fallen
 
