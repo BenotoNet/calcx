@@ -74,14 +74,14 @@ impl Num {
         if self.units == num2.units {
             return Ok(Num::from(self.quantity.clone()+num2.quantity.clone(), self.units.clone()))
         }
-        Err(String::from("Operation failed, number not unitsless"))
+        Err(String::from("Operation failed; unequal units cannot be added"))
     }
 
     pub fn sub(&self, num2: &Num) -> Result<Num, String> {
         if self.units == num2.units {
             return Ok(Num::from(self.quantity.clone()-num2.quantity.clone(), self.units.clone()))
         }
-        Err(String::from("Operation failed, number not unitsless"))
+        Err(String::from("Operation failed, unequal units cannot be added"))
     }
 
     pub fn mul(&self, num2: &Num) -> Result<Num, String> {
@@ -131,7 +131,7 @@ impl Num {
                             return Ok(Num::from(output_real.get_quant(), output_units));
                         }
                     },
-                    false => return Err(String::from("Exponent is not an integer")),
+                    false => return Err(String::from("Exponent is must be a whole number if base is negative")),
                 }
             }
             false => {

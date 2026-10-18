@@ -39,6 +39,11 @@ impl Calc {
     }
 
     pub fn run_custom_func(&self, func_str: &str, args: Vec<Expr>) -> Result<Expr, String> {
+        // Check if right number of arguments:
+        if args.len() != self.userfunctions.get_arg_num(func_str)? {
+            return Err(String::from("Wrong number of arguments, redefine if needed"))
+        }
+
         // println!{"{args:?}"}
         let mut calculation_recursive: Result<Expr, String> = self.userfunctions.get_func(func_str);
 
@@ -61,7 +66,7 @@ impl Calc {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FunctionStorage {
-    storage: HashMap<String, Expr>,
+    storage: HashMap<String, (Expr, usize)>,
 }
 
 impl FunctionStorage {
@@ -75,13 +80,20 @@ impl FunctionStorage {
 
     pub fn get_func(&self, func: &str) -> Result<Expr, String> {
         match self.storage.get(func) {
-            Some(v) => Ok(v.clone()),
+            Some(v) => Ok(v.clone().0),
             _ => Err(String::from("Could not get Function")),
         }
     }
 
-    pub fn set_func(&mut self, key: String, value: Result<Expr, String>) -> Result<(), String> {
-        self.storage.insert(key, value?);
+    pub fn get_arg_num(&self, func: &str) -> Result<usize, String> {
+        match self.storage.get(func) {
+            Some(v) => Ok(v.clone().1),
+            _ => Err(String::from("Could not get Function")),
+        }
+    }
+
+    pub fn set_func(&mut self, key: String, value: Result<Expr, String>, args: usize) -> Result<(), String> {
+        self.storage.insert(key, (value?, args));
         Ok(())
     }
 }

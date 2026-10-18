@@ -178,7 +178,7 @@ impl Calc {
 
                             let right = self.parse_expression();
                             
-                            self.userfunctions.set_func(var, right)?;
+                            self.userfunctions.set_func(var, right, variable_list_ordered.len())?;
                             Ok(Expr::Number(Num::unitless("1.0")))
                         },
                         _ => {return Err(String::from("Something is wrong, there is an assign sign at the wrong place"))}
