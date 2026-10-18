@@ -1,5 +1,4 @@
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions / requirements / ToDos:
-- [ ] Autocomplete custom defined functions and variables
 - [ ] Improve Error Messages
 - [ ] make a demo on the codeberg page for showing what calcx can do (README, [brainstorming](./project_showcase.md))
 - [ ] **Release V1.0.0**
@@ -8,6 +7,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] refactor to have nicer code (e.g. more fragmentation)
+- [x] Autocomplete custom defined functions and variables
 - [x] Migration from YAML to TOML or JSON
 - [x] Fix saving custom user-defined functions
 - [x] multiple re-assignment of user-functions

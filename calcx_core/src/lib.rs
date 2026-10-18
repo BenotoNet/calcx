@@ -126,6 +126,15 @@ impl Calc {
         tree
     }
 
+    pub fn get_customs(&self) -> Vec<String> {
+        let mut output = vec![];
+        let variables: Vec<String> = self.variables.get_keys();
+        let functions: Vec<String> = self.userfunctions.get_keys();
+        output.extend(variables);
+        output.extend(functions);
+        output
+    }
+
     pub fn run(&mut self, query: &str, save_history: bool) -> Result<Expr, String> {
         self.current = 0;
 

@@ -8,7 +8,7 @@ use std::path::Path;
 use std::fs;
 
 mod autocomplete;
-use rustyline::{Editor, history::DefaultHistory};
+use rustyline::{Editor, history::DefaultHistory, Config};
 
 use crate::utils;
 
@@ -38,7 +38,11 @@ impl UI {
     pub fn new(options: Vec<Setting>) -> UI {
         // Default Precision
         let default_precision = 15;
-        let mut rl = Editor::new().unwrap();
+
+        // change config of rustyline: 
+        let config = Config::builder()
+            .build();
+        let mut rl = Editor::with_config(config).unwrap();
 
         let helper = autocomplete::AutoComplete::build();
         rl.set_helper(Some(helper));
@@ -56,6 +60,7 @@ impl UI {
             match calcx_core::persistence::load_from_file(&config_path()) {
                 Ok(v) => {
                     // there is actual useful data here, set calculator to the loaded one
+                    ui.add_autocompletes(v.get_customs());
                     ui.calc = v;
                 },
                 _ => {println!("There was an error reading the config file, consider deleting or overwriting.")},
@@ -73,6 +78,12 @@ impl UI {
         }
         if exit_after_single_queries {exit(0)};
         return ui;
+    }
+
+    fn add_autocompletes(&mut self, autocompletes: Vec<String>) {
+        for word in autocompletes {
+            self.stdout.helper_mut().expect("could not get helper").add_word(word);
+        }
     }
 
     fn exit(&self, output_code: i32) -> Result<(), String> {
@@ -254,6 +265,9 @@ impl UI {
                 if !conversion_present {
                     self.run_query(&query, true);
                 }
+
+                // Append user-defined functions to autocomplete options
+                self.add_autocompletes(self.calc.get_customs());
             }
         }
     }

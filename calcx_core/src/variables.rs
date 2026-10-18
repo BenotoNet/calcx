@@ -14,6 +14,10 @@ impl VariableStorage {
         VariableStorage { storage: HashMap::new() }
     }
 
+    pub fn get_keys(&self) -> Vec<String> {
+        self.storage.keys().into_iter().map(|v| {v.to_string()}).collect()
+    }
+
     pub fn get_var(&self, var: String) -> Result<Expr, String> {
         match self.storage.get(&var) {
             Some(v) => Ok(Expr::Number(v.clone())),

@@ -69,6 +69,10 @@ impl FunctionStorage {
         FunctionStorage { storage: HashMap::new() }
     }
 
+    pub fn get_keys(&self) -> Vec<String> {
+        self.storage.keys().into_iter().map(|v| {v.to_string()}).collect()
+    }
+
     pub fn get_func(&self, func: &str) -> Result<Expr, String> {
         match self.storage.get(func) {
             Some(v) => Ok(v.clone()),
