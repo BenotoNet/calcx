@@ -47,14 +47,14 @@ impl UI {
         let helper = autocomplete::AutoComplete::build();
         rl.set_helper(Some(helper));
 
-        let mut ui = UI { calc: Calc::new(default_precision), stdout: rl, persistent: vec![Setting::AutoSave] };
-
         // Load previous settings, history, and variables
         if Path::new(&history_path()).exists() {
             // NOTE: Load previous history from history path
-            // FIX: currently not implemented
-            // rl.load_history(HISTORY_PATH).unwrap();
+            rl.load_history(&history_path()).expect("Could not load history");
         }
+
+        let mut ui = UI { calc: Calc::new(default_precision), stdout: rl, persistent: vec![Setting::AutoSave] };
+
         if Path::new(&config_path()).exists() {
             // NOTE: If we have a config file present, we want to load it
             match calcx_core::persistence::load_from_file(&config_path()) {
@@ -86,14 +86,14 @@ impl UI {
         }
     }
 
-    fn exit(&self, output_code: i32) -> Result<(), String> {
+    fn exit(&mut self, output_code: i32) -> Result<(), String> {
         if self.persistent.contains(&Setting::AutoSave) {
             self.save()?;
         };
         exit(output_code);
     }
 
-    fn save(&self) -> Result<(), String> {
+    fn save(&mut self) -> Result<(), String> {
         // Check if the parent dir exists
         if !Path::new(&home_path()).exists() {
             // There is no config home folder ($HOME/.config/calcx), therefore, we want to make it
@@ -106,10 +106,21 @@ impl UI {
         calcx_core::persistence::save_to_file(&self.calc, &config_path()).unwrap(); 
 
         // Save History
-        // FIX: currently not implemented
-        // self.stdout.save_history(HISTORY_PATH).unwrap();
+        self.stdout.save_history(&history_path()).expect("Could not save history");
 
         self.output("Done");
+        Ok(())
+    }
+
+    fn reset(&mut self) -> Result<(), String> {
+        self.calc = Calc::new(15); 
+        self.persistent = vec![Setting::AutoSave]; 
+        self.output("Done");
+        self.stdout.clear_history().expect("Could not clear history");
+        match std::fs::remove_file(&history_path()) {
+            Ok(v) => Ok(v),
+            Err(e) => Err(e.to_string())
+        }?;
         Ok(())
     }
 
@@ -201,10 +212,8 @@ impl UI {
 
                     // NOTE: Logic for saving calculator & resetting to factory defaults
                     "reset"|"RESET" => {
-                        self.calc = Calc::new(15); 
-                        self.persistent = vec![Setting::AutoSave]; 
-                        self.output("Done");
-                        return self.interactive()
+                        self.reset()?;
+                        return self.interactive();
                     },
                     "save"|"SAVE" => {
                         self.save()?;
