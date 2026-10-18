@@ -1,7 +1,23 @@
 # Project Description
 Hey there!
-This is my personal project, so don't expect high code quality or any type of reliability; there are already known bugs I will not bother to fix...
-It is simply and solely a hobby project. 
+However you might have found this project, you're here now! So here's a short rundown of what this is and isn't:
+
+1. First of all: This project is a command line tool to quickly and easily calculate all sorts of things. 
+2. The calculator does have advanced features compared to a normal pocket calculator, including:
+
+    - units
+    - physical constants
+    - user-assigned variables
+    - user-defined functions
+
+3. This is a *Hobby Project!*
+
+Unfortunately, I cannot garantee bug-free code (I mean, who can?), but I am trying my best to get to bugs before others do.
+If you find a bug, I would be very grateful if you submitted it or let me know some other way!
+To see if there are known bugs I am already aware of but have not got around to solving, look at the todo-list linked to at the bottom.
+
+I hope you find my *calcxulator* useful!
+
 
 Important Links:
 
