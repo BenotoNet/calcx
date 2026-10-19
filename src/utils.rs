@@ -13,23 +13,25 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Setting> {
         // Command line argument
         if opt.starts_with("-") {
             match opt.as_str() {
-                "--help"|"-h" => {help_menu(); std::process::exit(0)},
-                "--precision"|"-p" => {
+                "--help" | "-h" => {
+                    help_menu();
+                    std::process::exit(0)
+                }
+                "--precision" | "-p" => {
                     // new precision
                     index += 1;
                     let precision: usize = opt.parse().expect("Not a valid new Precision Value!");
                     option_queue.push(Setting::Precision(precision));
                 }
-                "--output-only"|"-o" => {
+                "--output-only" | "-o" => {
                     option_queue.push(Setting::OutputOnly);
                 }
-                "--autosave"|"-s" => {
+                "--autosave" | "-s" => {
                     option_queue.push(Setting::AutoSave);
                 }
-                _ => {},
+                _ => {}
             }
         }
-
         // Otherwise, we have a normal exec-once command / commands
         else {
             if opt.contains(";") {
@@ -37,8 +39,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Setting> {
                 for cmd in opt.split(";") {
                     option_queue.push(Setting::SingleQuery(cmd.to_string()))
                 }
-            }
-            else {
+            } else {
                 option_queue.push(Setting::SingleQuery(opt.clone()));
             }
         }
@@ -50,11 +51,11 @@ pub fn parse_cli_args(args: Vec<String>) -> Vec<Setting> {
 }
 
 pub fn success(output: &str) {
-    println!{"            = {output}\n"};
+    println! {"            = {output}\n"};
 }
 
 pub fn info(output: &str) {
-    println!{"{output}"}
+    println! {"{output}"}
 }
 
 // Printing the entire help menu for convinience purposes as a function
@@ -72,7 +73,8 @@ Command Line Interface options are:
     -s / --auto-save => automatically saves variables, functions, and history when exiting
 
 Additionally, you can append calculations after the options in quotation marks which well then be executed (after that the program will exit, also to allow piping of commands)
-Multiple commands / calculations within a single string can be seperated with semicolons (";"), they will be executed sequentually before the next string.
+Multiple commands / calculations within a single string can be seperated with semicolons (";
+    "), they will be executed sequentually before the next string.
 
 Example command:
 $ ./calcx --output-only --precision=32 \"my_var = 1/2*pi\" \"sin(my_var)\" > output.txt

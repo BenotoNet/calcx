@@ -1,4 +1,4 @@
-# Brainstorming for features to present on the codeberg page
+# Brainstorming for features to present on the codeberg/github page
 
 ### Interactive Session:
 - [ ] basic calculation

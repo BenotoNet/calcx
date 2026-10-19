@@ -162,12 +162,16 @@ fn user_defined_functions() {
     query(&mut calc, "custom_add_no_var(x) = 6+1", "1");
     query(&mut calc, "custom_add_no_var(0)", "7");
     query(&mut calc, "custom_add_no_var(500)", "7");
+}
 
-    // Edge cases
-    // This could fail, because variables should not be numbers, only letters? 
-    // FIX: DECIDE FOR ONE OF THE OPTIONS
+#[test]
+fn user_defined_functions_edge_case() {
+    let mut calc = make_default_calc();
+
+    // Edge case
+    // This should fail, because variables should not be numbers, only letters
     query(&mut calc, "custom_add_fail(3) = 3+1", "1");
-    query(&mut calc, "custom_add_fail(0)", "4");
+    assert_eq!{calc.run_output("custom_add_fail(5)", false), String::from("Wrong number of arguments, redefine if needed")}
 }
 
 #[test]

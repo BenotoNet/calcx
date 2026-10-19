@@ -1,8 +1,9 @@
 use std::fs;
+use std::path::PathBuf;
 use serde_json;
 use crate::Calc;
 
-pub fn save_to_file(calc: &Calc, path: &str) -> Result<(), String> {
+pub fn save_to_file(calc: &Calc, path: &PathBuf) -> Result<(), String> {
     let serialized = match serde_json::to_string(calc) {
         Ok(v) => v,
         Err(e) => return Err(e.to_string()),
@@ -14,7 +15,7 @@ pub fn save_to_file(calc: &Calc, path: &str) -> Result<(), String> {
     return Ok(());
 }
 
-pub fn load_from_file(path: &str) -> Result<Calc, String> {
+pub fn load_from_file(path: &PathBuf) -> Result<Calc, String> {
     // Get file contents with error handling
     let file_contents: String = match String::from_utf8(
         match fs::read(path) {
