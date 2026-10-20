@@ -23,7 +23,7 @@ Important Links:
 
 - [Link to ToDo-List](./todo.md)
 - [AI](./AI.md)
-
-How to use the calculator:
-
 - [Tutorial & Examples](./examples.md)
+
+Demo: 
+
