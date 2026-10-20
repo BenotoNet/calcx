@@ -168,8 +168,14 @@ impl UI {
         // ask for new user input
 
         loop {
-            // New: rustyline, less styling but more useful
-            let query: String = match self.stdout.readline(&cformat! {"%G:%b^Calcxulate >> "}) {
+            let user_query = match cfg![windows] {
+                // Disable colors because they create bugs on windows
+                true => {format!{"Calcxulate >> "}},
+
+                // Otherwise they can stay on
+                false => {cformat!{"%G:%b^Calcxulate >> "}}
+            };
+            let query: String = match self.stdout.readline(&user_query) {
                 Ok(input) => input,
                 Err(e) => return Err(e.to_string()),
             };
@@ -339,7 +345,7 @@ impl UI {
             println! {"{}", result};
         } else {
             // Normal output with nice formatting
-            UI::format_output(&cformat! {"{}", result});
+            UI::format_output(&format! {"{}", result});
         }
     }
 
