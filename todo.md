@@ -1,5 +1,5 @@
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions / requirements / ToDos:
-- [ ] make a demo on the codeberg / github page for showing what calcx can do (README, [brainstorming](./project_showcase.md))
+- [ ] make a demo on the codeberg / github page for showing what calcx can do (README, [brainstorming](./demo/brainstoring_ideas.md))
 - [ ] System of distribution & standardized way to run (-> any terminal, automatic installation, icon)
 - [ ] **Release V0.1.0**
 - [ ] rewrite AI-written code

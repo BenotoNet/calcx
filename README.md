@@ -18,6 +18,13 @@ To see if there are known bugs I am already aware of but have not got around to 
 
 I hope you find my *calcxulator* useful!
 
+Installation:
+Linux: 
+Either copy the binary for your system into your bin folder (/usr/bin/) or use the installation script to do it for you
+
+Windows: 
+Currently, there is no supported way of installation, but you can use the calcx.exe file as a portable installation.
+
 
 Important Links:
 
