@@ -34,7 +34,7 @@ Important Links:
 Demo: 
 
 **Basics**
-[basics_demonstration_mp4](./demo/output/basics.mp4)
+<video src="./demo/output/basics.mp4" controls width=400, height=400></video>
 
 **Unit-System**
 [units_demonstration_mp4](./demo/output/units.mp4)
