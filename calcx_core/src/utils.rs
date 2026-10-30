@@ -19,8 +19,35 @@ pub fn is_int(num: &Num) -> bool {
     }
 }
 
+// Rewriting AI code from scratch:
+// What this block is supposed to do: 
+// Input: Decimal Float with ~1000 decimal digits
+// Optimal Output: 
+// Either: Decimal with x places (variable max_decimals)
+// Or: Scientific Notation for very big or very small numbers (e.g. 5.12 * 10^-21)
+
+pub fn format_float(num: &Float, max_decimals: usize) -> String {
+    let mut num_str = format!{"{:.*}", max_decimals, num};
+
+    // Check for non scientific notation
+    if !num_str.contains("e") && !num_str.contains("E") {
+        // We do not have scientific notation, therefore, we want to strip the . in the case that we
+        // don't need it
+        
+        // 1. Remove Trailing 0s if there is a dot
+        while num_str.ends_with("0") && num_str.contains(".") {
+            num_str.pop();
+        }
+        // 2. Remove trailing dot
+        if num_str.ends_with(".") {num_str.pop();}
+        return num_str
+    }
+
+    return num_str;
+}
+
 // Written by AI, sorry...
-pub fn format_float(x: &Float, max_decimals: usize) -> String {
+pub fn format_float_ai(x: &Float, max_decimals: usize) -> String {
     let s = format!("{:.*}", max_decimals, x);
 
     // If it's already not scientific notation, just trim it.
@@ -85,16 +112,3 @@ fn trim_scientific(s: String) -> String {
     let (mantissa, exp) = s.split_once(['e', 'E']).unwrap();
     format!("{}e{}", trim(mantissa.to_string()), exp)
 }
-
-// Old Version
-// pub fn format_float(num: &Float, max_decimals: usize) -> String {
-//     let mut s = format!{"{:.*}", max_decimals, num};
-//
-//     if s.contains('.') {
-//         s = s.trim_end_matches('0')
-//             .trim_end_matches('.')
-//             .to_string();
-//     }
-//
-//     return s;
-// }
