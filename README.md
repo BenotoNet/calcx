@@ -23,8 +23,7 @@ Linux:
 Either copy the binary for your system into your bin folder (/usr/bin/) or use the installation script to do it for you
 
 Windows: 
-Currently, there is no supported way of installation, but you can use the calcx.exe file as a portable installation.
-
+Currently, there is no supported way of installation, but you may simply use the provided *calcx.exe* binary.
 
 Important Links:
 
@@ -34,3 +33,20 @@ Important Links:
 
 Demo: 
 
+**Basics**
+[basics_demonstration_mp4](./demo/output/basics.mp4)
+
+**Unit-System**
+[units_demonstration_mp4](./demo/output/units.mp4)
+
+**Functions**
+[functions_demonstration_mp4](./demo/output/functions.mp4)
+
+**User-Defined Variables**
+[user_vars_demonstration_mp4](./demo/output/user_variables.mp4)
+
+**User-Defined Functions**
+[user_funcs_demonstration_mp4](./demo/output/user_functions.mp4)
+
+**Scriping and Piping**
+[piping_demonstration_mp4](./demo/output/piping.mp4)

@@ -3,14 +3,13 @@
 ### Interactive Session:
 - [x] basic calculation
 - [x] units
-- [ ] Functions
-- [ ] Custom User Variables
-- [ ] Custom User Functions
+- [x] Functions
+- [x] Custom User Variables
+- [x] Custom User Functions
 
 ### Command Line Interface:
-- [ ] Scripting: piping
-- [ ] Big list of calculations to do -> out: list of answers
-- [ ] Two calculations simultaneously: calcx --output-only "5+5" "10/2"
+- [x] Two calculations simultaneously: calcx --output-only "5+5" "10/2"
+- [x] Scripting: piping
 
 
 **Demos will be rendered using VHS**
