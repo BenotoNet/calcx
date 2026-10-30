@@ -34,19 +34,19 @@ Important Links:
 Demo: 
 
 **Basics**
-![](./demo/output/basics.mp4)
+![basics_demonstration_mp4](./demo/output/basics.mp4)
 
 **Unit-System**
-![](./demo/output/units.mp4)
+![units_demonstration_mp4](./demo/output/units.mp4)
 
 **Functions**
-![](./demo/output/functions.mp4)
+![functions_demonstration_mp4](./demo/output/functions.mp4)
 
 **User-Defined Variables**
-![](./demo/output/user_variables.mp4)
+![user_vars_demonstration_mp4](./demo/output/user_variables.mp4)
 
 **User-Defined Functions**
-![](./demo/output/user_functions.mp4)
+![user_funcs_demonstration_mp4](./demo/output/user_functions.mp4)
 
 **Scriping and Piping**
-![](./demo/output/piping.mp4)
+![piping_demonstration_mp4](./demo/output/piping.mp4)
