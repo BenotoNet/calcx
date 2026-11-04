@@ -84,22 +84,30 @@ pub fn format_float(num: &Float, max_decimals: usize) -> String {
     }
     // Non-Scientific
     else {
-         num_str = remove_zeros(num_str);
-         let negative = num_str.starts_with("-"); let num_str = num_str.trim_start_matches("-");
-         let exp = num_str.split(".").nth(0).unwrap().len()-1;
-         let digits = num_str.replace(".", "");
-         if exp > MAX_EXPONENT {
-             // We have more digits than we want -> put into scientific notation
-             let mut scientific = (&digits[0..MAX_EXPONENT]).to_string();
-             scientific.insert(1, '.');
-             if negative {
-                 return format!{"-{} * 10^{exp}", remove_zeros(scientific)}
-             } else {
-                 return format!{"{} * 10^{exp}", remove_zeros(scientific)}
-             };
-         }
+        num_str = remove_zeros(num_str);
+        let negative = num_str.starts_with("-"); let num_str = num_str.trim_start_matches("-");
+        let exp = num_str.split(".").nth(0).unwrap().len()-1;
+        let digits = num_str.replace(".", "");
+        let result = if exp > MAX_EXPONENT {
+            // We have more digits than we want -> put into scientific notation
+            let mut scientific = (&digits[0..MAX_EXPONENT]).to_string();
+            scientific.insert(1, '.');
+            if negative {
+                format!{"-{} * 10^{exp}", remove_zeros(scientific)}
+            } else {
+                format!{"{} * 10^{exp}", remove_zeros(scientific)}
+            }
+        } else {
+            // Smaller, therefore just return num_str
+            num_str.to_string()
+        };
 
-         // Smaller, therefore just return num_str
-         return num_str.to_string();
+        // If negative add the negative sign back
+        if negative {
+            return format!{"-{result}"}
+        }
+        else {
+            return result;
+        }
     }
 }

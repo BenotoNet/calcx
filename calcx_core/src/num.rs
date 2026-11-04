@@ -123,9 +123,11 @@ impl Num {
                         let positive = Num::unitless_float(self.get_quant()).abs()?;
                         let output_real = positive.powf(num2)?;
                         let pos_or_neg = num2.modf(&Num::unitless("2.0"))?;
+
                         // Uneven, therefore we still have a Negative sign
-                        if &pos_or_neg == &Num::unitless("1.0") {
-                            return Ok(Num::from(output_real.mul(&Num::unitless("-1"))?.get_quant(), output_units));
+                        if &pos_or_neg.abs().unwrap() == &Num::unitless("1.0") {
+                            // Make number negative
+                            return Ok(Num::from(output_real.mul(&Num::unitless("-1"))?.get_quant(), output_units));;
                         }
                         else {
                             return Ok(Num::from(output_real.get_quant(), output_units));
