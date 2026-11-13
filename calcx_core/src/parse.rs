@@ -206,7 +206,7 @@ impl Calc {
             }
             _ => {
                 // an unknown Token!
-                return Err(String::from("Operation is not possible, there is an unknown token"));
+                return Err(String::from("Operation is not possible, there is an unexpected token"));
             },
         }
     }

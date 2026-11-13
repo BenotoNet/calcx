@@ -152,7 +152,17 @@ impl Calc {
         // storage
         match (&output, save_history) {
             (Ok(Expr::Number(num)), true) => {
+                // Adding this new answer to the history
                 self.history.push(Expr::Number(num.clone()));
+
+                // Check if history is becoming too large, then we want to delete first element
+                const MAX_HISTORY_LENGTH: usize = 1000;
+                while self.history.len() > MAX_HISTORY_LENGTH {
+                    println!{"Your History is becoming too large, consider resetting"}
+                    self.history = self.history[1..self.history.len()].to_vec();
+                }
+
+                // Set answer variable to calculated answer
                 self.variables.set_var(format!{"_{}", self.history.len()}, num.clone());
             }
             _ => {},

@@ -152,14 +152,10 @@ impl UI {
     fn reset(&mut self) -> Result<(), String> {
         self.calc = Calc::new(15);
         self.persistent = vec![Setting::AutoSave];
-        self.output("Done");
         self.stdout
             .clear_history()
             .expect("Could not clear history");
-        match std::fs::remove_file(&paths()?.history) {
-            Ok(v) => Ok(v),
-            Err(e) => Err(e.to_string()),
-        }?;
+        self.output("Done");
         Ok(())
     }
 

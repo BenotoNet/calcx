@@ -1,9 +1,10 @@
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions / requirements / ToDos:
-- [ ] Fix: No such File or Directory
 - [ ] System of distribution & standardized way to run (-> any terminal, automatic installation, icon)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] refactor to have nicer code (e.g. more fragmentation into smaller subsystems)
+- [x] Fix: Really large Histories
+- [x] Fix: No such File or Directory
 - [x] **Release V0.1.0**
 - [x] Answers get custom variables automatically (_1 = answer of calculation)
 - [x] Bug: (-1)^(-1) (should be -1)
