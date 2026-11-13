@@ -148,11 +148,20 @@ impl Calc {
         // println!{"{tree:?}"};
         let output = self.eval(tree);
 
+        // Save to internal history if we have a valid output and add answer variable to variable
+        // storage
         match (&output, save_history) {
-            (Ok(Expr::Number(num)), true) => {self.history.push(Expr::Number(num.clone()))}
+            (Ok(Expr::Number(num)), true) => {
+                self.history.push(Expr::Number(num.clone()));
+                self.variables.set_var(format!{"_{}", self.history.len()}, num.clone());
+            }
             _ => {},
         }
 
         output
+    }
+
+    pub fn get_history_count(&self) -> usize {
+        self.history.len()
     }
 }

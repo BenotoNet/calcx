@@ -344,8 +344,11 @@ impl UI {
         if self.persistent.contains(&Setting::OutputOnly) {
             println! {"{}", result};
         } else {
-            // Normal output with nice formatting
-            UI::format_output(&format! {"{}", result});
+            // Normal output with nice formatting and automatic addition of previous answer
+            // variables
+            let history_count = self.calc.get_history_count();
+            let history_digits = format!{"{history_count}"}.len();
+            println! {"{}{} = {result}\n", " ".repeat(10-history_digits), format!{"_{history_count}"}};
         }
     }
 
@@ -353,9 +356,5 @@ impl UI {
         // Have empty append unit string by default
         let out = self.calc.run_output(query, save_history);
         self.output(&out);
-    }
-
-    pub fn format_output(output_string: &str) {
-        utils::success(output_string);
     }
 }

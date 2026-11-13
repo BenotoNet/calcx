@@ -1,9 +1,11 @@
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions / requirements / ToDos:
-- [ ] **Release V0.1.0**
+- [ ] Fix: No such File or Directory
 - [ ] System of distribution & standardized way to run (-> any terminal, automatic installation, icon)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] refactor to have nicer code (e.g. more fragmentation into smaller subsystems)
+- [x] **Release V0.1.0**
+- [x] Answers get custom variables automatically (_1 = answer of calculation)
 - [x] Bug: (-1)^(-1) (should be -1)
 - [x] rewrite AI-written code
 - [x] make a demo on the codeberg / github page for showing what calcx can do (README, [brainstorming](./demo/brainstoring_ideas.md))
