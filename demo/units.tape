@@ -7,13 +7,13 @@ Set Theme "Catppuccin Mocha"
 Set TypingSpeed 400ms
 Set Shell bash
 
+
+
 Hide
-Show
-
-Sleep 2s
-
 Type "./calcx"
 Enter
+Show
+
 Sleep 2500ms
 
 
