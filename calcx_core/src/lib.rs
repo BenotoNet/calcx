@@ -163,7 +163,7 @@ impl Calc {
                 }
 
                 // Set answer variable to calculated answer
-                self.variables.set_var(format!{"_{}", self.history.len()}, num.clone());
+                self.variables.set_var(format!{"#{}", self.history.len()}, num.clone());
             }
             _ => {},
         }

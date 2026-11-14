@@ -352,7 +352,7 @@ impl UI {
             // variables
             let history_count = self.calc.get_history_count();
             let history_digits = format!{"{history_count}"}.len();
-            println! {"{}{} = {result}\n", " ".repeat(10-history_digits), format!{"_{history_count}"}};
+            println! {"{}{} = {result}\n", " ".repeat(10-history_digits), format!{"#{history_count}"}};
         }
     }
 
