@@ -3,6 +3,7 @@ use crate::calcx_core::Expr;
 
 use colored_print::cformat;
 use directories::ProjectDirs;
+use rustyline::history::History;
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -139,6 +140,13 @@ impl UI {
         }
         // Save config
         calcx_core::persistence::save_to_file(&self.calc, &paths()?.config).unwrap();
+
+        // Check if History is empty
+        if self.stdout.history().len() == 0 {
+            // delete previous history file to clear history (save_history doesn't
+            // overwrite if history is empty)
+            let _ = std::fs::remove_file(&paths()?.history);
+        }
 
         // Save History
         self.stdout
