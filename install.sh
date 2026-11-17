@@ -1,1 +1,5 @@
-sudo install -C -D -m 755 ./target/release/calcx /usr/local/bin/
+# Build
+cargo build --release
+
+# Copy Binaries
+sudo install -C -D -m 755 target/release/calcx /usr/local/bin/
