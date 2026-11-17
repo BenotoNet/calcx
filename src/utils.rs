@@ -84,6 +84,7 @@ Possible Meta-Keywords:
     - PRECISION:{{ new precision }}
     - OUTPUT_ONLY:{{ bool 1 or 0 (on/off) }}
     - AUTOSAVE:{{ bool 1 or 0 (on/off) }}
+    - NO_AUTO_RESTORE:{{ bool 1 or 0 (on/off) }}
 
 To run a query, simply type what you want to calculate and press enter. 
 Example queries to get to know the calculator and its capabilities:

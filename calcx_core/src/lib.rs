@@ -58,6 +58,14 @@ impl Calc {
         }
     }
 
+    pub fn get_last_n_history(&self, num: usize) -> Vec<String> {
+        let mut output = vec![];
+        for num in self.history[self.history.len()-num..self.history.len()].into_iter() {
+            output.push(num.display(self.precision));
+        }
+        output
+    }
+
     pub fn change_precision(&mut self, precision: usize) {
         self.precision = precision;
     }

@@ -17,12 +17,13 @@ use crate::utils;
 // NOTE: UI Library
 
 // Enums for setting Options
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum Setting {
     SingleQuery(String),
     Precision(usize),
     OutputOnly,
     AutoSave,
+    NoLastHistory,
 }
 
 pub struct Paths {
@@ -83,6 +84,16 @@ impl UI {
                     // there is actual useful data here, set calculator to the loaded one
                     ui.add_autocompletes(v.get_customs());
                     ui.calc = v;
+
+                    if !ui.persistent.contains(&Setting::NoLastHistory) {
+                        // Printing last xx answers
+                        const LAST_N_ANSWERS: usize = 3;
+                        for (i, hist_str) in ui.calc.get_last_n_history(LAST_N_ANSWERS).iter().enumerate() {
+                            let history_count = ui.calc.get_history_count();
+                            let history_digits = format!{"{history_count}"}.len();
+                            println! {"{}{} = {hist_str}\n", " ".repeat(10-history_digits), format!{"#{}", history_count-(LAST_N_ANSWERS-i)}};
+                        };
+                    }
                 }
                 _ => {
                     println!(
@@ -241,6 +252,32 @@ impl UI {
                     // Remove all occurences of output only in the storage
                     self.persistent.retain(|v| match v {
                         Setting::AutoSave => false,
+                        _ => true,
+                    });
+
+                    self.save()?;
+
+                    // Add a new line
+                    println! {""}
+                    continue;
+                }
+
+                if compact_query.contains("NO_AUTO_RESTORE:1") {
+                    // Add the setting to the persistent storage
+                    self.persistent.push(Setting::NoLastHistory);
+
+                    println!{"{:?}", self.persistent}
+
+                    self.save()?;
+
+                    // Add a new line
+                    println! {""}
+                    continue;
+                }
+                if compact_query.contains("NO_AUTO_RESTORE:0") {
+                    // Remove all occurences of output only in the storage
+                    self.persistent.retain(|v| match v {
+                        Setting::NoLastHistory => false,
                         _ => true,
                     });
 
