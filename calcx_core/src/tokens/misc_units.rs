@@ -122,6 +122,11 @@ pub fn unit_to_num(ul: &str) -> Result<Num, String> {
 
         "knot"|"knots" => {Num::new("1.0", vec![('m', 1), ('s', -1)]).mul(&Num::unitless("1852").div(&Num::unitless("3600"))?)?}
 
+        "radian"|"radians" => {Num::unitless("1")}
+
+        "month_average"|"month" => {Num::new("2629800", vec![('s', 1)])}
+        "thirty_day"|"thirtyday"|"30day"|"30days" => {Num::new("2592000", vec![('s', 1)])}
+
         _ => return Err(String::from("Not a pre defined Variable"))
     })
 }
