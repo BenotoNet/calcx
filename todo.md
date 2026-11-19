@@ -3,6 +3,7 @@ The purpose of this Project is to create a personalized calculator in Rust imple
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] refactor to have nicer code (e.g. more fragmentation into smaller subsystems)
+- [ ] Split up Exponent Limits for Scientific Notation
 - [x] Fix: Command Line History did not overwrite history file if history is empty
 - [x] Fix: Really large Histories
 - [x] Fix: No such File or Directory

@@ -40,7 +40,8 @@ pub fn format_float(num: &Float, max_decimals: usize) -> String {
         num
     };
 
-    const MAX_EXPONENT: usize = 6;
+    const MAX_P_EXPONENT: usize = 6;
+    const MAX_N_EXPONENT: usize = 3;
 
     let mut num_str = format!{"{:.*}", max_decimals, num};
 
@@ -52,7 +53,7 @@ pub fn format_float(num: &Float, max_decimals: usize) -> String {
         let base = remove_zeros(base.to_string());
 
         // if exp is too big or small, we just return scientific
-        if exp < 0-(MAX_EXPONENT as i32) || exp > MAX_EXPONENT as i32 {
+        if exp < 0-(MAX_N_EXPONENT as i32) || exp > MAX_P_EXPONENT as i32 {
             return format!{"{base} * 10^{exp}"}
         }
 
@@ -88,9 +89,9 @@ pub fn format_float(num: &Float, max_decimals: usize) -> String {
         let negative = num_str.starts_with("-"); let num_str = num_str.trim_start_matches("-");
         let exp = num_str.split(".").nth(0).unwrap().len()-1;
         let digits = num_str.replace(".", "");
-        let result = if exp > MAX_EXPONENT {
+        let result = if exp > MAX_P_EXPONENT {
             // We have more digits than we want -> put into scientific notation
-            let mut scientific = (&digits[0..MAX_EXPONENT]).to_string();
+            let mut scientific = (&digits[0..MAX_P_EXPONENT]).to_string();
             scientific.insert(1, '.');
             if negative {
                 format!{"-{} * 10^{exp}", remove_zeros(scientific)}
