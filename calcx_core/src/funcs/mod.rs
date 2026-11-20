@@ -205,6 +205,15 @@ impl Calc {
                 expect(&args, 1, false)?;
                 wrap(Num::from_units(args[0].get_units().clone()))
             }
+            "significant_digits"|"round_to_sd"|"round_sd" => {
+                expect(&args, 2, true)?;
+                let exp = args[0].log(&Num::unitless("10")).unwrap().floor().unwrap();
+                let big_offset = &Num::unitless("10").powf(&exp.sub(&args[1].sub(&Num::unitless("1")).unwrap()).unwrap()).unwrap();
+                let digits = (args[0].div(big_offset).unwrap())
+                    .round().unwrap();
+
+                wrap(digits.mul(big_offset).unwrap())
+            }
 
             _ => {Err(String::from("Not a Function"))},
         }
