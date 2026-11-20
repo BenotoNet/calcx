@@ -38,7 +38,7 @@ impl AutoComplete {
     fn get_current_word(line: &str, pos: usize) -> String {
         let start = &line[..pos];
         start
-            .split(&[' ', '\n', '.', ','])
+            .split(&[' ', '\n', '.', ',', '(', ')', '/', '*', '+', '-', '%', '^'])
             .last()
             .expect("Somehow the Autocomplete Line was completely empty")
             .to_string()

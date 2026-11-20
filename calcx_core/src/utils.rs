@@ -93,11 +93,7 @@ pub fn format_float(num: &Float, max_decimals: usize) -> String {
             // We have more digits than we want -> put into scientific notation
             let mut scientific = (&digits[0..MAX_P_EXPONENT]).to_string();
             scientific.insert(1, '.');
-            if negative {
-                format!{"-{} * 10^{exp}", remove_zeros(scientific)}
-            } else {
-                format!{"{} * 10^{exp}", remove_zeros(scientific)}
-            }
+            format!{"{} * 10^{exp}", remove_zeros(scientific)}
         } else {
             // Smaller, therefore just return num_str
             num_str.to_string()
