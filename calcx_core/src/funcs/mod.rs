@@ -199,7 +199,7 @@ impl Calc {
             }
             "c_to_k"|"celsius_to_kelvin"|"celsius" => {
                 expect(&args, 1, true)?;
-                wrap(args[0].mul(&Num::new("1", vec![('k', 1)]))?.add(&Num::new("273.2", vec![('k', 1)]))?)
+                wrap(args[0].mul(&Num::new("1", vec![('k', 1)]))?.add(&Num::new("273.15", vec![('k', 1)]))?)
             }
             "units"|"get_units"|"unit" => {
                 expect(&args, 1, false)?;
