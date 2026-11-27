@@ -36,7 +36,9 @@ mod funcs;
 
 impl Calc {
     pub fn new(precision: usize) -> Calc {
-        Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new(), userfunctions: funcs::custom::FunctionStorage::new(), precision: precision, history: vec![] }
+        let mut base = Calc { tokens: vec![], current: 0, variables: variables::VariableStorage::new(), userfunctions: funcs::custom::FunctionStorage::new(), precision: precision, history: vec![] };
+        base.populate_units();
+        base
     }
 
     pub fn set_tokens(&mut self, tokens: Vec<Token>) {
@@ -173,5 +175,9 @@ impl Calc {
 
     pub fn get_history_count(&self) -> usize {
         self.history.len()
+    }
+
+    pub fn populate_units(&mut self) {
+        self.variables.set_var(String::from("meter"), Num::new("1.0", vec![('m', 1)]))
     }
 }

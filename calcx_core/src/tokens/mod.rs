@@ -55,12 +55,6 @@ fn is_keyword(unknown_token: &str) -> bool {
     // checking if the token is one of the reserved keywords, then it is a keyword, otherwise, it's
     // a variable!
 
-    // Check if it is a unit:
-    match misc_units::unit_to_num(unknown_token) {
-        Ok(_) => return true,
-        _ => {},
-    };
-
     // Check if it's a reserved keyword:
     let temp_calc = Calc::new(1);
     match temp_calc.eval_keyword(unknown_token, Ok(&Num::unitless("1.0")), Ok(&Num::unitless("1.0"))) {
@@ -118,29 +112,6 @@ fn categorize(calc: &Calc, tokens: Vec<Token>) -> Vec<Token> {
         }
     }
     out_tokens
-}
-
-fn match_units(mut tokens: Vec<Token>) -> Vec<Token> {
-    let mut index = 0; 
-    while index < tokens.len() {
-        match tokens.get(index) {
-            // Checking the keywords for scientific notion / powers of ten / additional units like
-            // volts, farad, etc
-            Some(Token::Keyword(var)) => {
-                match misc_units::unit_to_num(var.as_str()) {
-                    Ok(num) => {
-                        tokens[index] = Token::RBrac; 
-                        tokens.insert(index, Token::Number(num));
-                        tokens.insert(index, Token::LBrac);
-                    },
-                    _ => {},
-                }
-            }
-            _ => {},
-        }
-        index += 1;
-    }
-    return tokens;
 }
 
 fn clean(tokens: Vec<Token>) -> Vec<Token> {
@@ -280,7 +251,6 @@ pub fn tokenize(calc: &Calc, query: &str) -> Vec<Token> {
     // into a token and finally clean up the list of tokens (combine two adjecent Numbers)
     let mut tokens = split_into_unknowns(query);
     tokens = categorize(calc, tokens);
-    tokens = match_units(tokens);
     tokens = clean(tokens);
 
     // Finally, return the list of tokens

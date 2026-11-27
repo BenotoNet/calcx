@@ -18,9 +18,16 @@ impl VariableStorage {
         self.storage.keys().into_iter().map(|v| {v.to_string()}).collect()
     }
 
-    pub fn get_var(&self, var: String) -> Result<Expr, String> {
-        match self.storage.get(&var) {
+    pub fn get_var(&self, var: &str) -> Result<Expr, String> {
+        match self.storage.get(var) {
             Some(v) => Ok(Expr::Number(v.clone())),
+            _ => Err(String::from("Could not get Variable")),
+        }
+    }
+
+    pub fn get_num(&self, key: &str) -> Result<Num, String> {
+        match self.storage.get(key) {
+            Some(v) => Ok(v.clone()),
             _ => Err(String::from("Could not get Variable")),
         }
     }

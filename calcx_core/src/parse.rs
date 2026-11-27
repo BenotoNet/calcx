@@ -201,7 +201,7 @@ impl Calc {
                         })
                     }
                     // Otherwise it really is just a normal variable
-                    return self.variables.get_var(var)
+                    return self.variables.get_var(&var)
                 }
             }
             _ => {

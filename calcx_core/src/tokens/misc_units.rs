@@ -1,4 +1,5 @@
 use crate::{Expr, Num};
+use std::collections::HashMap;
 
 fn calc_relative_dangerous(query: &str) -> Num {
     let mut temp_calc = crate::Calc::new(crate::PRECISION as usize);
@@ -6,6 +7,10 @@ fn calc_relative_dangerous(query: &str) -> Num {
         Expr::Number(num) => return num,
         _ => panic!{},
     }
+}
+
+pub struct UnitMap {
+    storage: HashMap<String, Num>
 }
 
 pub fn unit_to_num(ul: &str) -> Result<Num, String> {

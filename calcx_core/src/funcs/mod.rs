@@ -1,7 +1,6 @@
 use crate::Expr;
 use crate::Num;
 use crate::Calc;
-use crate::tokens::misc_units::unit_to_num;
 
 pub mod custom;
 
@@ -93,7 +92,7 @@ impl Calc {
             },
 
             "root"|"nth_root"|"n_root" => {
-                expect(&args, 2, true)?;
+                expect(&args, 2, false)?;
                 wrap(args[1].powf(&Num::unitless("1.0").div(&args[0])?)?)
             }
             "log" => {
@@ -132,7 +131,7 @@ impl Calc {
             }
             "ln"|"natural_log"|"natural_ln"|"log_natural" => {
                 expect(&args, 1, true)?;
-                wrap(args[0].log(&unit_to_num("e")?)?)
+                wrap(args[0].log(&self.variables.get_num("e")?)?)
             }
             "lg"|"log10"|"10log"|"log_base_10"|"log_base_ten" => {
                 expect(&args, 1, true)?;
