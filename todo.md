@@ -1,11 +1,13 @@
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions / requirements / ToDos:
-- [ ] relative definitions of units
+- [ ] Pre-calculated variables & Hash-map
+- [ ] >> Adjust autocomplete to automatically update
 - [ ] increase precision of constants
 - [ ] System of distribution & standardized way to run (-> any terminal, automatic installation, icon)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] refactor to have nicer code (e.g. more fragmentation into smaller subsystems)
-- [ ] Split up Exponent Limits for Scientific Notation
+- [x] relative definitions of units
+- [x] Split up Exponent Limits for Scientific Notation
 - [x] Function for significant digits rounding
 - [x] Autocomplete also when (var -> Additional splitters
 - [x] Fix: -speed_of_light gave double negative sign in answer
