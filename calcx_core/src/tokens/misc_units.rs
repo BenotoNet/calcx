@@ -127,6 +127,13 @@ pub fn unit_to_num(ul: &str) -> Result<Num, String> {
         "month_average"|"month" => {Num::new("2629800", vec![('s', 1)])}
         "thirty_day"|"thirtyday"|"30day"|"30days" => {Num::new("2592000", vec![('s', 1)])}
 
+        // TODO: Relative Definitions
+        // "mass_electron"|"mass_e" => {Num::new("", vec![('K', 1)])}
+        // "mass_proton"|"mass_p" => {Num::new("", vec![('K', 1)])}
+        // "mass_neutron"|"mass_n" => {Num::new("", vec![('K', 1)])}
+
+        "tnt_equivalent"|"tnt" => {Num::new("4.184e9", vec![('K', 1), ('m', 2), ('s', -2)])}
+
         _ => return Err(String::from("Not a pre defined Variable"))
     })
 }
