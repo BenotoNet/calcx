@@ -6,6 +6,7 @@ pub mod variables;
 pub mod keys_func;
 pub mod utils;
 pub mod persistence;
+mod constants;
 
 pub use num::Num;
 pub use expr::Expr;
@@ -178,6 +179,6 @@ impl Calc {
     }
 
     pub fn populate_units(&mut self) {
-        self.variables.set_var(String::from("meter"), Num::new("1.0", vec![('m', 1)]))
+        self.variables.set_multiple(constants::get_constants())
     }
 }

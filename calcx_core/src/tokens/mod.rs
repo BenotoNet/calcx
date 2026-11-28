@@ -56,12 +56,10 @@ fn is_keyword(unknown_token: &str) -> bool {
     // a variable!
 
     // Check if it's a reserved keyword:
-    let temp_calc = Calc::new(1);
-    match temp_calc.eval_keyword(unknown_token, Ok(&Num::unitless("1.0")), Ok(&Num::unitless("1.0"))) {
-        Err(v) => {
-            return !(v.as_str() == "Unknown Keyword or not enough Arguments! (Maybe not implemented yet?)")
-        },
-        _ => true,
+    // FIX: Better way, maybe hashmap again? 
+    match unknown_token {
+        "ans"|"last"|"last_answer"|"answer"|"nth_last"|"nth_ans"|"clip"|"copy"|"clipboard" => true,
+        _ => false,
     }
 }
 

@@ -35,5 +35,11 @@ impl VariableStorage {
     pub fn set_var(&mut self, key: String, value: Num) {
         self.storage.insert(key, value);
     }
+
+    pub fn set_multiple(&mut self, multiple: Vec<(String, Num)>) {
+        for (key, value) in multiple {
+            self.set_var(key, value);
+        }
+    }
 }
 

@@ -65,7 +65,7 @@ impl Units {
         return unit1;
     }
 
-    // When we have two Unit 
+    // When we have two Units
     pub fn combine<T: Fn(f64, f64) -> f64>(unit1: &Units, unit2: &Units, operation: T) -> Units {
         let mut output_units = Units::new(vec![]);
         output_units.second = operation(unit1.second, unit2.second);
@@ -76,6 +76,10 @@ impl Units {
         output_units.candela = operation(unit1.candela, unit2.candela);
 
         return output_units;
+    }
+
+    pub fn get_ordered_list(&self) -> [i8; 6] {
+        [self.second as i8, self.metre as i8, self.kilogram as i8, self.ampere as i8, self.kelvin as i8, self.candela as i8]
     }
 
     pub fn display(&self) -> String {
