@@ -1,10 +1,11 @@
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions / requirements / ToDos:
-- [ ] populate hashmap / proprietary format with all variables from before
+- [ ] Fix precedence
 - [ ] increase precision of constants
 - [ ] System of distribution & standardized way to run (-> any terminal, automatic installation, icon)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
 - [ ] Proper Clipboard support as a feature (disabled by default, since it takes quite a lot of dependencies)
 - [ ] refactor to have nicer code (e.g. more fragmentation into smaller subsystems)
+- [x] populate hashmap / proprietary format with all variables from before
 - [x] proprietary system for units -> custom file gets parsed into untis
 - [x] Pre-calculated variables & Hash-map
 - [x] >> Adjust autocomplete to automatically update

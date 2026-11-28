@@ -4,8 +4,6 @@ use crate::utils;
 pub mod token;
 pub use token::Token;
 
-pub mod misc_units;
-
 fn split_into_unknowns(query: &str) -> Vec<Token> {
     let splitters = String::from("+*/-%!^()= ,");
     let mut output = vec![];
