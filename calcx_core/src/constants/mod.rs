@@ -34,7 +34,7 @@ fn parse_prop_format(file_content: String) -> HashMap<String, Num> {
                 else if unit == "c" {working_units[5] += amount}
                 else {
                     // relative definition of units;
-                    let num = map.get(&unit.to_string()).expect(&format!{"Could not get relative UNIT, {}", unit}).get_units().get_ordered_list();
+                    let num = map.get(&unit.to_string()).expect(&format!{"Could not get relative UNIT: {}", unit}).get_units().get_ordered_list();
                     for (i, sub_unit) in num.iter().enumerate() {
                         working_units[i] += sub_unit
                     }

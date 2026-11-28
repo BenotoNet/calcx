@@ -1,5 +1,7 @@
 The purpose of this Project is to create a personalized calculator in Rust implementing the following functions / requirements / ToDos:
 - [ ] Fix precedence
+- [ ] Wrong Precision with constants (ex. speed of light with 1000 digits only displays 5)
+- [ ] Better Relative Definition (*, -, +, etc)
 - [ ] increase precision of constants
 - [ ] System of distribution & standardized way to run (-> any terminal, automatic installation, icon)
 - [ ] live fetching of regularly updated data (e.g. 4 USD to EUR, 0.001 BTC to EUR)
